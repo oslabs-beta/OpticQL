@@ -1,0 +1,46 @@
+{
+  "name": "OpticQL",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/server.js",
+    "electron": "electron .",
+    "dev": "NODE_ENV=development webpack-dev-server --hot & NODE_ENV=development npm start",
+    "build": "NODE_ENV=production webpack & NODE_ENV=production npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrick934/OpticQL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patrick934/OpticQL/issues"
+  },
+  "homepage": "https://github.com/patrick934/OpticQL#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.11.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-graph-vis": "^1.0.5",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^4.2.2",
+    "electron": "^10.1.0",
+    "nodemon": "^2.0.4",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-hot-middleware": "^2.25.0"
+  }
+}
