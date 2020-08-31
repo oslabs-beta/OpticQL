@@ -8,7 +8,7 @@ const PORT = 3000;
 app.use(express.json())
 app.use(express.urlencoded())
 
-// if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
 
 
   // statically serve everything in the build folder on the route '/build'. 
@@ -18,9 +18,9 @@ app.use(express.urlencoded())
   // serve index.html on the route '/'. 
   // PM: We need to send index.html first, and then index html runs the script that loads the webpack data from build/bundle.js
   app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../index.html'));
+    res.sendFile(path.join(__dirname, '../client/index.html'));
   });
 
-// }
+}
 
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
