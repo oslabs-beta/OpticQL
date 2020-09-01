@@ -2,13 +2,15 @@
   "name": "OpticQL",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./client/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server/server.js",
     "electron": "electron .",
     "dev": "NODE_ENV=development webpack-dev-server --hot & NODE_ENV=development npm start",
-    "build": "NODE_ENV=production webpack & NODE_ENV=production npm start"
+    "build": "NODE_ENV=production webpack & NODE_ENV=production npm start",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -36,11 +38,27 @@
     "babel-loader": "^8.1.0",
     "css-loader": "^4.2.2",
     "electron": "^10.1.0",
+    "electron-builder": "^22.8.0",
     "nodemon": "^2.0.4",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-hot-middleware": "^2.25.0"
+  },
+  "build": {
+    "appId": "yourappid",
+    "mac": {
+      "category": "your.app.category.type"
+    },
+    "files": [
+      "build/**/*",
+      "client/",
+      "node_modules/**/*",
+      "main.js"
+    ],
+    "directories":{
+      "buildResources": "assets"
+    }
   }
 }

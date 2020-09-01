@@ -10,7 +10,6 @@ app.use(express.urlencoded())
 
 if (process.env.NODE_ENV === 'production') {
 
-
   // statically serve everything in the build folder on the route '/build'. 
   // PM: So now index.html can look at build/bundle.js and find it there!!!!!!!
   app.use('/build', express.static(path.join(__dirname, '../build')));
