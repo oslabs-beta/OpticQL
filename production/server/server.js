@@ -8,6 +8,12 @@ const PORT = 3001;
 app.use(express.json())
 app.use(express.urlencoded())
 
+app.use('/api/schema', (req, res) => {
+  console.log('schema received!!!')
+  res.status(200).json({hello: 'holaTest2'})
+})
+
+
 if (process.env.NODE_ENV === 'production') {
 
   // statically serve everything in the build folder on the route '/build'. 

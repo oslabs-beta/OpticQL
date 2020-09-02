@@ -55,7 +55,8 @@
       "build/**/*",
       "client/",
       "node_modules/**/*",
-      "main.js"
+      "main.js",
+      "server/"
     ],
     "directories": {
       "buildResources": "assets"
