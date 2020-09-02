@@ -9,8 +9,6 @@ const db = require('./models/starwarsModel.js');
 
 const { makeExecutableSchema } = require('apollo-server');
 
-const axios = require('axios');
-
 
 
 // app.get('/api', ((req, res) => {
