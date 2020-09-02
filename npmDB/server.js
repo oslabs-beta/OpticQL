@@ -9,7 +9,7 @@ const db = require('./models/starwarsModel.js');
 
 const { makeExecutableSchema } = require('apollo-server');
 
-const axios = require('axios');
+// const axios = require('axios');
 
 
 
