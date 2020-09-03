@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors')
+const fetch = require('node-fetch');
 
 // const { graphqlHTTP } = require('express-graphql');
 // // const express_graphql = require('express-graphql');
@@ -673,6 +674,28 @@ app.use('/api/hello', (req, res) => {
 })
 
 
+
+// functionality to send schema to Electron
+function npmFetch(schema) {
+  fetch('http://localhost:3001/api/schema', {
+    method: 'POST', 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      hello: schema
+    }),
+  })
+  .then((res) => {
+    console.log(res)
+    return res.json()
+  })
+  .then((data)=>{
+    console.log('fetch')
+    console.log(data)
+  })
+}
+npmFetch(typeDefs)
 
 
 // app.listen(5000, () => console.log('Now browse to localhost:5000/graphql'));
