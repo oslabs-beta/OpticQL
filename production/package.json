@@ -2,7 +2,7 @@
   "name": "OpticQL",
   "version": "1.0.0",
   "description": "",
-  "main": "./client/start.js",
+  "main": "./client/main.js",
   "scripts": {
     "start": "NODE_ENV=production nodemon server/server.js",
     "electron": "electron .",
@@ -29,6 +29,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-graph-vis": "^1.0.5",
+    "react-indexed-db": "^1.0.12",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
