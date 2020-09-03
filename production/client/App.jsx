@@ -40,11 +40,24 @@ const App = props => {
     })
   }
 
+  function clickSchema() {
+    fetch('http://localhost:3000/getSchema')
+    .then((res) => {
+      return res.json()
+    })
+    .then((data)=>{
+      console.log('Updated schema: ')
+      console.log(data)
+    })
+  }
+
+
 
   return (
     <div>
       REACT IS WORKING
       <button onClick={clickTwo}>Click here for fetch</button>
+      <button onClick={clickSchema}>Click here for Schema update</button>
     </div>
   )
 }
