@@ -670,30 +670,30 @@ const schema = makeExecutableSchema({
 // }));
 
 app.use('/api/hello', (req, res) => {
-  res.status(200).json({hello: 'holaTest2'})
+	res.status(200).json({ hello: 'holaTest2' })
 })
 
 
 
 // functionality to send schema to Electron
-function npmFetch(schema) {
-  fetch('http://localhost:3001/api/schema', {
-    method: 'POST', 
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      hello: schema
-    }),
-  })
-  .then((res) => {
-    console.log(res)
-    return res.json()
-  })
-  .then((data)=>{
-    console.log('fetch')
-    console.log(data)
-  })
+function npmFetch (schema) {
+	fetch('http://localhost:3001/api/schema', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			hello: schema
+		}),
+	})
+		.then((res) => {
+			console.log(res)
+			return res.json()
+		})
+		.then((data) => {
+			console.log('fetch')
+			console.log(data)
+		})
 }
 npmFetch(typeDefs)
 
