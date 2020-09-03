@@ -16,6 +16,7 @@
 		"express": "^4.17.1",
 		"express-graphql": "^0.11.0",
 		"graphql-tools": "^6.2.0",
+		"node-fetch": "^2.6.0",
 		"pg": "^8.3.3",
 		"postgraphile": "^4.8.0"
 	}
