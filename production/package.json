@@ -2,7 +2,7 @@
   "name": "OpticQL",
   "version": "1.0.0",
   "description": "",
-  "main": "./client/main.js",
+  "main": "./client/start.js",
   "scripts": {
     "start": "nodemon server/server.js",
     "electron": "electron .",
