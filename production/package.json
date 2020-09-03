@@ -4,10 +4,10 @@
   "description": "",
   "main": "./client/main.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "NODE_ENV=production nodemon server/server.js",
     "electron": "electron .",
     "dev": "NODE_ENV=development webpack-dev-server --hot & NODE_ENV=development npm start",
-    "build": "NODE_ENV=production webpack & NODE_ENV=production npm start",
+    "build": "NODE_ENV=production webpack",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
