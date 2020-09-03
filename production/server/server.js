@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded())
 
 app.use('/api/schema', (req, res) => {
-  console.log(req.body.hello)
+  console.log(req.body.typeDefs)
   // console.log(JSON.parse(req.body))
   console.log('schema received!!!')
   res.status(200).json({hello: 'holaTest2'})
