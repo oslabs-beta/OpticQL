@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
+import React, { useState, Component } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 
-const App = props => {
+
+const App = (props) => {
   
-  function click() {
-    fetch('http://localhost:3000/api/hello', {
-    })
-    .then((res) => {
-      console.log(res)
-      return res.json()
-    })
-    .then((data)=>{
-      console.log('fetch')
-      console.log(data)
-    })
-  }
+  const db = useIndexedDB('queryData');
+  const [query, setQuery] = useState();
 
-  function clickTwo() {
+  const newQuery = `{
+    people {
+      gender
+    }
+  }`
+
+  function makeQuery() {
     fetch('http://localhost:3000/graphql', {
       method: 'POST',
       headers: {
@@ -23,22 +21,31 @@ const App = props => {
         'Accept': 'application/json',
       },
       body: JSON.stringify({
-        query: `{
-          people {
-            gender
-          }
-        }`
+        query: newQuery,
       })
     })
-    .then((res) => {
-      console.log(res)
-      return res.json()
+    .then(res => res.json())
+    .then(res => {
+      console.log("This is the response: ", res);
+      setQuery(res);
     })
-    .then((data)=>{
-      console.log('fetch')
-      console.log(data)
-    })
+    .catch(err => console.log("This is the error: ", err));
   }
+
+  function databaseInsert() {
+    
+    db.add({ name: query })
+      .then(id => {
+        console.log('ID Generated: ', id);
+      })
+      .catch(err => console.log("Error with database insertion: ", err))
+  };
+
+  function databaseGrab() {
+    db.getAll()
+    .then(result => console.log(result))
+    .catch(err => console.log("Error with getting all records from database: ", err));
+  };
 
   function clickSchema() {
     fetch('http://localhost:3000/getSchema')
@@ -51,15 +58,15 @@ const App = props => {
     })
   }
 
-
-
   return (
     <div>
-      REACT IS WORKING
-      <button onClick={clickTwo}>Click here for fetch</button>
+      React is working.
+      <button onClick={makeQuery}>Click here for fetch</button>
+      <button onClick={databaseInsert}>Upload Schema</button>
+      <button onClick={databaseGrab}>Read Schema</button>
       <button onClick={clickSchema}>Click here for Schema update</button>
     </div>
-  )
+    )
 }
 
 export default App;
