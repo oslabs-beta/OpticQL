@@ -670,13 +670,7 @@ const resolvers = {
 // 	graphiql: true,
 // }));
 
-app.use('/api/hello', (req, res) => {
-  res.status(200).json({hello: 'holaTest2'})
-})
 
-
-
-// functionality to send schema to Electron
 // function npmFetch(schema) {
 //   fetch('http://localhost:3001/api/schema', {
 //     method: 'POST', 
@@ -696,6 +690,18 @@ app.use('/api/hello', (req, res) => {
 //     console.log(data)
 //   })
 // }
+
+
+app.use('/api/hello', (req, res) => {
+  res.status(200).json({hello: 'holaTest2'})
+})
+
+// app.use('/getSchema', (req, res) => {
+//   res.status(200).json({schemaNew: typeDefs})
+// })
+
+// functionality to send schema to Electron
+
 opticQL(typeDefs, resolvers, app)
 
 

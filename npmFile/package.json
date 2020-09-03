@@ -1,0 +1,17 @@
+{
+  "name": "optic-ql",
+  "version": "1.0.3",
+  "description": "npm package for OpticQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.17.0",
+    "apollo-server-express": "^2.17.0",
+    "node-fetch": "^2.6.0"
+  }
+}
