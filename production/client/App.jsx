@@ -47,14 +47,26 @@ const App = (props) => {
     .catch(err => console.log("Error with getting all records from database: ", err));
   };
 
+  function clickSchema() {
+    fetch('http://localhost:3000/getSchema')
+    .then((res) => {
+      return res.json()
+    })
+    .then((data)=>{
+      console.log('Updated schema: ')
+      console.log(data)
+    })
+  }
+
   return (
     <div>
       React is working.
       <button onClick={makeQuery}>Click here for fetch</button>
       <button onClick={databaseInsert}>Upload Schema</button>
       <button onClick={databaseGrab}>Read Schema</button>
+      <button onClick={clickSchema}>Click here for Schema update</button>
     </div>
-  )
+    )
 }
 
 export default App;
