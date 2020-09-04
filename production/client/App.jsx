@@ -1,5 +1,6 @@
 import React, { useState, Component } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
+import GraphViz from './Viz.jsx'
 
 
 const App = (props) => {
@@ -65,6 +66,7 @@ const App = (props) => {
       <button onClick={databaseInsert}>Upload Schema</button>
       <button onClick={databaseGrab}>Read Schema</button>
       <button onClick={clickSchema}>Click here for Schema update</button>
+      <GraphViz />
     </div>
     )
 }
