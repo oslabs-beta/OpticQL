@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors')
-const fetch = require('node-fetch');
-const { opticQL } = require('optic-ql')
+// const fetch = require('node-fetch');
+const { opticQL } = require("optic-ql");
 
 // const { graphqlHTTP } = require('express-graphql');
 // // const express_graphql = require('express-graphql');
@@ -9,7 +9,7 @@ const { opticQL } = require('optic-ql')
 // // const { GraphQLSchema, GraphQLObjectType, GraphQLString } = graphql
 const db = require('./models/starwarsModel.js');
 
-const { makeExecutableSchema } = require('apollo-server');
+// const { makeExecutableSchema } = require('apollo-server');
 
 // const axios = require('axios');
 
@@ -22,7 +22,7 @@ const { makeExecutableSchema } = require('apollo-server');
 // 	})
 // }))
 
-const { ApolloServer, gql } = require('apollo-server-express');
+// const { ApolloServer, gql } = require('apollo-server-express');
 const app = express();
 app.use(cors())
 
@@ -660,21 +660,45 @@ const resolvers = {
 	},
 }
 
-const schema = makeExecutableSchema({
-	typeDefs,
-	resolvers,
-})
+// const schema = makeExecutableSchema({
+// 	typeDefs,
+// 	resolvers,
+// })
 
 // app.use('/graphql', graphqlHTTP({
 // 	schema: schema,
 // 	graphiql: true,
 // }));
 
+
+// function npmFetch(schema) {
+//   fetch('http://localhost:3001/api/schema', {
+//     method: 'POST', 
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       hello: schema
+//     }),
+//   })
+//   .then((res) => {
+//     console.log(res)
+//     return res.json()
+//   })
+//   .then((data)=>{
+//     console.log('fetch')
+//     console.log(data)
+//   })
+// }
+
+
 app.use('/api/hello', (req, res) => {
 	res.status(200).json({ hello: 'holaTest2' })
 })
 
-
+// app.use('/getSchema', (req, res) => {
+//   res.status(200).json({schemaNew: typeDefs})
+// })
 
 // functionality to send schema to Electron
 // function npmFetch (schema) {
@@ -696,32 +720,14 @@ app.use('/api/hello', (req, res) => {
 // 			console.log(data)
 // 		})
 // }
-opticQL(typeDefs)
+// opticQL(typeDefs)
+
+opticQL(typeDefs, resolvers, app)
 
 
 // app.listen(5000, () => console.log('Now browse to localhost:5000/graphql'));
-const server = new ApolloServer({ schema, context: {}, tracing: true, });
-server.applyMiddleware({ app });
+// const server = new ApolloServer({ schema, context: {}, tracing: true, });
+// server.applyMiddleware({ app });
 app.listen({ port: PORT }, () =>
-	console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
+	console.log(`🚀 Server ready at http://localhost:3000/graphql`)
 )
-// axios.get('http://localhost:3000/graphql')
-// 	.then(function (response) {
-// 		console.log("response:", response);
-// 	})
-// 	.catch(function (err) {
-// 		console.log("error:", err)
-// 	});
-
-// fetch("http://localhost:3000/graphql", {
-// 	method: "POST",
-// 	headers: { "Content-Type": "application/json" },
-// 	// credentials: "include",
-// })
-// 	.then((response) => response.json())
-// 	.then((data) => console.log("FETCH data", data))
-// 	.catch((err) => console.log("ERROR in login fetch", err));
-
-// fetch('http://localhost:3000/graphql')
-// 	.then(resp => resp.json())
-// 	.then(data => console.log(data));
