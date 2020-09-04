@@ -97,7 +97,7 @@ class GraphViz extends Component {
         manipulation: {
           enabled: false,
         },
-        clickToUse: true,
+        clickToUse: false,
         edges: {
           color: "#000000"
         },
