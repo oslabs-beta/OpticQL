@@ -17,17 +17,46 @@ function clickSchema() {
   .then((data)=>{
     console.log('Updated schema: ')
     // console.log(data)
-    const arrData = data.schemaNew.split(/}/);
-    console.log(arrData)
-    const arrData2 = arrData.map((el)=>{
-      const split = el.split(/\n/);
-      split.forEach((el)=>{
-        el.trim();
+    const arrTypes = data.schemaNew.split(/}/);
+    const formatted = arrTypes.map((type)=>{
+      const split = type.split(/\n/);
+      return split.map((field)=>{
+        const trimmed = field.trim();
+        return trimmed;
       })
-      return split;
     })
-    console.log(arrData2)
+    console.log('Formatted', formatted)
+    let queryArr;
+    let queryIndex;
+    let mutationIndex;
+    formatted.forEach((el, i)=>{
+      const elJoin = el.join("");
+      if(elJoin.includes("Query")) {
+        queryArr = el;
+        queryIndex = i;
+      }
+      if(elJoin.includes("Mutation")) {
+        mutationIndex = i;
+      }
+    })
+    // console.log("queryArr", queryArr)
+    const set = new Set();
+    queryArr.forEach((el)=>{
+      // split element via ":" and grab last element
+      if (el.includes(":")) {
+        const elSplit = el.split(':');
+        const lastElSplit = elSplit[elSplit.length-1];
+        console.log(typeof lastElSplit)
+        const regex = /[A-Za-z]+/;
+        const found = lastElSplit.match(regex);
+        console.log('found', found[0]);
+        set.add(found[0])
+        console.log('set', set)
+      }
+      
+    })
 
+    // console.log('set', ...new Set(Object.values(queryArr)));
   })
 }
 
