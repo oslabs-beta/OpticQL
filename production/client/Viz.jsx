@@ -24,7 +24,7 @@ function GraphViz() {
         { id: 2, label: "Node 2", title: "node 2 tootip text", color: 'green' },
         { id: 3, label: "Node 3", title: "node 3 tootip text" },
         { id: 4, label: "Node 4", title: "node 4 tootip text" },
-        { id: 5, label: "Node 5", title: "node 5 tootip text" },
+        { id: 'hello', label: "hello", title: "node 5 tootip text" },
         { id: 6, label: "Node 6", }
   
       ],
@@ -33,16 +33,16 @@ function GraphViz() {
         { from: 1, to: 4 },
         { from: 1, to: 3 },
         { from: 2, to: 4 },
-        { from: 2, to: 5 },
+        { from: 2, to: 'hello' },
         { from: 1, to: 6 },
       ]
     },
   );
    const [options, setOptions] = useState(
     {
-      layout: {
-        hierarchical: true
-      },
+      // layout: {
+      //   hierarchical: true
+      // },
       physics:{
         enabled: true,
       },
@@ -133,10 +133,10 @@ function GraphViz() {
           if (el.includes(":")) {
             const elSplit = el.split(':');
             const lastElSplit = elSplit[elSplit.length-1];
-            console.log(typeof lastElSplit)
+            // console.log(typeof lastElSplit)
             const regex = /[A-Za-z]+/;
             const found = lastElSplit.match(regex);
-            console.log('found', found[0]);
+            // console.log('found', found[0]);
             setQuery.add(found[0])
           }
           
@@ -163,7 +163,7 @@ function GraphViz() {
             el.forEach((prop) => {
               if (prop.includes(":")){
                 let propSplit = prop.split(":");
-                console.log('propsplit', propSplit[0]);
+                // console.log('propsplit', propSplit[0]);
                 let fieldName = propSplit[0];
                 if (propSplit[1].includes("[")) {
                   const regex = /[A-Za-z]+/;
@@ -177,6 +177,29 @@ function GraphViz() {
             })
           }
         })
+        // SAVE QUERYOBJECT IN THE DATABASE
+        const vizNodes = [];
+        const vizEdges = [];
+        const queryNode = {id: "Query", label: "Query", title: "TBD" }
+        vizNodes.push(queryNode)
+        for (let key in queryObject){
+          const node = {id: key, label: key, title: key};
+          vizNodes.push(node);
+          vizEdges.push({from: "Query", to: key})
+          const prop = key;
+          console.log('PROP',prop)
+          for (let childNode in queryObject[prop]) {
+            console.log('key', prop)
+            console.log('childNode', childNode)
+            const subNode = {id: prop + '.' + childNode, label: prop + '.' + childNode, title: prop + '.' + childNode};
+            vizNodes.push(subNode);
+            vizEdges.push({from: prop, to: prop + '.' + childNode})
+          }
+          // { from: 1, to: 4 },
+        }
+       console.log('nodes', vizNodes);
+       console.log('edges', vizEdges);
+        setGraph({nodes: vizNodes, edges: vizEdges})
       })
     }
 
