@@ -102,9 +102,9 @@ const ControlPanel = () => {
 		<div>
 			<p>User Control Panel</p>
 			<form onSubmit={handleSubmit}>
-				<div class="form-group">
-					<label for="query">Please enter query here</label>
-					<textarea class="form-control" id="query" rows="3" value={query} onChange={handleChange}></textarea>
+				<div className="form-group">
+					<label htmlFor="query">Please enter query here</label>
+					<textarea className="form-control" id="query" rows="3" value={query} onChange={handleChange}></textarea>
 				</div>
 				<input type="submit" value="Submit" />
 			</form>
