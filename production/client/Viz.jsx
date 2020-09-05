@@ -59,7 +59,7 @@ function clickSchema() {
     formatted.forEach((el, i)=>{
       let queryName;
       if (i !== queryIndex && i !== mutationIndex){
-        for (let i =0; i < el.length; i++){
+        for (let i = 0; i < el.length; i++){
           if (el[i].includes("type")) {
             let fieldSplit = el[i].split("type");
             // console.log('fieldSplit', fieldSplit);
@@ -67,27 +67,29 @@ function clickSchema() {
             const regex = /[A-Za-z]+/;
             const found = field.match(regex);
             queryName = found[0];
-            console.log('queryName', queryName)
+            // console.log('queryName', queryName)
             queryObject[queryName] = {};
-            console.log('queryObj', queryObject)
+            // console.log('queryObj', queryObject)
             break;
           }
-        }
-      // el.forEach((field)=> {
-      //   console.log('field', field)
-      //     if (field.includes("type")) {
-      //     let fieldSplit = field.split("type");
-      //     console.log('fieldSplit',fieldSplit)
-      //     } 
-      // })
+        } 
+        el.forEach((prop) => {
+          if (prop.includes(":")){
+            let propSplit = prop.split(":");
+            console.log('propsplit', propSplit[0]);
+            let fieldName = propSplit[0];
+            if (propSplit[1].includes("[")) {
+              const regex = /[A-Za-z]+/;
+              const found = propSplit[1].match(regex);
+              queryObject[queryName][fieldName] = found[0];
+            } else {
+              queryObject[queryName][fieldName] = true;
+              console.log('queryObject', queryObject)
+            }
+          }
+        })
       }
-    }
-    )
-  //does element include "type?"
-
-  //if so -- we set mutable variable as type
-
-  //iterate through array again, splitting by ":" and grabbing left side
+    })
   })
 }
 
