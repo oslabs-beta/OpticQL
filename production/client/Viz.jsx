@@ -14,9 +14,8 @@ function GraphViz() {
   const [graph, setGraph] = useState(
     {
       nodes: [
-        { id: 1, label: "Query", title: "node 1 tootip text", color: 'red', heightConstraint: {
-          minimum: '50'
-        }, title: 'DATA GOES HERE', font: {
+        { id: 1, label: "Query", title: "node 1 tootip text", color: 'red', heightConstraint: '200'
+        , title: 'DATA GOES HERE', font: {
           size: 20
         }, shape: 'circle'
       
@@ -40,14 +39,18 @@ function GraphViz() {
   );
    const [options, setOptions] = useState(
     {
-      // layout: {
-      //   hierarchical: true
-      // },
+      layout: {
+        improvedLayout: true
+      },
       physics:{
         enabled: true,
       },
       nodes: {
-        shape: 'circle'
+        shape: 'circle',
+        // widthConstraint: 35,
+        font: {
+          size: 10,
+        }
       },
       interaction: {
         hover: true,
@@ -180,10 +183,12 @@ function GraphViz() {
         // SAVE QUERYOBJECT IN THE DATABASE
         const vizNodes = [];
         const vizEdges = [];
-        const queryNode = {id: "Query", label: "Query", title: "TBD" }
+        const queryNode = {id: "Query", label: "Query", title: "TBD", color: 'rgba(90, 209, 104, 1)', heightConstraint:75}
         vizNodes.push(queryNode)
+        const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
+        let colorPosition = 0;
         for (let key in queryObject){
-          const node = {id: key, label: key, title: key};
+          const node = {id: key, label: key, title: key, group: key, heightConstraint: 50, color: colorArr[colorPosition]};
           vizNodes.push(node);
           vizEdges.push({from: "Query", to: key})
           const prop = key;
@@ -191,11 +196,12 @@ function GraphViz() {
           for (let childNode in queryObject[prop]) {
             console.log('key', prop)
             console.log('childNode', childNode)
-            const subNode = {id: prop + '.' + childNode, label: prop + '.' + childNode, title: prop + '.' + childNode};
+            const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color: colorArr[colorPosition]};
             vizNodes.push(subNode);
-            vizEdges.push({from: prop, to: prop + '.' + childNode})
+            vizEdges.push({from: prop, to: prop + '.' + childNode})     
           }
           // { from: 1, to: 4 },
+          colorPosition += 1;
         }
        console.log('nodes', vizNodes);
        console.log('edges', vizEdges);
