@@ -13,6 +13,7 @@ import Graph from "react-graph-vis";
 
 function GraphViz() {
   const { store } = useContext(Context);
+  const [net, setNet] = useState({}) 
 
   const [graph, setGraph] = useState(
     {
@@ -274,9 +275,9 @@ function GraphViz() {
             newNodeArr.push(el);
 
 
-            // EXTRA RANDOM NODES TO TEST:
-            const idExtra = 100 + i;
-            newNodeArr.push({id: idExtra, title: 'hello', label: 'hello'})
+            // // EXTRA RANDOM NODES TO TEST:
+            // const idExtra = 100 + i;
+            // newNodeArr.push({id: idExtra, title: 'hello', label: 'hello'})
 
 
           }
@@ -286,17 +287,20 @@ function GraphViz() {
 
         const edgesArr = graph.edges;
         
-        setGraph({})
+        // setGraph({})
+
+
+        net.network.setData({
+          edges: edgesArr , 
+          nodes: newNodeArr,
+        });
         
         // setGraph({
         //   edges: edgesArr , 
         //   nodes: newNodeArr,
         // })
 
-        function updateViz (x, y) {
-          setGraph({nodes: x, edges: y})
-        }
-        updateViz(newNodeArr, edgesArr)
+    
 
         console.log('NEW GRAPH', graph)
         // if not just add to new node array
@@ -305,7 +309,7 @@ function GraphViz() {
     }, [store.query.data])
 
     
-    function updateViz2 (x, y) {
+    function updateViz (x, y) {
       // trigger somethign that updates viz
       setGraph({nodes: x, edges: y})
       // console.log('updating VIZ: ', graph)
@@ -332,17 +336,17 @@ function GraphViz() {
     return (
       <div>
       <button onClick={clickSchema}>vis.js Schema update</button>
-      <button onClick={updateViz2}>VIZ UPDATE</button>
+      <button onClick={updateViz}>VIZ UPDATE</button>
 
       <Graph
         graph={graph}
         options={options}
         events={events}
         // ref={ref => (this.g = ref)}
-        // getNetwork={network => {
-        //   //  if you want access to vis.js network api you can set the state in a parent component using this property
-        //   this.setState({ network })
-        // }}
+        getNetwork={network => {
+          //  if you want access to vis.js network api you can set the state in a parent component using this property
+          setNet({ network })
+        }}
       />
       </div>
     );
