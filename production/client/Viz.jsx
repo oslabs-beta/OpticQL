@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
 
-
+const { store } = useContext(Context);
 // vis-network.esm.min.js:37 
 /*
 //child nodes are properties of a type node. these will have values of strings or numbers.
@@ -9,6 +10,8 @@ import Graph from "react-graph-vis";
 //edge will be between 2 type nodes.
 */
 
+
+const data = store.query.schema
 
 function GraphViz() {
   const [graph, setGraph] = useState(
@@ -207,6 +210,7 @@ function GraphViz() {
        console.log('edges', vizEdges);
         setGraph({nodes: vizNodes, edges: vizEdges})
       })
+      console.log("STORE SCHEMA", store.query.schema)
     }
 
 

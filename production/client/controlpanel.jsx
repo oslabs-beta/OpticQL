@@ -74,7 +74,11 @@ const ControlPanel = () => {
 					console.log('Schema ID Generated: ', id);
 				})
 				.catch(err => console.log("Error with schema database insertion: ", err))
-		}
+    }
+    dispatch({
+      type: "updateSchema",
+      payload: savedSchema
+    });
 	}, [savedSchema])
 
 	// Requests all information from indexeddb for schemas
