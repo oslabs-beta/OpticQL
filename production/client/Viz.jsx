@@ -52,9 +52,9 @@ function GraphViz() {
       nodes: {
         shape: 'circle',
         // widthConstraint: 35,
-        font: {
-          size: 10,
-        }
+        // font: {
+        //   size: 10,
+        // }
       },
       interaction: {
         hover: true,
@@ -194,20 +194,20 @@ function GraphViz() {
         // SAVE QUERYOBJECT IN THE DATABASE
         const vizNodes = [];
         const vizEdges = [];
-        const queryNode = {id: "Query", label: "Query", title: "TBD", color: 'rgba(90, 209, 104, 1)', heightConstraint:75}
+        const queryNode = {id: "Query", label: "Query", title: "TBD", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
         vizNodes.push(queryNode)
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
         let colorPosition = 0;
         for (let key in queryObject){
-          const node = {id: key, label: key, title: key, group: key, heightConstraint: 50, color: colorArr[colorPosition]};
+          const node = {id: key, label: key, title: key, group: key, widthConstraint: 75, color: colorArr[colorPosition], font: {size: 16, align: 'center'}};
           vizNodes.push(node);
-          vizEdges.push({from: "Query", to: key})
+          vizEdges.push({from: "Query", to: key, length: 275})
           const prop = key;
           // console.log('PROP',prop)
           for (let childNode in queryObject[prop]) {
             // console.log('key', prop)
             // console.log('childNode', childNode)
-            const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color: colorArr[colorPosition]};
+            const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color: colorArr[colorPosition], font: {size: 10, align: 'center'}};
             vizNodes.push(subNode);
             vizEdges.push({from: prop, to: prop + '.' + childNode})     
           }
@@ -309,12 +309,12 @@ function GraphViz() {
     }, [store.query.data])
 
     
-    function updateViz (x, y) {
-      // trigger somethign that updates viz
-      setGraph({nodes: x, edges: y})
-      // console.log('updating VIZ: ', graph)
-      // setGraph({...graph})
-    }
+    // function updateViz (x, y) {
+    //   // trigger somethign that updates viz
+    //   setGraph({nodes: x, edges: y})
+    //   // console.log('updating VIZ: ', graph)
+    //   // setGraph({...graph})
+    // }
       
     //useEffect when store changes are made
     
@@ -336,7 +336,6 @@ function GraphViz() {
     return (
       <div>
       <button onClick={clickSchema}>vis.js Schema update</button>
-      <button onClick={updateViz}>VIZ UPDATE</button>
 
       <Graph
         graph={graph}
