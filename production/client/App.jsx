@@ -3,6 +3,7 @@ import { Context, initialState, reducer } from './store.jsx';
 import ControlPanel from './controlpanel.jsx';
 import QueryDisplay from './queryDisplay.jsx';
 import GraphViz from './Viz.jsx'
+import PerformanceDisplay from './performanceDisplay.jsx'
 
 const App = () => {
 
@@ -12,8 +13,9 @@ const App = () => {
 		<div>
 			<Context.Provider value={{ store, dispatch }}>
 				<ControlPanel />
-				<GraphViz />
 				<QueryDisplay />
+				<GraphViz />
+				<PerformanceDisplay />
 			</Context.Provider>
 		</div>
 	)
