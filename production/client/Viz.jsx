@@ -220,10 +220,7 @@ function GraphViz() {
       // })
     }
     useEffect(() => {
-      // {
-      // people {films {director} gender }
-      // planets {name}
-      // }
+   
       const greenObj = {};
       const queryRes = store.query.data;
 
@@ -234,7 +231,13 @@ function GraphViz() {
           if (key in convert) {
             val = convert[key];
             greenObj[val] = true
-            const newData = data[key][0];
+            // WHAT IF DATA[KEY][0] HAS A VALUE OF NULL
+            let newData; 
+            let count = 0;
+            while (!data[key][count]) {
+              count += 1;
+            }
+            newData = data[key][0];
             for (let prop in newData) {
               console.log('PROP-recHelp', prop)
               const propValue = val + '.' + prop
@@ -255,10 +258,60 @@ function GraphViz() {
         // console.log('CONVERT WORKS', convert)
         recHelp(queryRes)
         console.log(greenObj)
+        //  { id: 2, label: "Node 2", title: "node 2 tootip text", color: 'green' },
+        // setGraph({nodes: [] edges: []})
 
+        // 1. create a new node array
+        const newNodeArr = []
+        // 2. iterate old nodes array, check if greenObj[oldNode[id]], it exists, turn node green, 
+        graph.nodes.forEach((el, i)=> {
+          if (greenObj[el.id]) {
+            // turn el green
+            el.color = 'rgba(90, 209, 104, 1)'
+            el.title = 'CHANGED'
+            newNodeArr.push(el);
+          } else {
+            newNodeArr.push(el);
+
+
+            // EXTRA RANDOM NODES TO TEST:
+            const idExtra = 100 + i;
+            newNodeArr.push({id: idExtra, title: 'hello', label: 'hello'})
+
+
+          }
+        })
+        console.log(newNodeArr)
+
+
+        const edgesArr = graph.edges;
+        
+        setGraph({})
+        
+        // setGraph({
+        //   edges: edgesArr , 
+        //   nodes: newNodeArr,
+        // })
+
+        function updateViz (x, y) {
+          setGraph({nodes: x, edges: y})
+        }
+        updateViz(newNodeArr, edgesArr)
+
+        console.log('NEW GRAPH', graph)
+        // if not just add to new node array
+        // 3. Set graph via spread, but have nodes = newNode array
       }
-    })
+    }, [store.query.data])
 
+    
+    function updateViz2 (x, y) {
+      // trigger somethign that updates viz
+      setGraph({nodes: x, edges: y})
+      // console.log('updating VIZ: ', graph)
+      // setGraph({...graph})
+    }
+      
     //useEffect when store changes are made
     
     //if store.query !== {}
@@ -267,13 +320,20 @@ function GraphViz() {
 
     //grab query types and fields.
 
-    //iterate through visNodes array, compare to nodes in queryArray, and change all nodes in both to green.
+    //iterate through visNodes array, compare to nodes in greenObj, and change all nodes in both to green.
 
+
+      // {
+      // people {films {director} gender }
+      // planets {name}
+      // }
 
 
     return (
       <div>
       <button onClick={clickSchema}>vis.js Schema update</button>
+      <button onClick={updateViz2}>VIZ UPDATE</button>
+
       <Graph
         graph={graph}
         options={options}
