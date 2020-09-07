@@ -102,6 +102,8 @@ function GraphViz() {
 
     // network: null,
 
+    const [convert, setConvert] = useState({})
+
     function clickSchema() {
       console.log("STORE SCHEMA", store.schema)
       // fetch('http://localhost:3000/getSchema')
@@ -135,6 +137,7 @@ function GraphViz() {
         })
         // console.log("queryArr", queryArr)
         const setQuery = new Set();
+        const queryConvert = {};
         queryArr.forEach((el)=>{
           // split element via ":" and grab last element
           if (el.includes(":")) {
@@ -145,9 +148,12 @@ function GraphViz() {
             const found = lastElSplit.match(regex);
             // console.log('found', found[0]);
             setQuery.add(found[0])
+            const left = elSplit[0];
+            const leftName = left.split("(");
+            queryConvert[leftName[0]] = found[0];
           }
-          
         })
+        setConvert(queryConvert);
         //check that index !== query or mutation index
         const queryObject = {};
         formatted.forEach((el, i)=>{
@@ -214,10 +220,41 @@ function GraphViz() {
       // })
     }
     useEffect(() => {
+      // {
+      // people {films {director} gender }
+      // planets {name}
+      // }
       const greenObj = {};
-      if (store.query.data) {
-        console.log('STOREQUERYEFFECT', store.query.data)
+      const queryRes = store.query.data;
 
+      const recHelp = (data) => {
+        for (let key in data) {
+          let val;
+          console.log('KEY-recHelp', key)
+          if (key in convert) {
+            val = convert[key];
+            greenObj[val] = true
+            const newData = data[key][0];
+            for (let prop in newData) {
+              console.log('PROP-recHelp', prop)
+              const propValue = val + '.' + prop
+              greenObj[propValue] = true;
+              if (Array.isArray(newData[prop])) {
+                const newObj = {};
+                newObj[prop] = newData[prop];
+                console.log('NEWOBJ-recHelp', newObj);
+                recHelp(newObj)
+              }
+            }
+          } 
+        }   
+      }
+
+      if (queryRes) {
+        console.log('STOREQUERYEFFECT', queryRes)
+        // console.log('CONVERT WORKS', convert)
+        recHelp(queryRes)
+        console.log(greenObj)
 
       }
     })
