@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Context } from './store.jsx';
-import ErrorHandler from './errorHandler.jsx';
 
 const QueryDisplay = () => {
 
 	const { store } = useContext(Context);
-
-	console.log("store.query.data:", store.query.data)
-	console.log("store.query.extesions", store.query.extensions)
 
 	// Handles error messages from queries
 	// const errorArr = [];
