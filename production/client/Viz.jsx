@@ -196,10 +196,10 @@ function GraphViz() {
           vizNodes.push(node);
           vizEdges.push({from: "Query", to: key})
           const prop = key;
-          console.log('PROP',prop)
+          // console.log('PROP',prop)
           for (let childNode in queryObject[prop]) {
-            console.log('key', prop)
-            console.log('childNode', childNode)
+            // console.log('key', prop)
+            // console.log('childNode', childNode)
             const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color: colorArr[colorPosition]};
             vizNodes.push(subNode);
             vizEdges.push({from: prop, to: prop + '.' + childNode})     
@@ -209,10 +209,28 @@ function GraphViz() {
         }
        console.log('nodes', vizNodes);
        console.log('edges', vizEdges);
+ 
         setGraph({nodes: vizNodes, edges: vizEdges})
       // })
     }
+    useEffect(() => {
+      const greenObj = {};
+      if (store.query.data) {
+        console.log('STOREQUERYEFFECT', store.query.data)
 
+
+      }
+    })
+
+    //useEffect when store changes are made
+    
+    //if store.query !== {}
+
+    //take store.query.data and iterate through items. 
+
+    //grab query types and fields.
+
+    //iterate through visNodes array, compare to nodes in queryArray, and change all nodes in both to green.
 
 
 
