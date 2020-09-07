@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
 
-const { store } = useContext(Context);
 // vis-network.esm.min.js:37 
 /*
 //child nodes are properties of a type node. these will have values of strings or numbers.
@@ -11,9 +10,10 @@ const { store } = useContext(Context);
 */
 
 
-const data = store.query.schema
 
 function GraphViz() {
+  const { store } = useContext(Context);
+
   const [graph, setGraph] = useState(
     {
       nodes: [
@@ -103,14 +103,15 @@ function GraphViz() {
     // network: null,
 
     function clickSchema() {
-      fetch('http://localhost:3000/getSchema')
-      .then((res) => {
-        return res.json()
-      })
-      .then((data)=>{
+      console.log("STORE SCHEMA", store.schema)
+      // fetch('http://localhost:3000/getSchema')
+      // .then((res) => {
+      //   return res.json()
+      // })
+      // .then((data)=>{
         console.log('Updated schema: ')
         // console.log(data)
-        const arrTypes = data.schemaNew.split(/}/);
+        const arrTypes = store.schema.schemaNew.split(/}/);
         const formatted = arrTypes.map((type)=>{
           const split = type.split(/\n/);
           return split.map((field)=>{
@@ -209,8 +210,7 @@ function GraphViz() {
        console.log('nodes', vizNodes);
        console.log('edges', vizEdges);
         setGraph({nodes: vizNodes, edges: vizEdges})
-      })
-      console.log("STORE SCHEMA", store.query.schema)
+      // })
     }
 
 
