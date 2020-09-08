@@ -40,7 +40,8 @@ function GraphViz() {
   const [events, setEvents] = useState({});
   const [convert, setConvert] = useState({})
 
-    function clickSchema() {
+    useEffect(()=>{
+      if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
         const formatted = arrTypes.map((type)=>{
           const split = type.split(/\n/);
@@ -129,7 +130,8 @@ function GraphViz() {
        console.log('nodes', vizNodes);
        console.log('edges', vizEdges);
         setGraph({nodes: vizNodes, edges: vizEdges})
-    }
+      }
+      }, [store.schema.schemaNew])
 
     useEffect(() => {
       const greenObj = {};
@@ -183,7 +185,7 @@ function GraphViz() {
 
     return (
       <div>
-      <button onClick={clickSchema}>vis.js Schema update</button>
+      {/* <button onClick={clickSchema}>vis.js Schema update</button> */}
 
       <Graph
         graph={graph}
