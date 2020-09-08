@@ -107,14 +107,14 @@ const ControlPanel = () => {
 			<p>User Control Panel</p>
 			<form onSubmit={handleSubmit}>
 				<div className="form-group">
-					<label htmlFor="query">Please enter query here</label>
-					<textarea className="form-control" id="query" rows="3" value={query} onChange={handleChange}></textarea>
+					<label htmlFor="query"></label>
+					<textarea className="form-control" id="query" value={query} onChange={handleChange} placeholder="Please enter query here"></textarea>
 				</div>
-				<input type="submit" value="Submit" />
+				<input type="submit" value="Submit Query" />
 			</form>
-			<button key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button>
-			<button key={2} onClick={requestSchema}>Request updated Schema</button>
-			<button key={3} onClick={schemaDatabaseGrab}>Check Database for Schema</button>
+			{/* <button key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button> */}
+			<button key={2} onClick={requestSchema}>Update Schema</button>
+			{/* <button key={3} onClick={schemaDatabaseGrab}>Check Database for Schema</button> */}
 		</div>
 	)
 

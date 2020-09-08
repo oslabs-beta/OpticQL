@@ -3,7 +3,8 @@ import { Context, initialState, reducer } from './store.jsx';
 import ControlPanel from './controlpanel.jsx';
 import QueryDisplay from './queryDisplay.jsx';
 import GraphViz from './Viz.jsx'
-import PerformanceDisplay from './performanceDisplay.jsx'
+import PerformanceDisplay from './performanceDisplay.jsx';
+import NavBar from './navBar.jsx'
 
 const App = () => {
 
@@ -11,7 +12,8 @@ const App = () => {
 
 	return (
 		<div>
-			<Context.Provider value={{ store, dispatch }}>
+			<Context.Provider value={{ store, dispatch }}>	
+				<NavBar />
 				<div id='mainContainer'>
 					<div className="row" id='topRow'>
 						<div className="quadrant" id="controlPanel">

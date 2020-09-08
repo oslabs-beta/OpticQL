@@ -1,9 +1,17 @@
+#title {
+	text-align: center;
+}
+#buttonContainer {
+	display: flex;
+	justify-content: flex-end;
+	width: 95%;
+}
 .row {
 	display: flex;
   height: 700px;
 	width: 90%;
 	height: 45%;
-	min-width: 400px;
+	min-width: 540px;
 	min-height: 500px;
 }
 
@@ -22,8 +30,9 @@
   width: 50%;
 	min-width: 200px;
 	/* min-height: 100px; */
-	max-height: 500px;
+	height: 500px;
 	margin: 0px 10px 0px 10px;
+	padding: 10px;
 }
 
 #mainContainer {
@@ -31,5 +40,14 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  background-color: red
+  background-color: red;
+  min-width: 600px;
 }
+#queryDisplay {
+	overflow-y: scroll;
+}
+#query {
+	min-height: 200px;
+	min-width: 100%;
+}
+
