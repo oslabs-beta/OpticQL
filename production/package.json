@@ -27,12 +27,10 @@
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
     "react": "^16.13.1",
-    "react-canvas-js": "^1.0.1",
     "react-dom": "^16.13.1",
     "react-graph-vis": "^1.0.5",
     "react-indexed-db": "^1.0.12",
-    "react-router-dom": "^5.2.0",
-    "vega-embed": "^6.11.1"
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
@@ -43,10 +41,7 @@
     "electron": "^10.1.0",
     "electron-builder": "^22.8.0",
     "nodemon": "^2.0.4",
-    "react-vega": "^7.4.1",
     "style-loader": "^1.2.1",
-    "vega": "^5.15.0",
-    "vega-lite": "^4.15.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
