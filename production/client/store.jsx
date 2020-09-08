@@ -1,6 +1,9 @@
 import React from 'react';
 
-export const initialState = { query: {} }
+export const initialState = {
+	query: {},
+	newVal: '',
+}
 
 export const reducer = (state, action) => {
 	switch (action.type) {
