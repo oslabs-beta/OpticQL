@@ -33,8 +33,9 @@ function GraphViz() {
       edges: {
         color: "#000000"
       },
-      height: "600px",
-      width: "700px"
+      height: "500px",
+      width: "100%",
+      autoResize: true,
     },
    )
   const [events, setEvents] = useState({});
@@ -185,8 +186,6 @@ function GraphViz() {
 
     return (
       <div>
-      {/* <button onClick={clickSchema}>vis.js Schema update</button> */}
-
       <Graph
         graph={graph}
         options={options}

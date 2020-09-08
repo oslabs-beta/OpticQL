@@ -1,0 +1,35 @@
+.row {
+	display: flex;
+  height: 700px;
+	width: 90%;
+	height: 45%;
+	min-width: 400px;
+	min-height: 500px;
+}
+
+#topRow {
+	background-color: yellow;
+	margin: 20px;
+}
+
+#bottomRow {
+	background-color: blue;
+	margin: 0px 20px 20px 20px;
+}
+
+.quadrant {
+  border: solid 1px black;
+  width: 50%;
+	min-width: 200px;
+	/* min-height: 100px; */
+	max-height: 500px;
+	margin: 0px 10px 0px 10px;
+}
+
+#mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: red
+}
