@@ -214,7 +214,7 @@ function GraphViz() {
     return (
       <div>
       <div className='topLeftButtons' id='vizQuadrant'>
-        <button className="quadrantButton" className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
+        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
         <button className="quadrantButton">View Full Screen</button>
       </div>
       <Graph
