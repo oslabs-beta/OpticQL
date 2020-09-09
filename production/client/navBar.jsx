@@ -5,8 +5,8 @@ const NavBar = () => {
 return (
 	<div>
     <div id="buttonContainer">
-      <button>Button1</button>
-      <button>Button2</button>
+      <button className="navButton">Save</button>
+      <button className="navButton">History</button>
     </div>
     <div id='title'>
 		  <h1>OpticQL</h1>

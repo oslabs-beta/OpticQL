@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
+import { useIndexedDB } from 'react-indexed-db';
 
 function GraphViz() {
-  const { store } = useContext(Context);
-  const [net, setNet] = useState({}) 
+  const { store, dispatch } = useContext(Context);
+  const [net, setNet] = useState({})
+  const [savedSchema, saveSchema] = useState();
+  const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
       nodes: [{id: 1, label: 'Click Update Schema', title: 'Click Update Schema', font: {size: 18}, color: 'rgba(255, 102, 102, 1)'}], 
@@ -184,8 +187,36 @@ function GraphViz() {
       }
     }, [store.query.data])
 
+
+    // Make query to User App's server API for updated GraphQL schema
+	function requestSchema () {
+		fetch('http://localhost:3000/getSchema')
+			.then(res => res.json())
+			.then(res => saveSchema(res))
+			.catch(err => console.log('Error with fetching updated schema from User app: ', err));
+	}
+	// Invokes when savedSchema state is update, sending schema to indexeddb table of schema
+	useEffect(() => {
+		if (savedSchema) {
+			schemaDB.add({ name: savedSchema })
+				.then(id => {
+					console.log('Schema ID Generated: ', id);
+				})
+				.catch(err => console.log("Error with schema database insertion: ", err))
+				dispatch({
+					type: "updateSchema",
+					payload: savedSchema
+				});
+    }
+	}, [savedSchema])
+
+
     return (
       <div>
+      <div className='quadrantTitle' id='vizQuadrant'>
+        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
+        <button>View Full Screen</button>
+      </div>
       <Graph
         graph={graph}
         options={options}

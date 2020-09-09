@@ -6,8 +6,7 @@ import GraphViz from './Viz.jsx'
 import PerformanceDisplay from './performanceDisplay.jsx';
 import NavBar from './navBar.jsx'
 
-const App = () => {
-
+const App = () => {	
 	const [store, dispatch] = useReducer(reducer, initialState)
 
 	return (

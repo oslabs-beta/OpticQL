@@ -7,12 +7,11 @@ import { Context } from './store.jsx';
 const ControlPanel = () => {
 
 	const { dispatch } = useContext(Context);
-
+	
 	const queryDB = useIndexedDB('queryData');
 	const schemaDB = useIndexedDB('schemaData');
 	const [query, setQuery] = useState();
 	const [savedQuery, saveQuery] = useState();
-	const [savedSchema, saveSchema] = useState();
 
 	// Make query to User App's server API, in turn, User's database
 
@@ -57,29 +56,7 @@ const ControlPanel = () => {
 			.catch(err => console.log("Error with getting all records from query database: ", err));
 	};
 
-	// Make query to User App's server API for updated GraphQL schema
-
-	function requestSchema () {
-		fetch('http://localhost:3000/getSchema')
-			.then(res => res.json())
-			.then(res => saveSchema(res))
-			.catch(err => console.log('Error with fetching updated schema from User app: ', err));
-	}
-	// Invokes when savedSchema state is update, sending schema to indexeddb table of schema
-
-	useEffect(() => {
-		if (savedSchema) {
-			schemaDB.add({ name: savedSchema })
-				.then(id => {
-					console.log('Schema ID Generated: ', id);
-				})
-				.catch(err => console.log("Error with schema database insertion: ", err))
-				dispatch({
-					type: "updateSchema",
-					payload: savedSchema
-				});
-    }
-	}, [savedSchema])
+	
 
 	// Requests all information from indexeddb for schemas
 
@@ -104,16 +81,16 @@ const ControlPanel = () => {
 
 	return (
 		<div>
-			<p>User Control Panel</p>
+			<div className='quadrantTitle' id='controlQuadrant'>
+			</div>
 			<form onSubmit={handleSubmit}>
 				<div className="form-group">
 					<label htmlFor="query"></label>
 					<textarea className="form-control" id="query" value={query} onChange={handleChange} placeholder="Please enter query here"></textarea>
+					<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
 				</div>
-				<input type="submit" value="Submit Query" />
 			</form>
 			{/* <button key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button> */}
-			<button key={2} onClick={requestSchema}>Update Schema</button>
 			{/* <button key={3} onClick={schemaDatabaseGrab}>Check Database for Schema</button> */}
 		</div>
 	)
