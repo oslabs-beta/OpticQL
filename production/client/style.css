@@ -1,6 +1,10 @@
-
+body {
+	background-color: #06181f;
+}
 #title {
 	text-align: center;
+	color: white;
+	font-size: 24px;
 }
 #buttonContainer {
 	display: flex;
@@ -22,7 +26,8 @@
 	border-radius: 15px;
 	border: 0px;
 	color: white;
-	padding: 15px;
+  padding: 15px;
+  height: 400px;
 }
 /* #controlPanel {
 	padding: 20px 25px 20px 20px;
@@ -37,7 +42,6 @@
 }
 
 .quadrant {
-	border: solid 1px black;
 	border-radius: 20px;
   width: 50%;
 	min-width: 200px;
@@ -65,20 +69,28 @@
 }
 
 #queryScroll {
-	overflow-y: scroll;
-	height: 430px;
+	overflow-y: auto;
+	height: 415px;
 	background-color: #032330;
 	color: white;
-	border-radius: 15px;
+  border-radius: 15px;
+  padding: 0px 15px 15px 15px;
 }
 
 .quadrantButton {
 	background-color: #75E6DA;
 	font-size: 16px;
 	color:#05445E;
-	border: solid 1px navy;
+	border: none;
 	margin: 0px 20px 0px 0px;
 	height: 100%;
 	/* width: 150px; */
 	border-radius: 10px;
 }
+
+#queryPlaceholder {
+  color: white
+}
+/* #form-group {
+  height: 430px;
+} */

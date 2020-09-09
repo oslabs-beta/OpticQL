@@ -83,7 +83,7 @@ const ControlPanel = () => {
 		<div>
 		
 			<form onSubmit={handleSubmit}>
-				<div className="form-group">
+				<div id="form-group">
 					<div className='topLeftButtons' id='controlQuadrant'>
 						<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
 					</div>

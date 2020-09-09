@@ -227,7 +227,11 @@ const PerfData = () => {
       container.push(containerLine);
     }
   }
-  return <div>{container}</div>;
+  return (
+    <div>
+      {store.query.data ? <div>{container}</div> : <div id='queryPlaceholder'>No query results to display</div>}
+    </div>
+  );
 };
 
 export default PerfData;
