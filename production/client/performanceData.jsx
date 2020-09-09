@@ -14,29 +14,36 @@ import {
 const PerfData = () => {
   const { store } = useContext(Context);
 
-  const perfObj = {};
-  // {
-  //   people.gender: [[people.0.gender, duration], [people.1.gender, duration]]
-  //   people.name: [[people.0.name, duration], [people.1.name, duration]]
-  //   people.films: [[people.0.films, duration], [people.1.films, duration]]
-  //   people.films._id:
-  // }
-  const topLevelQueryArr = [];
-  const perfAvg = {};
-  // {
-  // people.gender: avg,
-  // people.name: avg,
-  // people.films: avg
-  // }
+  // Declaring variables to re-assign if store.query.extensions is not falsy
+  const data = [];
+  const container = [];
+  let overallResTime;
+  let startTime;
+  let endTime;
 
-  let data;
-  let container = [];
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
 
   if (store.query.extensions) {
-    // Top-level query information
+    // Declaring variables
+    const perfObj = {};
+    const topLevelQueryArr = [];
+    const perfAvg = {};
+    const anomaliesObj = {};
+
+    // Saving top-level query information --> formatting overall response time (in ms) to include commas before the decimal
+    overallResTime = numberWithCommas(
+      (store.query.extensions.tracing.duration / 1000000).toFixed(4)
+    );
+
+    // Saving the rest of the top-level query information
+    startTime = store.query.extensions.tracing.startTime;
+    endTime = store.query.extensions.tracing.endTime;
+
+    // Saving resolver-level information to a variable
     const performanceDataArray =
       store.query.extensions.tracing.execution.resolvers;
-    const overallResTime = store.query.extensions.tracing.duration;
 
     // Resolver-level query information
     for (let i = 0; i < performanceDataArray.length; i++) {
@@ -48,13 +55,10 @@ const PerfData = () => {
         topLevelQueryArr.push([pathStr, pathDuration]);
       } else {
         const pathStrJoined = currResolver.path.join(".");
-
         const pathKey = currResolver.path.filter(function (curEl) {
           return typeof curEl === "string";
         });
-
         const pathKeyJoined = pathKey.join(".");
-
         if (perfObj[pathKeyJoined]) {
           perfObj[pathKeyJoined].push([pathStrJoined, currResolver.duration]);
         } else {
@@ -73,27 +77,15 @@ const PerfData = () => {
       perfAvg[perfQuery] = Number(finalAvg.toFixed(4));
     }
 
-    console.log("perfObj ", perfObj);
-    console.log("topLevelQueryArr ", topLevelQueryArr);
-    console.log("performanceAvg:", perfAvg);
-
-    data = [];
-    //data is {[pathname:avgTime],[Pathname:avgTime],[Pathname:avgTime]}
-
-    const anomaliesObj = {};
-
     for (const [pathName, avg] of Object.entries(perfAvg)) {
       const anomaliesArr = [];
-
       const arrayOfTimes = perfObj[pathName];
-
       arrayOfTimes.forEach((el) => {
         const resTime = el[1] / 1000000;
         if (resTime > avg) {
           anomaliesArr.push(`${el[0]}: ${resTime} ms`);
         }
       });
-
       anomaliesObj[pathName] = anomaliesArr;
     }
 
@@ -101,28 +93,21 @@ const PerfData = () => {
       let queryKeyObj = {};
       queryKeyObj.x = queryKey;
       queryKeyObj.y = perfAvg[queryKey];
-      queryKeyObj.z = anomaliesObj[queryKey];
+      queryKeyObj.z = anomaliesObj[queryKey].length;
+      queryKeyObj.q = perfObj[queryKey].length;
+      queryKeyObj.t = numberWithCommas(perfAvg[queryKey].toFixed(4));
       data.push(queryKeyObj);
     }
 
-    console.log("DATA DATA: ", data);
-    //perfAvg=
-    // {
-    // people.gender: avg,
-    // people.name: avg,
-    // people.films: avg
-    // }
-    //    [{x: people.films.avg, y: avg},{},{}]
+    // Console logs for error-checking
 
-    //perfObg =
-    // {
-    //   people.gender: [[people.0.gender, duration], [people.1.gender, duration]]
-    //   people.name: [[people.0.name, duration], [people.1.name, duration]]
-    //   people.films: [[people.0.films, duration], [people.1.films, duration]]
-    //   people.films._id:
-    // }
+    console.log("perfObj ", perfObj);
+    console.log("topLevelQueryArr ", topLevelQueryArr);
+    console.log("perfAvg:", perfAvg);
+    console.log("anomaliesObj:", anomaliesObj);
+    console.log("data: ", data);
 
-    //container line chart
+    // Container for line chart --> Used when there is MORE THAN ONE path
     const containerLine = [
       <VictoryChart
         // theme={VictoryTheme.material}
@@ -130,12 +115,17 @@ const PerfData = () => {
         containerComponent={
           <VictoryVoronoiContainer
             voronoiDimension="x"
-            labels={({ datum }) => `No. of anomalies: ${datum.z.length}`}
+            labels={({ datum }) =>
+              `Avg. response time: ${datum.t} ms,
+              # total resolvers: ${datum.q},
+              # outlier resolvers: ${datum.z}`
+            }
             labelComponent={
               <VictoryTooltip
-                flyoutHeight={30}
-                cornerRadius={0}
-                flyoutStyle={{ fill: "yellow" }}
+                // flyoutHeight={30}
+                cornerRadius={5}
+                flyoutStyle={{ fill: "#D4F1F4" }}
+                style={{ fontSize: 6 }}
               />
             }
           />
@@ -143,16 +133,16 @@ const PerfData = () => {
       >
         <VictoryLine
           style={{
-            labels: { fontSize: 6 },
-            data: { stroke: "#c43a31" },
-            parent: { border: "1px solid #ccc" },
+            // labels: { fontSize: 6 },
+            data: { stroke: "#189AB4" },
+            // parent: { border: "1px solid #ccc" },
           }}
           data={data}
-          labels={({ datum }) => `Avg.: ${datum.y}`}
+          // labels={({ datum }) => `Avg.: ${datum.y}`}
         />
         <VictoryAxis
           style={{
-            tickLabels: { fontSize: 6, padding: 5 },
+            tickLabels: { fontSize: 6, padding: 15, angle: -45 },
           }}
         />
         <VictoryAxis
@@ -164,16 +154,22 @@ const PerfData = () => {
       </VictoryChart>,
     ];
 
+    // Container for bar chart --> Used when there is ONLY ONE path
     const containerBar = [
       <VictoryChart
         // theme={VictoryTheme.material}
         domainPadding={{ x: 10 }}
-        containerComponent={<VictoryZoomContainer />}
+        // containerComponent={<VictoryZoomContainer />}
       >
         <VictoryBar
+          style={{
+            data: { fill: "#189AB4" },
+          }}
           data={data}
           labels={({ datum }) =>
-            `Field: ${datum.x}, Response Time: ${datum.y}, No. of anomalies: ${datum.z.length}`
+            `Avg. response time: ${datum.t} ms,
+            # total resolvers: ${datum.q},
+            # outlier resolvers: ${datum.z}`
           }
           barWidth={({ index }) => index * 5 + 20}
           labelComponent={
@@ -199,10 +195,36 @@ const PerfData = () => {
       </VictoryChart>,
     ];
 
+    // Adding <p> tags with top-level query information to container array (for rendering)
+    container.push(
+      <p key={"overallPerfMetric: 1"}>Overall query start time: {startTime}</p>
+    );
+    container.push(
+      <p key={"overallPerfMetric: 2"}>Overall query end time: {endTime}</p>
+    );
+    container.push(
+      <p key={"overallPerfMetric: 3"}>
+        Overall response time: {overallResTime} ms
+      </p>
+    );
+
+    for (let i = 0; i < topLevelQueryArr.length; i++) {
+      let overallParentResTime = numberWithCommas(
+        (topLevelQueryArr[i][1] / 1000000).toFixed(4)
+      );
+
+      container.push(
+        <p
+          key={`Time Elapsed to parent resolver-${i}`}
+        >{`Response time to ${topLevelQueryArr[i][0]} field: ${overallParentResTime} ms`}</p>
+      );
+    }
+
+    // Conditional statement to assign container to either the line or bar chart
     if (data.length === 1) {
-      container = containerBar;
+      container.push(containerBar);
     } else {
-      container = containerLine;
+      container.push(containerLine);
     }
   }
   return <div>{container}</div>;
