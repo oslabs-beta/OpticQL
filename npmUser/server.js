@@ -32,17 +32,17 @@ const PORT = 3000;
 const typeDefs = `
 type Query {
   people: [Person!]!
-  person(id: Int!): Person!
+  person(_id: Int!): Person!
   films: [Film!]!
-  film(id: Int!): Film!
+  film(_id: Int!): Film!
   planets: [Planet!]!
-  planet(id: Int!): Planet!
+  planet(_id: Int!): Planet!
   species: [Species!]!
-  speciesByID(id: Int!): Species!
+  speciesByID(_id: Int!): Species!
   vessels: [Vessel!]!
-  vessel(id: Int!): Vessel!
+  vessel(_id: Int!): Vessel!
   starshipSpecs: [StarshipSpec!]!
-  starshipSpec(id: Int!): StarshipSpec!
+  starshipSpec(_id: Int!): StarshipSpec!
 }
 type Mutation {
   createPerson(
