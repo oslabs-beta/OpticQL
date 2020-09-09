@@ -3,7 +3,7 @@ import { Context, initialState, reducer } from './store.jsx';
 import ControlPanel from './controlpanel.jsx';
 import QueryDisplay from './queryDisplay.jsx';
 import GraphViz from './Viz.jsx'
-import PerformanceDisplay from './performanceDisplay.jsx';
+import PerformanceData from './performanceData.jsx';
 import NavBar from './navBar.jsx'
 
 const App = () => {	
@@ -24,7 +24,7 @@ const App = () => {
 					</div>
 					<div className="row" id="bottomRow">
 						<div id="performanceDisplay" className="quadrant">
-							<PerformanceDisplay />
+							<PerformanceData />
 						</div>
 						<div id="graphViz" className="quadrant">
 							<GraphViz />
