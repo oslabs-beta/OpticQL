@@ -81,13 +81,14 @@ const ControlPanel = () => {
 
 	return (
 		<div>
-			<div className='quadrantTitle' id='controlQuadrant'>
-			</div>
+		
 			<form onSubmit={handleSubmit}>
 				<div className="form-group">
-					<label htmlFor="query"></label>
+					<div className='topLeftButtons' id='controlQuadrant'>
+						<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
+					</div>
+					{/* <label htmlFor="query"></label> */}
 					<textarea className="form-control" id="query" value={query} onChange={handleChange} placeholder="Please enter query here"></textarea>
-					<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
 				</div>
 			</form>
 			{/* <button key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button> */}

@@ -31,12 +31,12 @@ const QueryDisplay = () => {
 
 	return (
 		<div>
-			<div>
-				<button onClick={handleGetResponse}>Response</button>
-				<button onClick={handleGetMetrics}>Metrics</button>
-				<button onClick={handleGetErrors}>Errors</button>
+			<div className="topLeftButtons">
+				<button className="quadrantButton" onClick={handleGetResponse}>Response</button>
+				<button className="quadrantButton" onClick={handleGetMetrics}>Metrics</button>
+				<button className="quadrantButton" onClick={handleGetErrors}>Errors</button>
 			</div>
-			<div>
+			<div id='queryScroll'>
 				{response && <pre><code>{JSON.stringify(store.query.data, null, 2)}</code></pre>}
 				{metrics && <pre><code>{JSON.stringify(store.query.extensions, null, 2)}</code></pre>}
 				{errors && <pre><code>{JSON.stringify(store.query.errors, null, 2)}</code></pre>}

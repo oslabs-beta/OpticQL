@@ -1,3 +1,4 @@
+
 #title {
 	text-align: center;
 }
@@ -14,25 +15,37 @@
 	min-width: 540px;
 	min-height: 500px;
 }
+.form-control {
+	outline: none;
+	background-color:  #032330;
+	width: 95%;
+	border-radius: 15px;
+	border: 0px;
+	color: white;
+	padding: 15px;
+}
+/* #controlPanel {
+	padding: 20px 25px 20px 20px;
+} */
 
 #topRow {
-	background-color: yellow;
 	margin: 20px;
 }
 
 #bottomRow {
-	background-color: blue;
 	margin: 0px 20px 20px 20px;
 }
 
 .quadrant {
-  border: solid 1px black;
+	border: solid 1px black;
+	border-radius: 20px;
   width: 50%;
 	min-width: 200px;
 	/* min-height: 100px; */
 	height: 500px;
-	margin: 0px 10px 0px 10px;
-	padding: 10px;
+	margin: 0px 20px 0px 20px;
+	padding: 20px;
+	background-color: #05445E
 }
 
 #mainContainer {
@@ -40,14 +53,32 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  background-color: red;
   min-width: 600px;
 }
-#queryDisplay {
-	overflow-y: scroll;
+.topLeftButtons {
+	height: 40px;
+	margin-bottom: 20px;
 }
 #query {
 	min-height: 200px;
-	min-width: 100%;
+	/* min-width: 100%; */
 }
 
+#queryScroll {
+	overflow-y: scroll;
+	height: 430px;
+	background-color: #032330;
+	color: white;
+	border-radius: 15px;
+}
+
+.quadrantButton {
+	background-color: #75E6DA;
+	font-size: 16px;
+	color:#05445E;
+	border: solid 1px navy;
+	margin: 0px 20px 0px 0px;
+	height: 100%;
+	/* width: 150px; */
+	border-radius: 10px;
+}

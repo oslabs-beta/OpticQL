@@ -36,7 +36,7 @@ function GraphViz() {
       edges: {
         color: "#000000"
       },
-      height: "500px",
+      height: "430px",
       width: "100%",
       autoResize: true,
     },
@@ -213,9 +213,9 @@ function GraphViz() {
 
     return (
       <div>
-      <div className='quadrantTitle' id='vizQuadrant'>
-        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
-        <button>View Full Screen</button>
+      <div className='topLeftButtons' id='vizQuadrant'>
+        <button className="quadrantButton" className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
+        <button className="quadrantButton">View Full Screen</button>
       </div>
       <Graph
         graph={graph}
