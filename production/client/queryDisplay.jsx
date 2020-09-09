@@ -34,14 +34,17 @@ const QueryDisplay = () => {
       setMetrics(false);
       setErrors(false);
     }
-	}
+  }
+  
+  let responseButton = response ? 'queryDisplayTrue' : 'queryDisplayFalse'
+
 
 	return (
 		<div>
 			<div className="topLeftButtons">
-				<button style={{backgroundColor:response? '#D4F1F4' : '#75E6DA'}} className="quadrantButton" onClick={handleGetResponse}>Response</button>
-				<button style={{backgroundColor:metrics? '#D4F1F4' : '#75E6DA'}}className="quadrantButton" onClick={handleGetMetrics}>Metrics</button>
-				<button style={{backgroundColor:errors? '#D4F1F4' : '#75E6DA'}}className="quadrantButton" onClick={handleGetErrors}>Errors</button>
+				<button className={response ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetResponse}>Response</button>
+				<button className={metrics ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetMetrics}>Metrics</button>
+				<button className={errors ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetErrors}>Errors</button>
 			</div>
       {!store.query.data && 
         <div id='queryPlaceholder'>No query results to display</div>
