@@ -59,6 +59,18 @@ body {
 	background-color: #05445E
 }
 
+.quadrant2 {
+  border-radius: 20px;
+  width: 50%;
+	min-width: 200px;
+	/* min-height: 100px; */
+	height: 650px;
+	margin: 10px 20px 10px 20px;
+	padding: 20px;
+	background-color: #05445E
+}
+
+
 #mainContainer {
   display: flex;
   justify-content: center;
@@ -66,10 +78,12 @@ body {
   flex-wrap: wrap;
   min-width: 600px;
 }
+
 .topLeftButtons {
 	height: 40px;
 	margin-bottom: 20px;
 }
+
 #query {
 	min-height: 200px;
 	/* min-width: 100%; */
@@ -87,7 +101,8 @@ body {
   padding: 0px 15px 15px 15px;
 }
 
-.quadrantButton {
+.quadrantButton, 
+.performanceMetricsButton {
 	background-color: #75E6DA;
 	font-size: 16px;
 	font-weight: 500;
@@ -161,4 +176,32 @@ input:focus {
 
 #graphBox:focus {
   outline:none;
+	border-radius: 10px;
+}
+
+.perfMetricPTag {
+	color: white;
+	font-size: 14px;
+	font-family: Arial;
+	margin: 0;
+	padding: 0;
+}
+
+.perfMetricPTagTitle {
+	color: white;
+	font-size: 20px;
+	font-family: Arial;
+	margin: 0;
+	padding: 0;
+}
+
+.performanceMetricsButton {
+	height: 40px;
+	margin-bottom: 20px;
+	margin-right: 140px;
+}
+
+.performanceMetricsButtonInfo {
+	display: flex;
+	flex-direction: right;
 }

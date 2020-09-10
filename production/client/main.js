@@ -7,9 +7,27 @@ function createWindow () {
 		width: 1280,
 		height: 720,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			nativeWindowOpen: true,
 		}
 	})
+
+	win.webContents.on('new-window',
+		(event, url, frameName, disposition, options, additionalFeatures) => {
+			// This is the name we chose for our window. You can have multiple names for
+			// multiple windows and each have their options
+			if (frameName === 'NewWindowComponent') {
+				event.preventDefault();
+				Object.assign(options, {
+					// This will prevent interactions with the mainWindow
+					parent: win,
+					width: 300,
+					height: 300,
+					// You can also set `left` and `top` positions
+				});
+				event.newGuest = new BrowserWindow(options);
+			}
+		});
 
 	// and load the index.html of the app.
 	// win.loadFile('client/index.html')
@@ -32,6 +50,9 @@ app.whenReady().then(createWindow)
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+
+
+
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
 		app.quit()

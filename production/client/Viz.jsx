@@ -38,7 +38,7 @@ function GraphViz() {
       edges: {
         color: '#c8c8c8'
       },
-      height: "430px",
+      height: "580px",
       width: "100%",
 
       autoResize: true,

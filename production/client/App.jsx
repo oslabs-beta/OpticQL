@@ -23,10 +23,10 @@ const App = () => {
 						</div>
 					</div>
 					<div className="row" id="bottomRow">
-						<div id="performanceDisplay" className="quadrant">
+						<div id="performanceDisplay" className="quadrant2">
 							<PerformanceData />
 						</div>
-						<div id="graphViz" className="quadrant">
+						<div id="graphViz" className="quadrant2">
 							<GraphViz />
 						</div>
 					</div>
