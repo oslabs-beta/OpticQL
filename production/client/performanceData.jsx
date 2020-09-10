@@ -1,7 +1,5 @@
 import React, { useState, useContext } from "react";
-import NewWindow from 'react-new-window'
 import { Context } from "./store.jsx";
-import TestWindow from "./testWindow.jsx"
 import ExpandPerfData from "./expandPerfData.jsx"
 
 import {
