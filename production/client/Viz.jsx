@@ -189,6 +189,7 @@ function GraphViz() {
       }
 
       if (queryRes && store.schema.schemaNew) {
+        
         recHelp(queryRes)
         const newNodeArr = []
         graph.nodes.forEach((el, i)=> {
