@@ -38,13 +38,16 @@ const QueryDisplay = () => {
   
   let responseButton = response ? 'queryDisplayTrue' : 'queryDisplayFalse'
 
-
+  // <img src="./assets/logo2.png" />
 	return (
 		<div>
-      {!store.query.data && 
+      {(!store.query.data && !store.loading) &&
         <div id='queryPlaceholder'>No query results to display</div>
       }
-      {store.query.data && 
+      {store.loading && 
+          <img src="./assets/loading.gif" className="loading" />
+      }
+      {(store.query.data && !store.loading) &&
         <div>
           <div className="topLeftButtons">
             <button className={response ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetResponse}>Response</button>

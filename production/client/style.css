@@ -1,5 +1,4 @@
 
-
 body {
 	background-color: #06181f;
 	font-family: 'Roboto', sans-serif;
@@ -8,10 +7,14 @@ body {
 #title {
 	text-align: center;
 }
+
 #buttonContainer {
 	display: flex;
 	justify-content: flex-end;
 	width: 95%;
+}
+.loading {
+	text-align: center;
 }
 .row {
 	display: flex;

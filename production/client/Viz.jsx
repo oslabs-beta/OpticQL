@@ -153,13 +153,14 @@ function GraphViz() {
             edges: vizEdges, 
             nodes: vizNodes,
           });
-        } else {
-          setGraph({nodes: vizNodes, edges: vizEdges})
-        }
+          // reset setGraph to have empty nodes and edges
+        } 
+        setGraph({nodes: vizNodes, edges: vizEdges})
       }
       }, [newSchema])
 
     useEffect(() => {
+      console.log('STORE.QUERY.DATA CHANGED:', store.query.data)
       const greenObj = {};
       const queryRes = store.query.data;
       const recHelp = (data) => {
@@ -189,10 +190,10 @@ function GraphViz() {
       }
 
       if (queryRes && store.schema.schemaNew) {
-        
         recHelp(queryRes)
         const newNodeArr = []
         graph.nodes.forEach((el, i)=> {
+          // ISSUE IS THAT GRAPH.NODES HAS OLD GREEN NODES!!!
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
             el.color = 'rgba(90, 209, 104, 1)'
@@ -203,8 +204,9 @@ function GraphViz() {
           }
         })
         const edgesArr = graph.edges;
+        console.log('data is being reset here w/ new green nodes:')
         net.network.setData({
-          edges: edgesArr , 
+          edges: edgesArr, 
           nodes: newNodeArr,
         });
         greenNodeOn(true);

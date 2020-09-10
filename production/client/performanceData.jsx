@@ -229,7 +229,9 @@ const PerfData = () => {
   }
   return (
     <div>
-      {store.query.data ? <div>{container}</div> : <div id='queryPlaceholder'>No query results to display</div>}
+      {store.loading && <img src="./assets/loading.gif" />}
+      {(!store.query.data && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
+      {(store.query.data && !store.loading) && <div>{container}</div>}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { Context } from './store.jsx';
 
 const ControlPanel = () => {
 
-	const { dispatch } = useContext(Context);
+	const { dispatch, store } = useContext(Context);
 	
 	const queryDB = useIndexedDB('queryData');
 	const schemaDB = useIndexedDB('schemaData');
@@ -16,6 +16,11 @@ const ControlPanel = () => {
 	// Make query to User App's server API, in turn, User's database
 
 	function makeQuery () {
+    // UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
+    dispatch({
+      type: "updateLoading",
+      payload: true
+    });
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
 			headers: {
@@ -27,8 +32,20 @@ const ControlPanel = () => {
 			})
 		})
 			.then(res => res.json())
-			.then(res => saveQuery(res))
-			.catch(err => console.log("This is the error: ", err));
+			.then((res) => {
+        saveQuery(res)
+        dispatch({
+          type: "updateLoading",
+          payload: false
+        });
+      })
+			.catch(err => {
+        dispatch({
+					type: "updateLoading",
+					payload: false
+        });
+        console.log("This is the error: ", err);
+      })
 	}
 
 	// Invokes when savedQuery state is update, sending query to indexeddb
@@ -76,12 +93,11 @@ const ControlPanel = () => {
 
 	function handleSubmit (e) {
 		e.preventDefault();
-		makeQuery();
+    makeQuery();
 	}
 
 	return (
 		<div>
-		
 			<form onSubmit={handleSubmit}>
 				<div id="form-group">
 					<div className='topLeftButtons' id='controlQuadrant'>
