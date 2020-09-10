@@ -17,16 +17,6 @@ import {
 
 const PerfData = () => {
 
-	// Function definition to open up a new window
-	// const demo = () => {
-	// 	console.log('This is the demo function');
-
-	// 	return (
-	// 		< NewWindow >
-	// 			<h1>Hi 👋</h1>
-	// 		</NewWindow >)
-	// }
-
 	const { store } = useContext(Context);
 	const [showWindowPortal, setWindowPortal] = useState(false);
 	// const [outerPerformanceObj, setPerformanceObj] = useState({});
@@ -148,7 +138,7 @@ const PerfData = () => {
 								// flyoutHeight={30}
 								cornerRadius={5}
 								flyoutStyle={{ fill: "#D4F1F4" }}
-								style={{ fontSize: 8 }}
+								style={{ fontSize: 9 }}
 							/>
 						}
 					/>
