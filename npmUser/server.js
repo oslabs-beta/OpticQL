@@ -226,7 +226,6 @@ type Species {
   films: [Film]
 }
 type Vessel {
-	id: Int!
   _id: Int!
   cost_in_credits: Int
   length: String
@@ -530,7 +529,6 @@ const resolvers = {
 
 	Person: {
 		vessels: (people) => {
-			console.log(people._id)
 			try {
 				const query = 'SELECT * FROM vessels LEFT OUTER JOIN pilots ON vessels._id = pilots.vessel_id WHERE pilots.person_id = $1';
 				const values = [people._id]
