@@ -7,6 +7,8 @@ function GraphViz() {
   const { store, dispatch } = useContext(Context);
   const [net, setNet] = useState({})
   const [savedSchema, saveSchema] = useState();
+  const [newSchema, updateSchema] = useState(0);
+  const [greenNode, greenNodeOn] = useState(false)
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
@@ -46,6 +48,7 @@ function GraphViz() {
   const [convert, setConvert] = useState({})
 
     useEffect(()=>{
+      console.log('TRIGGERED WHEN THERE IS A NEW SCHEMA IN THE DATABASE')
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
         const formatted = arrTypes.map((type)=>{
@@ -132,11 +135,29 @@ function GraphViz() {
           }
           colorPosition += 1;
         }
-       console.log('nodes', vizNodes);
-       console.log('edges', vizEdges);
-        setGraph({nodes: vizNodes, edges: vizEdges})
+      //  console.log('nodes', vizNodes);
+      //  console.log('edges', vizEdges);
+        console.log('newSchema', newSchema)
+
+        // if (newSchema === 1) {
+        //   setGraph({nodes: vizNodes, edges: vizEdges})
+        // } else {
+        //   net.network.setData({
+        //     edges: vizEdges , 
+        //     nodes: vizNodes,
+        //   });
+        // }
+        if (greenNode) {
+          greenNodeOn(false)
+          net.network.setData({
+            edges: vizEdges, 
+            nodes: vizNodes,
+          });
+        } else {
+          setGraph({nodes: vizNodes, edges: vizEdges})
+        }
       }
-      }, [store.schema.schemaNew])
+      }, [newSchema])
 
     useEffect(() => {
       const greenObj = {};
@@ -185,6 +206,7 @@ function GraphViz() {
           edges: edgesArr , 
           nodes: newNodeArr,
         });
+        greenNodeOn(true);
       }
     }, [store.query.data])
 
@@ -207,7 +229,8 @@ function GraphViz() {
 				dispatch({
 					type: "updateSchema",
 					payload: savedSchema
-				});
+        });
+        updateSchema(newSchema + 1);
     }
 	}, [savedSchema])
 
