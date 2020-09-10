@@ -249,25 +249,39 @@ const PerfData = () => {
 		// setPerformanceObj(performanceObj)
 	}
 
-	return <div>
-		<div className="performanceMetricsButtonInfo">
-			<button onClick={toggleWindowPortal}
-				className="performanceMetricsButton"
-			>
-				{/* {showWindowPortal ? 'Close the' : 'Open a'}  */}Expand Performance Metrics
-			</button>
-			<ExpandPerfData key={1} showWindow={showWindowPortal} container={htmlContainer} performance={performanceObj} />
-			{/* {showWindowPortal && (
-				<TestWindow>
-					<h1>Counter in a portal: {showWindowPortal}</h1>
-					<p>Even though I render in a different window, I share state!</p>
+  // {store.loading && <img src="./assets/loading.gif" />}
+  // {(!store.query.data && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
+  // {(store.query.data && !store.loading) && <div>{container}</div>}
 
-				</TestWindow>)} */}
 
-			<div>{htmlContainer}</div>
-		</div>
-		<div>{chartContainer}</div>
-	</div>;
+
+	return (
+  <div>
+    {store.loading && <img src="./assets/loading.gif" />}
+    {(!store.query.data && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
+    {(store.query.data && !store.loading) && 
+    <div>
+      <div className="performanceMetricsButtonInfo">
+        <button onClick={toggleWindowPortal}
+          className="performanceMetricsButton"
+        >
+          {/* {showWindowPortal ? 'Close the' : 'Open a'}  */}Expand Performance Metrics
+        </button>
+        <ExpandPerfData key={1} showWindow={showWindowPortal} container={htmlContainer} performance={performanceObj} />
+        {/* {showWindowPortal && (
+          <TestWindow>
+            <h1>Counter in a portal: {showWindowPortal}</h1>
+            <p>Even though I render in a different window, I share state!</p>
+
+          </TestWindow>)} */}
+
+        <div>{htmlContainer}</div>
+      </div>
+      <div>{chartContainer}</div>
+    </div>
+  }
+  </div>
+  )
 };
 
 export default PerfData;

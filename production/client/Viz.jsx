@@ -7,6 +7,8 @@ function GraphViz() {
   const { store, dispatch } = useContext(Context);
   const [net, setNet] = useState({})
   const [savedSchema, saveSchema] = useState();
+  const [newSchema, updateSchema] = useState(0);
+  const [greenNode, greenNodeOn] = useState(false)
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
@@ -34,10 +36,11 @@ function GraphViz() {
       },
       clickToUse: false,
       edges: {
-        color: "#000000"
+        color: '#c8c8c8'
       },
-      height: "430px",
+      height: "580px",
       width: "100%",
+
       autoResize: true,
     },
    )
@@ -45,6 +48,7 @@ function GraphViz() {
   const [convert, setConvert] = useState({})
 
     useEffect(()=>{
+      console.log('TRIGGERED WHEN THERE IS A NEW SCHEMA IN THE DATABASE')
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
         const formatted = arrTypes.map((type)=>{
@@ -115,7 +119,7 @@ function GraphViz() {
         })
         const vizNodes = [];
         const vizEdges = [];
-        const queryNode = {id: "Query", label: "Query", title: "TBD", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
+        const queryNode = {id: "Query", label: "Query", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
         vizNodes.push(queryNode)
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
         let colorPosition = 0;
@@ -131,13 +135,32 @@ function GraphViz() {
           }
           colorPosition += 1;
         }
-       console.log('nodes', vizNodes);
-       console.log('edges', vizEdges);
+      //  console.log('nodes', vizNodes);
+      //  console.log('edges', vizEdges);
+        console.log('newSchema', newSchema)
+
+        // if (newSchema === 1) {
+        //   setGraph({nodes: vizNodes, edges: vizEdges})
+        // } else {
+        //   net.network.setData({
+        //     edges: vizEdges , 
+        //     nodes: vizNodes,
+        //   });
+        // }
+        if (greenNode) {
+          greenNodeOn(false)
+          net.network.setData({
+            edges: vizEdges, 
+            nodes: vizNodes,
+          });
+          // reset setGraph to have empty nodes and edges
+        } 
         setGraph({nodes: vizNodes, edges: vizEdges})
       }
-      }, [store.schema.schemaNew])
+      }, [newSchema])
 
     useEffect(() => {
+      console.log('STORE.QUERY.DATA CHANGED:', store.query.data)
       const greenObj = {};
       const queryRes = store.query.data;
       const recHelp = (data) => {
@@ -166,24 +189,27 @@ function GraphViz() {
         }   
       }
 
-      if (queryRes) {
+      if (queryRes && store.schema.schemaNew) {
         recHelp(queryRes)
         const newNodeArr = []
         graph.nodes.forEach((el, i)=> {
+          // ISSUE IS THAT GRAPH.NODES HAS OLD GREEN NODES!!!
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
             el.color = 'rgba(90, 209, 104, 1)'
-            el.title = 'CHANGED'
+            // el.title = 'CHANGED'
             newNodeArr.push(el);
           } else {
             newNodeArr.push(el);
           }
         })
         const edgesArr = graph.edges;
+        console.log('data is being reset here w/ new green nodes:')
         net.network.setData({
-          edges: edgesArr , 
+          edges: edgesArr, 
           nodes: newNodeArr,
         });
+        greenNodeOn(true);
       }
     }, [store.query.data])
 
@@ -206,7 +232,8 @@ function GraphViz() {
 				dispatch({
 					type: "updateSchema",
 					payload: savedSchema
-				});
+        });
+        updateSchema(newSchema + 1);
     }
 	}, [savedSchema])
 
@@ -214,18 +241,24 @@ function GraphViz() {
     return (
       <div>
       <div className='topLeftButtons' id='vizQuadrant'>
-        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
-        <button className="quadrantButton">View Full Screen</button>
+        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Import Schema</button>
+        {store.schema.schemaNew && 
+          <button className="quadrantButton">View Full Screen</button>
+        }
       </div>
-      <Graph
-        graph={graph}
-        options={options}
-        events={events}
-        getNetwork={network => {
-          //  if you want access to vis.js network api you can set the state in a parent component using this property
-          setNet({ network })
-        }}
-      />
+      {store.schema.schemaNew && 
+      <div id='graphBox'>
+        <Graph
+          graph={graph}
+          options={options}
+          events={events}
+          getNetwork={network => {
+            //  if you want access to vis.js network api you can set the state in a parent component using this property
+            setNet({ network })
+          }}
+        />
+      </div>
+      }
       </div>
     );
 }
