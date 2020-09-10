@@ -41,19 +41,21 @@ const QueryDisplay = () => {
 
 	return (
 		<div>
-			<div className="topLeftButtons">
-				<button className={response ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetResponse}>Response</button>
-				<button className={metrics ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetMetrics}>Metrics</button>
-				<button className={errors ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetErrors}>Errors</button>
-			</div>
       {!store.query.data && 
         <div id='queryPlaceholder'>No query results to display</div>
       }
       {store.query.data && 
-        <div id='queryScroll'>
-            {response && <pre><code>{JSON.stringify(store.query.data, null, 2)}</code></pre>}
-            {metrics && <pre><code>{JSON.stringify(store.query.extensions, null, 2)}</code></pre>}
-            {errors && <pre><code>{JSON.stringify(store.query.errors, null, 2)}</code></pre>}
+        <div>
+          <div className="topLeftButtons">
+            <button className={response ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetResponse}>Response</button>
+            <button className={metrics ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetMetrics}>Metrics</button>
+            <button className={errors ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetErrors}>Errors</button>
+          </div>
+          <div id='queryScroll'>
+              {response && <pre><code>{JSON.stringify(store.query.data, null, 2)}</code></pre>}
+              {metrics && <pre><code>{JSON.stringify(store.query.extensions, null, 2)}</code></pre>}
+              {errors && <pre><code>{JSON.stringify(store.query.errors, null, 2)}</code></pre>}
+          </div>
         </div>
       }
 		</div>

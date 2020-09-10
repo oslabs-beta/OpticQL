@@ -34,10 +34,11 @@ function GraphViz() {
       },
       clickToUse: false,
       edges: {
-        color: "#000000"
+        color: '#c8c8c8'
       },
       height: "430px",
       width: "100%",
+
       autoResize: true,
     },
    )
@@ -115,7 +116,7 @@ function GraphViz() {
         })
         const vizNodes = [];
         const vizEdges = [];
-        const queryNode = {id: "Query", label: "Query", title: "TBD", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
+        const queryNode = {id: "Query", label: "Query", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
         vizNodes.push(queryNode)
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
         let colorPosition = 0;
@@ -173,7 +174,7 @@ function GraphViz() {
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
             el.color = 'rgba(90, 209, 104, 1)'
-            el.title = 'CHANGED'
+            // el.title = 'CHANGED'
             newNodeArr.push(el);
           } else {
             newNodeArr.push(el);
@@ -214,18 +215,24 @@ function GraphViz() {
     return (
       <div>
       <div className='topLeftButtons' id='vizQuadrant'>
-        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Update Schema</button>
-        <button className="quadrantButton">View Full Screen</button>
+        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Import Schema</button>
+        {store.schema.schemaNew && 
+          <button className="quadrantButton">View Full Screen</button>
+        }
       </div>
-      <Graph
-        graph={graph}
-        options={options}
-        events={events}
-        getNetwork={network => {
-          //  if you want access to vis.js network api you can set the state in a parent component using this property
-          setNet({ network })
-        }}
-      />
+      {store.schema.schemaNew && 
+      <div id='graphBox'>
+        <Graph
+          graph={graph}
+          options={options}
+          events={events}
+          getNetwork={network => {
+            //  if you want access to vis.js network api you can set the state in a parent component using this property
+            setNet({ network })
+          }}
+        />
+      </div>
+      }
       </div>
     );
 }

@@ -18,7 +18,7 @@ body {
 .row {
 	display: flex;
   height: 700px;
-	width: 90%;
+	width: 95%;
 	height: 45%;
 	min-width: 540px;
 	min-height: 500px;
@@ -53,7 +53,7 @@ body {
 	min-width: 200px;
 	/* min-height: 100px; */
 	height: 500px;
-	margin: 0px 20px 0px 20px;
+	margin: 10px 20px 10px 20px;
 	padding: 20px;
 	background-color: #05445E
 }
@@ -79,6 +79,9 @@ body {
 	height: 415px;
 	background-color: #032330;
 	color: #c8c8c8;
+  font-family: sans-serif;
+  font: sans-serif;
+	font-size: 16px;
   border-radius: 15px;
   padding: 0px 15px 15px 15px;
 }
@@ -86,7 +89,7 @@ body {
 .quadrantButton {
 	background-color: #75E6DA;
 	font-size: 16px;
-	font-weight: 400;
+	font-weight: 500;
 	color:#05445E;
 	border: none;
 	margin: 0px 20px 0px 0px;
@@ -150,3 +153,11 @@ input:focus {
   background-color: #5dbab0;
 }
 
+#graphBox {
+  background-color: #032330;
+  border-radius: 15px;
+}
+
+#graphBox:focus {
+  outline:none;
+}
