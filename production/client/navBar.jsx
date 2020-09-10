@@ -9,7 +9,7 @@ return (
       <button className="navButton">History</button>
     </div> */}
     <div id='title'>
-		  <h1>OpticQL</h1>
+      <img src="./assets/logo2.png" />
     </div>
 	</div>
 );
