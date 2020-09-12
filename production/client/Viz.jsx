@@ -61,9 +61,7 @@ function GraphViz() {
     },
    )
  
-
     useEffect(()=>{
-      console.log('TRIGGERED WHEN THERE IS A NEW SCHEMA IN THE DATABASE')
       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema'
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       if (store.schema.schemaNew){
@@ -155,55 +153,31 @@ function GraphViz() {
           for (let childNode in queryObject[prop]) {
             const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color2: colorArr[colorPosition], color: colorArr[colorPosition], font: {size: 10, align: 'center'}};
             vizNodes.push(subNode);
-            vizEdges.push({from: prop, to: prop + '.' + childNode})
-            // Check if queryObject[prop][childNode] !== true, we can then add connection between 'prop.childNode' to value that is not 'true' 
-            // if (queryObject[prop][childNode] !== true) {
-            //   vizEdges.push({from: prop + '.' + childNode, to: queryObject[prop][childNode]}) 
-            // }    
+            vizEdges.push({from: prop, to: prop + '.' + childNode})  
           }
           colorPosition += 1;
         }
-        
         setgraphObjRef(queryObject)
-        // if there are green nodes already in graph, update the green nodes via setData
-
+        // if there are green nodes already in graph, update the green nodes via setData. Setting 'greenNode' to 
+        // false will result in orig graph being rendered instead of green graph
         if (greenNode) {
           greenNodeOn(false)
-          net.network.setData({
-            edges: vizEdges, 
-            nodes: vizNodes,
-          });
+          // net.network.setData({
+          //   edges: vizEdges, 
+          //   nodes: vizNodes,
+          // });
         } 
-
-        // must use setGraph to re-render the viz with updated green nodes, or with initial data
+        // must use setGraph to render initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
+        
       }
       }, [updatedSchema])
 
     useEffect(() => {
-        // reset green node array
-
-        // if (greenNode) {
-        //   net.network.setData({
-        //     edges: [], 
-        //     nodes: [],
-        //   });
-        // }
-        
-        // setgraphObjRef({})
-
-        // setGraphGreen({
-        //   nodes: [], 
-        //   edges: []
-        // },)
-      
-       
-
       // listening for change to store.query.data, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       const greenObj = {};
       const queryRes = store.query.data;
-      console.log('QUERY-RES', queryRes)
       const recHelp = (data) => {
         // iterate through queries targeted ('people', 'planets')
         for (let key in data) {
@@ -232,8 +206,6 @@ function GraphViz() {
         }   
       }
       // if there has been a query made and a schema is imported
-      console.log('    ')
-      console.log('GRAPH-NODES', graph.nodes)
       graph.nodes.forEach((el, i)=>{
         if (i !== 0) {
           if (el.color === 'rgba(90, 209, 104, 1)') {
@@ -241,17 +213,13 @@ function GraphViz() {
           }
         }
       })
-      // setGraph({...graph, nodes: newGraphNodes})
-
       if (queryRes && store.schema.schemaNew) {
         // this fills out greenObj with our fields for green nodes
         recHelp(queryRes)
          const newNodeArr = graph.nodes.map((el, i)=> {
-          // ISSUE IS THAT GRAPH.NODES HAS OLD GREEN NODES!!!
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
             el.color = 'rgba(90, 209, 104, 1)'
-            // el.title = 'CHANGED'
             return el;
           } else {
             return el;
@@ -270,30 +238,20 @@ function GraphViz() {
             graphObjFormat[value] = graphObjRef[key][prop];
           }
         }
-
         for (let key in greenObj) {
-          console.log('graphObjFormat', graphObjFormat)
-          console.log('graphObjFormat-KEY',graphObjFormat[key])
           if (graphObjFormat[key]) {
             // add edge beween value and key
-            console.log('SHOULD BE PERSON/FILM', graphObjFormat[key])
             edgesArr.push({from: key, to: graphObjFormat[key]})
           }
         }
-        
-        console.log('data is being reset here w/ new green nodes:')
-        
+        // if there are green nodes present, we need to update them 
         if (greenNode) {
-          // net.network.setData({
-          //   edges: [], 
-          //   nodes: [],
-          // });
           net.network.setData({
             edges: edgesArr, 
             nodes: newNodeArr,
           });
-
         }
+        // if no green nodes currently, need to use setGraphGreen to create graph
         else {
           setGraphGreen({
             edges: edgesArr, 
@@ -301,10 +259,6 @@ function GraphViz() {
           })
           greenNodeOn(true);
         }
-    
-
-      
-
       }
     }, [store.query.data])
 
@@ -347,10 +301,10 @@ function GraphViz() {
           graph={graph}
           options={options}
           events={events}
-          getNetwork={network => {
-            //  if you want access to vis.js network api you can set the state in a parent component using this property
-            setNet({ network })
-          }}
+          // getNetwork={network => {
+          //   //  if you want access to vis.js network api you can set the state in a parent component using this property
+          //   setNet({ network })
+          // }}
         />
       </div>
       }
