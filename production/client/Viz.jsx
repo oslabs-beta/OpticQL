@@ -48,11 +48,11 @@ function GraphViz() {
       clickToUse: false,
       edges: {
         color: '#c8c8c8',
-      //   smooth: {
-      //     enabled: true,
-      //     type: "dynamic",
-      //     // roundness: 0.5
-      //   },
+        smooth: {
+          enabled: true,
+          type: "dynamic",
+          // roundness: 0.5
+        },
       },
       height: "580px",
       width: "100%",
@@ -134,7 +134,7 @@ function GraphViz() {
                   const found = propSplit[1].match(regex);
                   queryObject[queryName][fieldName] = found[0];
                 } else {
-                  queryObject[queryName][fieldName] = true;
+                  queryObject[queryName][fieldName] = false;
                 }
               }
             })
@@ -179,6 +179,24 @@ function GraphViz() {
       }, [updatedSchema])
 
     useEffect(() => {
+        // reset green node array
+
+        if (greenNode) {
+          net.networkG.setData({
+            edges: [], 
+            nodes: [],
+          });
+        }
+        
+        setgraphObjRef({})
+
+        setGraphGreen({
+          nodes: [], 
+          edges: []
+        },)
+      
+       
+
       // listening for change to store.query.data, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       const greenObj = {};
@@ -243,24 +261,31 @@ function GraphViz() {
 
         for (let key in greenObj) {
           console.log('graphObjFormat', graphObjFormat)
-          if (graphObjFormat[key] !== true) {
+          console.log('graphObjFormat-KEY',graphObjFormat[key])
+          if (graphObjFormat[key]) {
             // add edge beween value and key
-            console.log('SHOULD BE PERSON/FILM',graphObjFormat[key])
+            console.log('SHOULD BE PERSON/FILM', graphObjFormat[key])
             edgesArr.push({from: key, to: graphObjFormat[key]})
           }
         }
         
         console.log('data is being reset here w/ new green nodes:')
-        // net.network.setData({
-        //   edges: edgesArr, 
-        //   nodes: newNodeArr,
-        // });
-
+        
+        if (greenNode) {
+          net.networkG.setData({
+            edges: edgesArr, 
+            nodes: newNodeArr,
+          });
+        }
+     
         setGraphGreen({
           edges: edgesArr, 
           nodes: newNodeArr,
         })
         greenNodeOn(true);
+
+      
+
       }
     }, [store.query.data])
 
@@ -317,9 +342,9 @@ function GraphViz() {
           graph={graphGreen}
           options={options}
           events={events}
-          getNetwork={network => {
+          getNetwork={networkG => {
             //  if you want access to vis.js network api you can set the state in a parent component using this property
-            setNet({ network })
+            setNet({ networkG })
           }}
         />
       </div>
