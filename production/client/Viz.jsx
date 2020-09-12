@@ -233,16 +233,15 @@ function GraphViz() {
       if (queryRes && store.schema.schemaNew) {
         // this fills out greenObj with our fields for green nodes
         recHelp(queryRes)
-        const newNodeArr = []
-        graph.nodes.forEach((el, i)=> {
+         const newNodeArr = graph.nodes.map((el, i)=> {
           // ISSUE IS THAT GRAPH.NODES HAS OLD GREEN NODES!!!
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
             el.color = 'rgba(90, 209, 104, 1)'
             // el.title = 'CHANGED'
-            newNodeArr.push(el);
+            return el;
           } else {
-            newNodeArr.push(el);
+            return el;
           }
         })
         const edgesArr = graph.edges;
@@ -272,10 +271,15 @@ function GraphViz() {
         console.log('data is being reset here w/ new green nodes:')
         
         if (greenNode) {
+          // net.network.setData({
+          //   edges: [], 
+          //   nodes: [],
+          // });
           net.network.setData({
             edges: edgesArr, 
-            nodes: newNodeArr,
+            nodes: [newNodeArr],
           });
+
         }
      
         setGraphGreen({
