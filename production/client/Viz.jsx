@@ -176,6 +176,14 @@ function GraphViz() {
     useEffect(() => {
       // listening for change to store.query.data, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
+      if (greenNode) {
+        net.network.setData({
+          edges: [], 
+          nodes: [],
+        });
+      }
+
+
       const greenObj = {};
       const queryRes = store.query.data;
       const recHelp = (data) => {
