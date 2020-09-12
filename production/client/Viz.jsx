@@ -10,7 +10,6 @@ function GraphViz() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
 
-
   const [updatedSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false)
   const [events, setEvents] = useState({});
@@ -241,7 +240,7 @@ function GraphViz() {
 
         
 
-        const nodeCopy = [...JSON.parse(JSON.stringify(nodes))] 
+        const nodeCopy = JSON.parse(JSON.stringify(nodes))
         const newNodeArr = nodeCopy.map((el)=> {
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
@@ -251,7 +250,7 @@ function GraphViz() {
             return el;
           }
         })
-        const edgesArr = [...JSON.parse(JSON.stringify(edges))]
+        const edgesArr = JSON.parse(JSON.stringify(edges))
         // We can now add connections between connector nodes via graphObjRef
         // iterate greenObj, find the value of greenObj key in graphObjRef, and if value is not 'true' add a edge between the value
         // and the key and push ege to edgesArr
