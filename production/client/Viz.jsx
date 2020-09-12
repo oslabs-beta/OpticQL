@@ -148,12 +148,12 @@ function GraphViz() {
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
         let colorPosition = 0;
         for (let key in queryObject){
-          const node = {id: key, label: key, title: key, group: key, widthConstraint: 75, color: colorArr[colorPosition], font: {size: 16, align: 'center'}};
+          const node = {id: key, label: key, title: key, group: key, widthConstraint: 75, color2: colorArr[colorPosition], color: colorArr[colorPosition], font: {size: 16, align: 'center'}};
           vizNodes.push(node);
           vizEdges.push({from: "Query", to: key, length: 275})
           const prop = key;
           for (let childNode in queryObject[prop]) {
-            const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color: colorArr[colorPosition], font: {size: 10, align: 'center'}};
+            const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color2: colorArr[colorPosition], color: colorArr[colorPosition], font: {size: 10, align: 'center'}};
             vizNodes.push(subNode);
             vizEdges.push({from: prop, to: prop + '.' + childNode})
             // Check if queryObject[prop][childNode] !== true, we can then add connection between 'prop.childNode' to value that is not 'true' 
@@ -166,6 +166,7 @@ function GraphViz() {
         
         setgraphObjRef(queryObject)
         // if there are green nodes already in graph, update the green nodes via setData
+
         if (greenNode) {
           greenNodeOn(false)
           net.network.setData({
@@ -173,6 +174,7 @@ function GraphViz() {
             nodes: vizNodes,
           });
         } 
+
         // must use setGraph to re-render the viz with updated green nodes, or with initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
       }
@@ -181,19 +183,19 @@ function GraphViz() {
     useEffect(() => {
         // reset green node array
 
-        if (greenNode) {
-          net.network.setData({
-            edges: [], 
-            nodes: [],
-          });
-        }
+        // if (greenNode) {
+        //   net.network.setData({
+        //     edges: [], 
+        //     nodes: [],
+        //   });
+        // }
         
-        setgraphObjRef({})
+        // setgraphObjRef({})
 
-        setGraphGreen({
-          nodes: [], 
-          edges: []
-        },)
+        // setGraphGreen({
+        //   nodes: [], 
+        //   edges: []
+        // },)
       
        
 
@@ -230,6 +232,17 @@ function GraphViz() {
         }   
       }
       // if there has been a query made and a schema is imported
+      console.log('    ')
+      console.log('GRAPH-NODES', graph.nodes)
+      graph.nodes.forEach((el, i)=>{
+        if (i !== 0) {
+          if (el.color === 'rgba(90, 209, 104, 1)') {
+            el.color = el.color2
+          }
+        }
+      })
+      // setGraph({...graph, nodes: newGraphNodes})
+
       if (queryRes && store.schema.schemaNew) {
         // this fills out greenObj with our fields for green nodes
         recHelp(queryRes)
@@ -277,16 +290,18 @@ function GraphViz() {
           // });
           net.network.setData({
             edges: edgesArr, 
-            nodes: [newNodeArr],
+            nodes: newNodeArr,
           });
 
         }
-     
-        setGraphGreen({
-          edges: edgesArr, 
-          nodes: newNodeArr,
-        })
-        greenNodeOn(true);
+        else {
+          setGraphGreen({
+            edges: edgesArr, 
+            nodes: newNodeArr,
+          })
+          greenNodeOn(true);
+        }
+    
 
       
 
