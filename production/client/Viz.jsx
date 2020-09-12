@@ -182,7 +182,7 @@ function GraphViz() {
         // reset green node array
 
         if (greenNode) {
-          net.networkG.setData({
+          net.network.setData({
             edges: [], 
             nodes: [],
           });
@@ -272,7 +272,7 @@ function GraphViz() {
         console.log('data is being reset here w/ new green nodes:')
         
         if (greenNode) {
-          net.networkG.setData({
+          net.network.setData({
             edges: edgesArr, 
             nodes: newNodeArr,
           });
@@ -342,9 +342,9 @@ function GraphViz() {
           graph={graphGreen}
           options={options}
           events={events}
-          getNetwork={networkG => {
+          getNetwork={network => {
             //  if you want access to vis.js network api you can set the state in a parent component using this property
-            setNet({ networkG })
+            setNet({ network })
           }}
         />
       </div>
