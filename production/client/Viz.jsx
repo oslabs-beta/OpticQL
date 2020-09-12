@@ -11,6 +11,7 @@ function GraphViz() {
   const [greenNode, greenNodeOn] = useState(false)
   const [events, setEvents] = useState({});
   const [convert, setConvert] = useState({})
+  const [graphObjRef, setgraphObjRef] = useState({})
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
@@ -162,6 +163,8 @@ function GraphViz() {
           }
           colorPosition += 1;
         }
+        
+        setgraphObjRef(queryObject)
         // if there are green nodes already in graph, update the green nodes via setData
         if (greenNode) {
           greenNodeOn(false)
@@ -176,13 +179,17 @@ function GraphViz() {
       }, [updatedSchema])
 
     useEffect(() => {
-      console.log('STORE.QUERY.DATA CHANGED:', store.query.data)
+      // listening for change to store.query.data, this will change if new query is executed
+      // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       const greenObj = {};
       const queryRes = store.query.data;
+      console.log('QUERY-RES', queryRes)
       const recHelp = (data) => {
+        // iterate through queries targeted ('people', 'planets')
         for (let key in data) {
           let val;
           if (key in convert) {
+            // turn val into 'Person' if key is 'people'
             val = convert[key];
             greenObj[val] = true
             // If data[key][0] has a value of null:
@@ -191,7 +198,7 @@ function GraphViz() {
             while (!data[key][count]) {
               count += 1;
             }
-            newData = data[key][0];
+            newData = data[key][count];
             for (let prop in newData) {
               const propValue = val + '.' + prop
               greenObj[propValue] = true;
@@ -204,8 +211,9 @@ function GraphViz() {
           } 
         }   
       }
-
+      // if there has been a query made and a schema is imported
       if (queryRes && store.schema.schemaNew) {
+        // this fills out greenObj with our fields for green nodes
         recHelp(queryRes)
         const newNodeArr = []
         graph.nodes.forEach((el, i)=> {
@@ -220,11 +228,38 @@ function GraphViz() {
           }
         })
         const edgesArr = graph.edges;
+        // We can now add connections between connector nodes via graphObjRef
+        // iterate greenObj, find the value of greenObj key in graphObjRef, and if value is not 'true' add a edge between the value
+        // and the key and push ege to edgesArr
+
+        //formats the graphObjRef to have values of "true" or [type]
+        const graphObjFormat = {};
+        for (let key in graphObjRef) {
+          for (let prop in graphObjRef[key]) {
+            let value = key + '.' + prop;
+            graphObjFormat[value] = graphObjRef[key][prop];
+          }
+        }
+
+        for (let key in greenObj) {
+          console.log('graphObjFormat', graphObjFormat)
+          if (graphObjFormat[key] !== true) {
+            // add edge beween value and key
+            console.log('SHOULD BE PERSON/FILM',graphObjFormat[key])
+            edgesArr.push({from: key, to: graphObjFormat[key]})
+          }
+        }
+        
         console.log('data is being reset here w/ new green nodes:')
-        net.network.setData({
+        // net.network.setData({
+        //   edges: edgesArr, 
+        //   nodes: newNodeArr,
+        // });
+
+        setGraphGreen({
           edges: edgesArr, 
           nodes: newNodeArr,
-        });
+        })
         greenNodeOn(true);
       }
     }, [store.query.data])
@@ -289,7 +324,7 @@ function GraphViz() {
         />
       </div>
       }
-      
+
       </div>
     );
 }
