@@ -7,7 +7,7 @@ import { Context } from './store.jsx';
 const ControlPanel = () => {
 
 	const { dispatch, store } = useContext(Context);
-	
+
 	const queryDB = useIndexedDB('queryData');
 	const schemaDB = useIndexedDB('schemaData');
 	const [query, setQuery] = useState();
@@ -16,11 +16,11 @@ const ControlPanel = () => {
 	// Make query to User App's server API, in turn, User's database
 
 	function makeQuery () {
-    // UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
-    dispatch({
-      type: "updateLoading",
-      payload: true
-    });
+		// UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
+		dispatch({
+			type: "updateLoading",
+			payload: true
+		});
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
 			headers: {
@@ -33,19 +33,19 @@ const ControlPanel = () => {
 		})
 			.then(res => res.json())
 			.then((res) => {
-        saveQuery(res)
-        dispatch({
-          type: "updateLoading",
-          payload: false
-        });
-      })
-			.catch(err => {
-        dispatch({
+				saveQuery(res)
+				dispatch({
 					type: "updateLoading",
 					payload: false
-        });
-        console.log("This is the error: ", err);
-      })
+				});
+			})
+			.catch(err => {
+				dispatch({
+					type: "updateLoading",
+					payload: false
+				});
+				console.log("This is the error: ", err);
+			})
 	}
 
 	// Invokes when savedQuery state is update, sending query to indexeddb
@@ -73,7 +73,7 @@ const ControlPanel = () => {
 			.catch(err => console.log("Error with getting all records from query database: ", err));
 	};
 
-	
+
 
 	// Requests all information from indexeddb for schemas
 
@@ -93,22 +93,50 @@ const ControlPanel = () => {
 
 	function handleSubmit (e) {
 		e.preventDefault();
-    makeQuery();
+		makeQuery();
 	}
+
+	//delete the queryData indexDB table
+
+	const handleDeleteQueryData = () => {
+		queryDB.clear().then(() => {
+			alert('Query database fully deleted!');
+		});
+	}
+
+	const handleDeleteSchemaData = () => {
+		schemaDB.clear().then(() => {
+			alert('Schema database fully deleted!');
+		});
+	}
+
+	// function ClearAll() {
+	// 	const { clear } = useIndexedDB('schemaData');
+
+	// 	const handleClickSchemaData = () => {
+	// 	  clear().then(() => {
+	// 		alert('All Clear!');
+	// 	  });
+	// 	}
+	// }
 
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
 				<div id="form-group">
-					<div className='topLeftButtons' id='controlQuadrant'>
+					<div className="topLeftButtons" id="controlQuadrant">
 						<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
 					</div>
 					{/* <label htmlFor="query"></label> */}
 					<textarea className="form-control" id="query" value={query} onChange={handleChange} placeholder="Please enter query here"></textarea>
 				</div>
 			</form>
-			{/* <button key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button> */}
-			{/* <button key={3} onClick={schemaDatabaseGrab}>Check Database for Schema</button> */}
+			<div className="indexDBbuttons">
+				<button className="indexDBstyleButton" key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button>
+				<button className="indexDBstyleButton" key={2} onClick={schemaDatabaseGrab}>Check Database for Schema</button>
+				<button className="indexDBstyleButton" key={3} onClick={handleDeleteQueryData}>Delete Query Data</button>
+				<button className="indexDBstyleButton" key={4} onClick={handleDeleteSchemaData}>Delete Schema Data</button>
+			</div>
 		</div>
 	)
 

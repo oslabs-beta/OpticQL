@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import App from './App';
 import { DBConfig } from './DBConfig';
 import { initDB } from 'react-indexed-db';
+import { BrowserRouter } from 'react-router-dom';
 
 initDB(DBConfig);
 
@@ -10,6 +11,8 @@ initDB(DBConfig);
 
 // should grab the App component and attach to the index.html
 render(
-	<App />,
+	<BrowserRouter>
+		<App />
+	</BrowserRouter>,
 	document.getElementById('root'),
 );

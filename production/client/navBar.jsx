@@ -1,17 +1,26 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Context } from './store.jsx';
+import React from 'react';
+import { useHistory, Link } from 'react-router-dom';
 
 const NavBar = () => {
-return (
-	<div>
-    {/* <div id="buttonContainer">
-      <button className="navButton">Save</button>
-      <button className="navButton">History</button>
-    </div> */}
-    <div id='title'>
-      <img src="./assets/logo2.png" />
-    </div>
-	</div>
-);
+	// remember to ask patrick and rebecca for the logo code
+	const newLocation = (e) => {
+		e.preventDefault();
+		window.location.href = '/history'
+	}
+
+	return (
+		<div>
+			<Link to="/">Home </Link>
+			<button style={{ "backgroundColor": 'white' }}>
+				<Link to="/history">Historical Performance</Link>
+			</button>
+
+			{/* <button component={Link} to="/history">
+				Click Me
+</button> */}
+
+		</div>
+	);
 }
+
 export default NavBar;
