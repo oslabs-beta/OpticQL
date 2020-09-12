@@ -7,6 +7,10 @@ function GraphViz() {
   const { store, dispatch } = useContext(Context);
   const [net, setNet] = useState({})
   const [savedSchema, saveSchema] = useState();
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
+
+
   const [updatedSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false)
   const [events, setEvents] = useState({});
@@ -169,6 +173,11 @@ function GraphViz() {
         } 
         // must use setGraph to render initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
+
+        setNodes(JSON.parse(JSON.stringify(vizNodes)));
+        setEdges(JSON.parse(JSON.stringify(vizEdges)));
+        console.log('1NODES:', nodes)
+        console.log('1EDGES:', edges)
         
       }
       }, [updatedSchema])
@@ -176,13 +185,18 @@ function GraphViz() {
     useEffect(() => {
       // listening for change to store.query.data, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
-      if (greenNode) {
-        net.network.setData({
-          edges: [], 
-          nodes: [],
-        });
-      }
+      
+      // if (greenNode) {
+      //   net.network.setData({
+      //     edges: [], 
+      //     nodes: [],
+      //   });
+      // }
+    
+      if (store.query.data) {
 
+      console.log('2NODES:', nodes)
+      console.log('2EDGES:', edges)
 
       const greenObj = {};
       const queryRes = store.query.data;
@@ -214,17 +228,21 @@ function GraphViz() {
         }   
       }
       // if there has been a query made and a schema is imported
-      graph.nodes.forEach((el, i)=>{
-        if (i !== 0) {
-          if (el.color === 'rgba(90, 209, 104, 1)') {
-            el.color = el.color2
-          }
-        }
-      })
+      // graph.nodes.forEach((el, i)=>{
+      //   if (i !== 0) {
+      //     if (el.color === 'rgba(90, 209, 104, 1)') {
+      //       el.color = el.color2
+      //     }
+      //   }
+      // })
       if (queryRes && store.schema.schemaNew) {
         // this fills out greenObj with our fields for green nodes
         recHelp(queryRes)
-         const newNodeArr = graph.nodes.map((el, i)=> {
+
+        
+
+        const nodeCopy = [...JSON.parse(JSON.stringify(nodes))] 
+        const newNodeArr = nodeCopy.map((el)=> {
           // check if value is a key in greenObj, it true, turn its node color green
           if (greenObj[el.id]) {
             el.color = 'rgba(90, 209, 104, 1)'
@@ -233,7 +251,7 @@ function GraphViz() {
             return el;
           }
         })
-        const edgesArr = graph.edges;
+        const edgesArr = [...JSON.parse(JSON.stringify(edges))]
         // We can now add connections between connector nodes via graphObjRef
         // iterate greenObj, find the value of greenObj key in graphObjRef, and if value is not 'true' add a edge between the value
         // and the key and push ege to edgesArr
@@ -260,14 +278,15 @@ function GraphViz() {
           });
         }
         // if no green nodes currently, need to use setGraphGreen to create graph
-        else {
+        
           setGraphGreen({
             edges: edgesArr, 
             nodes: newNodeArr,
           })
           greenNodeOn(true);
-        }
+        
       }
+    }
     }, [store.query.data])
 
 
