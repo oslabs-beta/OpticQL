@@ -9,10 +9,12 @@ function GraphViz() {
   const [savedSchema, saveSchema] = useState();
   const [newSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false)
+  const [events, setEvents] = useState({});
+  const [convert, setConvert] = useState({})
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
-      nodes: [{id: 1, label: 'Click Update Schema', title: 'Click Update Schema', font: {size: 18}, color: 'rgba(255, 102, 102, 1)'}], 
+      nodes: [], 
       edges: []
     },
   );
@@ -36,7 +38,12 @@ function GraphViz() {
       },
       clickToUse: false,
       edges: {
-        color: '#c8c8c8'
+        color: '#c8c8c8',
+        smooth: {
+          enabled: true,
+          type: "dynamic",
+          // roundness: 0.5
+        },
       },
       height: "580px",
       width: "100%",
@@ -44,11 +51,12 @@ function GraphViz() {
       autoResize: true,
     },
    )
-  const [events, setEvents] = useState({});
-  const [convert, setConvert] = useState({})
+ 
 
     useEffect(()=>{
       console.log('TRIGGERED WHEN THERE IS A NEW SCHEMA IN THE DATABASE')
+      // Triggered when there is a new schema in the database (the useEffect listens for 'newSchema'
+      // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
         const formatted = arrTypes.map((type)=>{
@@ -58,6 +66,8 @@ function GraphViz() {
             return trimmed;
           })
         })
+        //Separating query and mutation types from general type fields, 
+        // which will be used to create nodes in graph.
         let queryArr;
         let queryIndex;
         let mutationIndex;
@@ -71,27 +81,30 @@ function GraphViz() {
             mutationIndex = i;
           }
         })
-        const setQuery = new Set();
+        // const setQuery = new Set();
         const queryConvert = {};
+        // Format object of 'type Query' here
         queryArr.forEach((el)=>{
           if (el.includes(":")) {
             const elSplit = el.split(':');
             const lastElSplit = elSplit[elSplit.length-1];
             const regex = /[A-Za-z]+/;
             const found = lastElSplit.match(regex);
-            setQuery.add(found[0])
+            // setQuery.add(found[0])
             const left = elSplit[0];
             const leftName = left.split("(");
             queryConvert[leftName[0]] = found[0];
           }
         })
-        // convert looks at the type of query ('people', 'person') and converts it to schema 'Type' (Person)
+        // Convert looks at the type of query ('people', 'person') and converts it to schema 'Type' (Person)
         setConvert(queryConvert);
         const queryObject = {};
+        // Now isolate the Non-Query/Mutation type fields 
         formatted.forEach((el, i)=>{
           let queryName;
           if (i !== queryIndex && i !== mutationIndex){
             for (let i = 0; i < el.length; i++){
+              // Isolate the 'type' of the field ('Person', 'Film')
               if (el[i].includes("type")) {
                 let fieldSplit = el[i].split("type");
                 let field = fieldSplit[fieldSplit.length-1];
@@ -102,6 +115,7 @@ function GraphViz() {
                 break;
               }
             } 
+            // Fill out queryObject with 'queryName' as property and fields as values
             el.forEach((prop) => {
               if (prop.includes(":")){
                 let propSplit = prop.split(":");
@@ -119,6 +133,7 @@ function GraphViz() {
         })
         const vizNodes = [];
         const vizEdges = [];
+        //Creates central query node that connects all field "types"
         const queryNode = {id: "Query", label: "Query", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
         vizNodes.push(queryNode)
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
@@ -131,30 +146,23 @@ function GraphViz() {
           for (let childNode in queryObject[prop]) {
             const subNode = {id: prop + '.' + childNode, label: childNode, title: prop + '.' + childNode, group: prop, widthConstraint: 35, color: colorArr[colorPosition], font: {size: 10, align: 'center'}};
             vizNodes.push(subNode);
-            vizEdges.push({from: prop, to: prop + '.' + childNode})     
+            vizEdges.push({from: prop, to: prop + '.' + childNode})
+            // Check if queryObject[prop][childNode] !== true, we can then add connection between 'prop.childNode' to value that is not 'true' 
+            // if (queryObject[prop][childNode] !== true) {
+            //   vizEdges.push({from: prop + '.' + childNode, to: queryObject[prop][childNode]}) 
+            // }    
           }
           colorPosition += 1;
         }
-      //  console.log('nodes', vizNodes);
-      //  console.log('edges', vizEdges);
-        console.log('newSchema', newSchema)
-
-        // if (newSchema === 1) {
-        //   setGraph({nodes: vizNodes, edges: vizEdges})
-        // } else {
-        //   net.network.setData({
-        //     edges: vizEdges , 
-        //     nodes: vizNodes,
-        //   });
-        // }
+        // if there are green nodes already in graph, update the green nodes via setData
         if (greenNode) {
           greenNodeOn(false)
           net.network.setData({
             edges: vizEdges, 
             nodes: vizNodes,
           });
-          // reset setGraph to have empty nodes and edges
         } 
+        // must use setGraph to re-render the viz with updated green nodes, or with initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
       }
       }, [newSchema])
