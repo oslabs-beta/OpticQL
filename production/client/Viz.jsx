@@ -7,7 +7,7 @@ function GraphViz() {
   const { store, dispatch } = useContext(Context);
   const [net, setNet] = useState({})
   const [savedSchema, saveSchema] = useState();
-  const [newSchema, updateSchema] = useState(0);
+  const [updatedSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false)
   const [events, setEvents] = useState({});
   const [convert, setConvert] = useState({})
@@ -18,6 +18,14 @@ function GraphViz() {
       edges: []
     },
   );
+  const [graphGreen, setGraphGreen] = useState(
+    {
+      nodes: [], 
+      edges: []
+    },
+  );
+
+
   const [options, setOptions] = useState(
     {
       layout: {
@@ -39,11 +47,11 @@ function GraphViz() {
       clickToUse: false,
       edges: {
         color: '#c8c8c8',
-        smooth: {
-          enabled: true,
-          type: "dynamic",
-          // roundness: 0.5
-        },
+      //   smooth: {
+      //     enabled: true,
+      //     type: "dynamic",
+      //     // roundness: 0.5
+      //   },
       },
       height: "580px",
       width: "100%",
@@ -55,7 +63,7 @@ function GraphViz() {
 
     useEffect(()=>{
       console.log('TRIGGERED WHEN THERE IS A NEW SCHEMA IN THE DATABASE')
-      // Triggered when there is a new schema in the database (the useEffect listens for 'newSchema'
+      // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema'
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
@@ -165,7 +173,7 @@ function GraphViz() {
         // must use setGraph to re-render the viz with updated green nodes, or with initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
       }
-      }, [newSchema])
+      }, [updatedSchema])
 
     useEffect(() => {
       console.log('STORE.QUERY.DATA CHANGED:', store.query.data)
@@ -241,7 +249,7 @@ function GraphViz() {
 					type: "updateSchema",
 					payload: savedSchema
         });
-        updateSchema(newSchema + 1);
+        updateSchema(updatedSchema + 1);
     }
 	}, [savedSchema])
 
@@ -254,7 +262,7 @@ function GraphViz() {
           <button className="quadrantButton">View Full Screen</button>
         }
       </div>
-      {store.schema.schemaNew && 
+      {(store.schema.schemaNew && !greenNode) &&
       <div id='graphBox'>
         <Graph
           graph={graph}
@@ -267,6 +275,21 @@ function GraphViz() {
         />
       </div>
       }
+
+      {(store.schema.schemaNew && greenNode) &&
+      <div id='graphBox'>
+        <Graph
+          graph={graphGreen}
+          options={options}
+          events={events}
+          getNetwork={network => {
+            //  if you want access to vis.js network api you can set the state in a parent component using this property
+            setNet({ network })
+          }}
+        />
+      </div>
+      }
+      
       </div>
     );
 }
