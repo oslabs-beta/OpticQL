@@ -114,9 +114,21 @@ function GraphViz() {
             queryConvert[leftName[0]] = found[0];
           }
         })
+          const mutationSplitBracket = allMutations.split(/{\n/)
           const regex = /!\n/
-          const mutation = allMutations.split(regex);
+          const mutation = mutationSplitBracket[1].split(regex);
           console.log(mutation)
+          mutation.map((el) => {
+            const regexEnd = /\):/
+            let endNode = el.split(regexEnd);
+            let field = endNode[endNode.length-1].trim()
+            const index = el.indexOf("(");
+            const sliced = el.slice(0, index).trim()
+            if (sliced.length !== 0){
+              mutationConvert[sliced] = field;
+            }
+            console.log(mutationConvert)
+          })
       
 
         // Convert looks at the type of query ('people', 'person') and converts it to schema 'Type' (Person)
