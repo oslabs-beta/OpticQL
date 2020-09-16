@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const initialState = { query: {} , schema: {}, loading: false }
+export const initialState = { query: {} , schema: {}, loading: false, mutation: false }
 
 export const reducer = (state, action) => {
 	switch (action.type) {
@@ -13,6 +13,8 @@ export const reducer = (state, action) => {
     case "updateLoading": {
       return {...state, loading: action.payload}
     }
+    case "mutation": 
+      return {...state, mutation: action.payload}
 		default:
 			return state
 	}

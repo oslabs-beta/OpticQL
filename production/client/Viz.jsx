@@ -67,14 +67,20 @@ function GraphViz() {
     useEffect(()=>{
       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema'
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
+      let allMutations;
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
         const formatted = arrTypes.map((type)=>{
-          const split = type.split(/\n/);
-          return split.map((field)=>{
+          if (type.includes('Mutation')) {
+            allMutations = type;
+          }
+            const split = type.split(/\n/);
+            return split.map((field)=>{
             const trimmed = field.trim();
             return trimmed;
           })
+          
+        
         })
         //Separating query and mutation types from general type fields, 
         // which will be used to create nodes in graph.
@@ -88,11 +94,13 @@ function GraphViz() {
             queryIndex = i;
           }
           if(elJoin.includes("Mutation")) {
+            // allMutations = elJoin;
             mutationIndex = i;
           }
         })
         // const setQuery = new Set();
         const queryConvert = {};
+        const mutationConvert = {};
         // Format object of 'type Query' here
         queryArr.forEach((el)=>{
           if (el.includes(":")) {
@@ -106,6 +114,11 @@ function GraphViz() {
             queryConvert[leftName[0]] = found[0];
           }
         })
+          const regex = /!\n/
+          const mutation = allMutations.split(regex);
+          console.log(mutation)
+      
+
         // Convert looks at the type of query ('people', 'person') and converts it to schema 'Type' (Person)
         setConvert(queryConvert);
         const queryObject = {};
@@ -175,8 +188,7 @@ function GraphViz() {
 
         setNodes(JSON.parse(JSON.stringify(vizNodes)));
         setEdges(JSON.parse(JSON.stringify(vizEdges)));
-        console.log('1NODES:', nodes)
-        console.log('1EDGES:', edges)
+     
         
       }
       }, [updatedSchema])
@@ -193,9 +205,6 @@ function GraphViz() {
       // }
     
       if (store.query.data) {
-
-      console.log('2NODES:', nodes)
-      console.log('2EDGES:', edges)
 
       const greenObj = {};
       const queryRes = store.query.data;
@@ -226,19 +235,19 @@ function GraphViz() {
           } 
         }   
       }
-      // if there has been a query made and a schema is imported
-      // graph.nodes.forEach((el, i)=>{
-      //   if (i !== 0) {
-      //     if (el.color === 'rgba(90, 209, 104, 1)') {
-      //       el.color = el.color2
-      //     }
-      //   }
-      // })
-      if (queryRes && store.schema.schemaNew) {
-        // this fills out greenObj with our fields for green nodes
-        recHelp(queryRes)
+    
 
+      if ((queryRes && store.schema.schemaNew) || (store.mutation && store.schema.schemaNew)) {
+        // for QUERY: this fills out greenObj with our fields for green nodes
+        if (!store.mutation) {
+          recHelp(queryRes)
+        } else {
+          // ADD FUNC TO BE INVOKED ON MUTATION, SHOULD ALSO FILL OUT 'GREEN OBJ'
+        }
         
+        
+        
+
 
         const nodeCopy = JSON.parse(JSON.stringify(nodes))
         const newNodeArr = nodeCopy.map((el)=> {

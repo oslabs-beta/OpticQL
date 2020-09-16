@@ -21,6 +21,17 @@ const ControlPanel = () => {
       type: "updateLoading",
       payload: true
     });
+
+    // ADD DISPATCH, send query to 'Mutation' variable
+    // if query.includes('mutation')
+    if (query.includes('mutation')) {
+      dispatch({
+        type: "mutation",
+        payload: query
+      });
+    };
+    
+
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
 			headers: {
