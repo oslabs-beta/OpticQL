@@ -53,8 +53,12 @@ const ControlPanel = () => {
 	// Invokes when savedQuery state is update, sending query to indexeddb
 
 	useEffect(() => {
-		if (savedQuery) {
-			queryDB.add({ name: savedQuery })
+		if (savedQuery && savedQuery.extensions) {
+			// console.log('The saved query!: ', query)
+			queryDB.add({
+				queryString: query,
+				response: savedQuery
+			})
 				.then(id => {
 					console.log('Query DB ID Generated: ', id);
 				})
@@ -71,7 +75,10 @@ const ControlPanel = () => {
 
 	function queryDatabaseGrab () {
 		queryDB.getAll()
-			.then(result => console.log(result))
+			.then(result => {
+				console.log(result)
+				console.log('The query living in state: ', store.query)
+			})
 			.catch(err => console.log("Error with getting all records from query database: ", err));
 	};
 
@@ -87,8 +94,9 @@ const ControlPanel = () => {
 
 	// Used to capture updated information from form input field for queries
 
-	function handleChange (e) {
-		setQuery(e.target.value);
+	function handleChange (query_str) {
+		// console.log('this is the event: ', e)
+		setQuery(query_str);
 	}
 
 	//grabs the input value (query) from the text box and invokes makeQuery function to send that query to Apollo server
@@ -116,24 +124,23 @@ const ControlPanel = () => {
 		lineNumbers: true,
 	}
 
-	// function ClearAll() {
-	// 	const { clear } = useIndexedDB('schemaData');
-
-	// 	const handleClickSchemaData = () => {
-	// 	  clear().then(() => {
-	// 		alert('All Clear!');
-	// 	  });
-	// 	}
-	// }
+	// Deprecated form to handle query text input
+	// <form onSubmit={handleSubmit}>
+	// 	<div id="form-group">
+	// 		<div className="topLeftButtons" id="controlQuadrant">
+	// 			<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
+	// 		</div>
+	// 		{/* <label htmlFor="query"></label> */}
+	// 		<textarea className="form-control" id="query" value={query} onChange={handleChange} placeholder="Please enter query here"></textarea>
+	// 	</div>
+	// </form>
 
 	return (
 		<div>
-
 			<div className="topLeftButtons">
 				<button className="quadrantButton" onClick={handleSubmit}>Submit Query</button>
 				<CodeMirror options={options} id="query" value={query} onChange={handleChange} defaultValue="Please enter query here" />
 			</div>
-
 			<div className="indexDBbuttons">
 				<button className="indexDBstyleButton" key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button>
 				<button className="indexDBstyleButton" key={2} onClick={schemaDatabaseGrab}>Check Database for Schema</button>
@@ -142,8 +149,6 @@ const ControlPanel = () => {
 			</div>
 		</div>
 	)
-
-
 
 }
 
