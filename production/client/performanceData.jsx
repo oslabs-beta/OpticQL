@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Context } from "./store.jsx";
-import ExpandPerfData from "./expandPerfData.jsx"
+import ExpandPerfData from "./expandPerfData.jsx";
+import HistoryView from "./historyView.jsx";
+import { useIndexedDB } from 'react-indexed-db';
 
 import {
 	VictoryChart,
@@ -16,12 +18,49 @@ import {
 const PerfData = () => {
 
 	const { store } = useContext(Context);
-	const [showWindowPortal, setWindowPortal] = useState(false);
-	// const [outerPerformanceObj, setPerformanceObj] = useState({});
+	const [showWindowPortalOne, setWindowPortalOne] = useState(false);
+	const [showWindowPortalTwo, setWindowPortalTwo] = useState(false);
+	const [dbResults, setDBResults] = useState();
+	const queryDB = useIndexedDB('queryData');
 
-	function toggleWindowPortal () {
-		setWindowPortal(!showWindowPortal)
+	const dbData = [];
+
+	function toggleWindowPortalOne () {
+		// Set local state
+		setWindowPortalOne(!showWindowPortalOne)
 	}
+
+	function numberWithCommas (x) {
+		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+	}
+
+	function toggleWindowPortalTwo () {
+		// Set local state
+		setWindowPortalTwo(!showWindowPortalTwo)
+
+		// Execute database query for historical information
+		// queryDB.getAll()
+		// 	.then(result => {
+		// 		console.log(result);
+		// 		return result;
+		// 	})
+		// 	// Loop through the result and make an array with [query name, total duration]
+		// 	.then(result => {
+		// 		for (let i = 0; i < result.length; i++) {
+		// 			const currQueryObj = result[i]
+		// 			dbData.push({
+		// 				x: currQueryObj.id,
+		// 				y: (currQueryObj.response.extensions.tracing.duration / 1000000),
+		// 				z: currQueryObj.queryString,
+		// 				t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
+		// 			})
+		// 		}
+		// 		// set state here for DBResults
+		// 		return setDBResults(dbData)
+		// 	})
+		// 	.catch(err => console.log("Error with database query for all historical information: ", err));
+	}
+
 
 	// Declaring variables to re-assign if store.query.extensions is not falsy
 	const data = [];
@@ -30,7 +69,9 @@ const PerfData = () => {
 	let overallResTime;
 	let startTime;
 	let endTime;
-	const performanceObj = {}
+	const performanceObj = {};
+	const perfAvg = {};
+	const anomaliesObj = {};
 
 	function numberWithCommas (x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -40,8 +81,6 @@ const PerfData = () => {
 		// Declaring variables
 		// const performanceObj = {};
 		const topLevelQueryArr = [];
-		const perfAvg = {};
-		const anomaliesObj = {};
 
 		// Saving top-level query information --> formatting overall response time (in ms) to include commas before the decimal
 		overallResTime = numberWithCommas(
@@ -112,11 +151,11 @@ const PerfData = () => {
 
 		// Console logs for error-checking
 
-		console.log("performanceObj ", performanceObj);
-		console.log("topLevelQueryArr ", topLevelQueryArr);
-		console.log("perfAvg:", perfAvg);
-		console.log("anomaliesObj:", anomaliesObj);
-		console.log("data: ", data);
+		// console.log("performanceObj ", performanceObj);
+		// console.log("topLevelQueryArr ", topLevelQueryArr);
+		// console.log("perfAvg:", perfAvg);
+		// console.log("anomaliesObj:", anomaliesObj);
+		// console.log("data: ", data);
 
 		// Container for line chart --> Used when there is MORE THAN ONE path
 		const containerLine = [
@@ -249,39 +288,30 @@ const PerfData = () => {
 		// setPerformanceObj(performanceObj)
 	}
 
-  // {store.loading && <img src="./assets/loading.gif" />}
-  // {(!store.query.data && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
-  // {(store.query.data && !store.loading) && <div>{container}</div>}
-
-
-
 	return (
-  <div>
-    {store.loading && <img src="./assets/loading.gif" />}
-    {(!store.query.extensions && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
-    {(store.query.extensions && !store.loading) && 
-    <div>
-      <div className="performanceMetricsButtonInfo">
-        <button onClick={toggleWindowPortal}
-          className="performanceMetricsButton"
-        >
-          {/* {showWindowPortal ? 'Close the' : 'Open a'}  */}Expand Performance Metrics
-        </button>
-        <ExpandPerfData key={1} showWindow={showWindowPortal} container={htmlContainer} performance={performanceObj} />
-        {/* {showWindowPortal && (
-          <TestWindow>
-            <h1>Counter in a portal: {showWindowPortal}</h1>
-            <p>Even though I render in a different window, I share state!</p>
+		<div>
+			{store.loading && <img src="./assets/loading.gif" />}
+			{(!store.query.data && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
+			{(store.query.data && !store.loading) &&
+				<div>
+					<div className="performanceMetricsButtonInfo">
+						<button onClick={toggleWindowPortalOne} className="performanceMetricsButton">
+							Expand Performance Metrics
+						</button>
 
-          </TestWindow>)} */}
+						<button onClick={toggleWindowPortalTwo} className="performanceMetricsButton">
+							Show Historical Metrics
+						</button>
 
-        <div>{htmlContainer}</div>
-      </div>
-      <div>{chartContainer}</div>
-    </div>
-  }
-  </div>
-  )
+						<ExpandPerfData key={'ExpandPerfData 1'} showWindow={showWindowPortalOne} performanceAvg={perfAvg} anomaliesObject={anomaliesObj} performance={performanceObj} />
+						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} />
+						<div>{htmlContainer}</div>
+					</div>
+					<div>{chartContainer}</div>
+				</div>
+			}
+		</div>
+	)
 };
 
 export default PerfData;

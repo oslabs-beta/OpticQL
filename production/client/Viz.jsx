@@ -55,7 +55,7 @@ function GraphViz() {
           type: "dynamic",
         },
       },
-      height: "580px",
+      height: "630px",
       width: "100%",
 
       autoResize: true,
@@ -310,7 +310,7 @@ function GraphViz() {
     }
     }, [store.query.extensions])
 
-    // Make query to User App's server API for updated GraphQL schema
+	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
 		fetch('http://localhost:3000/getSchema')
 			.then(res => res.json())

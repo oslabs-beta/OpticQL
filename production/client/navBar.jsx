@@ -1,17 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Context } from './store.jsx';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
-return (
-	<div>
-    {/* <div id="buttonContainer">
-      <button className="navButton">Save</button>
-      <button className="navButton">History</button>
-    </div> */}
-    <div id='title'>
+
+	// REMEMBER TO ASK PATRICK AND REBECCA FOR RE-INSERTION OF THE LOGO
+
+	const linkStyle = {
+		"color": "#05445E",
+		"textDecoration": "none",
+	}
+
+	return (
+    <div>
+      <div id='title'>
       <img src="./assets/logo2.png" />
+      </div>
+      <div className="navigation">
+        <button className="navButtons">
+          <Link to="/" style={linkStyle}>Home</Link>
+        </button>
+        <button className="navButtons">
+          <Link to="/fullviz" style={linkStyle}>Full Viz</Link>
+        </button>
+      </div>
     </div>
-	</div>
-);
+	);
 }
+
 export default NavBar;
