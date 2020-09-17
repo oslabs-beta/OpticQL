@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import TestWindow from './testWindow.jsx';
+import { Context } from './store.jsx';
 
 import {
 	VictoryChart,
@@ -13,13 +14,13 @@ import {
 
 const History = (props) => {
 
-	const [chartContainer, setChartContainer] = useState([])
-	const [updatedData, setUpdatedData] = useState([])
+	const { store } = useContext(Context);
+	// const [chartContainer, setChartContainer] = useState([])
+	// const [updatedData, setUpdatedData] = useState([])
 
 	// let data = [];
-	// const chartContainer = [];
-
-	console.log(props.dbResults)
+	const chartContainer = [];
+	// console.log(props.dbResults)
 
 	const containerLine = [
 		<VictoryChart
@@ -49,7 +50,7 @@ const History = (props) => {
 					data: { stroke: "#189AB4" },
 					// parent: { border: "1px solid #ccc" },
 				}}
-				data={updatedData}
+				data={store.history}
 			// labels={({ datum }) => `Avg.: ${datum.y}`}
 			/>
 			<VictoryAxis
@@ -79,7 +80,7 @@ const History = (props) => {
 				style={{
 					data: { fill: "#189AB4" },
 				}}
-				data={updatedData}
+				data={store.history}
 				labels={({ datum }) =>
 					`Query: ${datum.t} ms,
 				Query String: ${datum.z}`
@@ -110,23 +111,23 @@ const History = (props) => {
 		</VictoryChart>,
 	];
 
-	useEffect(() => {
+	// useEffect(() => {
 
-		console.log('We are in the useEffect')
+	console.log('We are in the useEffect')
 
-		if (props.dbResults && props.dbResults.length === 1) {
-			setChartContainer(containerBar);
-		} else {
-			setChartContainer(containerLine);
-		}
+	if (store.history.length === 1) {
+		chartContainer.push(containerBar);
+	} else {
+		chartContainer.push(containerLine);
+	}
 
-	}, [updatedData])
+	// }, [updatedData])
 
-	useEffect(() => {
+	// useEffect(() => {
 
-		setUpdatedData(props.dbResults);
+	// 	setUpdatedData(props.dbResults);
 
-	}, [props.dbResults])
+	// }, [props.dbResults])
 
 
 	// Deletes all query in the database

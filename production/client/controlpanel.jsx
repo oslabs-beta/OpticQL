@@ -15,6 +15,10 @@ const ControlPanel = () => {
 	const [query, setQuery] = useState();
 	const [savedQuery, saveQuery] = useState();
 
+	function numberWithCommas (x) {
+		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+	}
+
 	// Make query to User App's server API, in turn, User's database
 
 	function makeQuery () {
@@ -68,6 +72,31 @@ const ControlPanel = () => {
 				type: "updateQuery",
 				payload: savedQuery
 			});
+
+			queryDB.getAll()
+				.then(result => {
+					console.log(result);
+					return result;
+				})
+				// Loop through the result and make an array with [query name, total duration]
+				.then(result => {
+					const dbData = [];
+					for (let i = 0; i < result.length; i++) {
+						const currQueryObj = result[i]
+						dbData.push({
+							x: currQueryObj.id,
+							y: (currQueryObj.response.extensions.tracing.duration / 1000000),
+							z: currQueryObj.queryString,
+							t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
+						})
+					}
+					dispatch({
+						type: "saveHistory",
+						payload: dbData
+					});
+				})
+				.catch(err => console.log("Error with database query for all historical information: ", err));
+
 		}
 	}, [savedQuery])
 

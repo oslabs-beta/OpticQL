@@ -39,26 +39,26 @@ const PerfData = () => {
 		setWindowPortalTwo(!showWindowPortalTwo)
 
 		// Execute database query for historical information
-		queryDB.getAll()
-			.then(result => {
-				console.log(result);
-				return result;
-			})
-			// Loop through the result and make an array with [query name, total duration]
-			.then(result => {
-				for (let i = 0; i < result.length; i++) {
-					const currQueryObj = result[i]
-					dbData.push({
-						x: currQueryObj.id,
-						y: (currQueryObj.response.extensions.tracing.duration / 1000000),
-						z: currQueryObj.queryString,
-						t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
-					})
-				}
-				// set state here for DBResults
-				return setDBResults(dbData)
-			})
-			.catch(err => console.log("Error with database query for all historical information: ", err));
+		// queryDB.getAll()
+		// 	.then(result => {
+		// 		console.log(result);
+		// 		return result;
+		// 	})
+		// 	// Loop through the result and make an array with [query name, total duration]
+		// 	.then(result => {
+		// 		for (let i = 0; i < result.length; i++) {
+		// 			const currQueryObj = result[i]
+		// 			dbData.push({
+		// 				x: currQueryObj.id,
+		// 				y: (currQueryObj.response.extensions.tracing.duration / 1000000),
+		// 				z: currQueryObj.queryString,
+		// 				t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
+		// 			})
+		// 		}
+		// 		// set state here for DBResults
+		// 		return setDBResults(dbData)
+		// 	})
+		// 	.catch(err => console.log("Error with database query for all historical information: ", err));
 	}
 
 
@@ -304,7 +304,7 @@ const PerfData = () => {
 						</button>
 
 						<ExpandPerfData key={'ExpandPerfData 1'} showWindow={showWindowPortalOne} performanceAvg={perfAvg} anomaliesObject={anomaliesObj} performance={performanceObj} />
-						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} dbResults={dbResults} />
+						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} />
 						<div>{htmlContainer}</div>
 					</div>
 					<div>{chartContainer}</div>
