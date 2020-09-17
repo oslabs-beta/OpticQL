@@ -249,6 +249,20 @@ function GraphViz() {
         const regexTest = /[a-zA-Z ]+\([^]+\)/g
         const mutationArr = data.match(regexTest)
         console.log('mutationArr', mutationArr)
+        mutationArr.forEach((el)=>{
+          const mutationArrTrim = el.trim();
+          const typeMutationArr = mutationArrTrim.split("(");
+          // iterate typeMutationArr, trip the el[0], and split the right side
+          const typeMutation = typeMutationArr[0].trim();
+          const typeMutationConvert = mutationRef[typeMutation];
+          greenObj[typeMutationConvert] = true;
+          const fieldMutations = typeMutationArr[1].split(/(:)/)
+          console.log('fieldMutations', fieldMutations)
+          console.log(typeMutationArr)
+        })
+
+        
+        
       }
 
       if ((queryRes && store.schema.schemaNew) || (store.mutation && store.schema.schemaNew)) {
