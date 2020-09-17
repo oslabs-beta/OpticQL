@@ -280,6 +280,10 @@ function GraphViz() {
         } else {
           // ADD FUNC TO BE INVOKED ON MUTATION, SHOULD ALSO FILL OUT 'GREEN OBJ'
           mutationHelp(mutationRes)
+          dispatch({
+            type: "mutation",
+            payload: false
+          });
         }
         
         
