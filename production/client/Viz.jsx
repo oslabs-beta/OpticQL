@@ -246,7 +246,7 @@ function GraphViz() {
         // regex to match mutation type
         console.log('DataPreRegex', data)
         // const typeRegex = /[A-Za-z0-9_ ]+\(.+\)$/g
-        const regexTest = /[a-zA-Z ]+\([^]+\)/g
+        const regexTest = /[a-zA-Z ]+\([^\)]+\)/g
         const mutationArr = data.match(regexTest)
         console.log('mutationArr', mutationArr)
         mutationArr.forEach((el)=>{
@@ -268,7 +268,7 @@ function GraphViz() {
             }
           })
         })
-        console.log(greenObj)
+        console.log('GREENOBJ', greenObj)
         
         
       }
