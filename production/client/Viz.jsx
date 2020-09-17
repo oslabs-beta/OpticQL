@@ -63,7 +63,7 @@ function GraphViz() {
    )
  
     useEffect(()=>{
-      // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema'
+      // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       let allMutations;
       if (store.schema.schemaNew){
@@ -80,7 +80,7 @@ function GraphViz() {
           
         
         })
-        //Separating query and mutation types from general type fields, 
+        // Separating query and mutation types from general type fields, 
         // which will be used to create nodes in graph.
         let queryArr;
         let queryIndex;
@@ -92,26 +92,25 @@ function GraphViz() {
             queryIndex = i;
           }
           if(elJoin.includes("Mutation")) {
-            // allMutations = elJoin;
             mutationIndex = i;
           }
         })
-        // const setQuery = new Set();
+        
         const queryConvert = {};
         const mutationConvert = {};
-        // Format object of 'type Query' here
+        // Fill out 'queryConvert' to be a dictonary that looks up the field 'type' for a query 'type' (key/value pair -> people: 'Person')
         queryArr.forEach((el)=>{
           if (el.includes(":")) {
             const elSplit = el.split(':');
             const lastElSplit = elSplit[elSplit.length-1];
             const regex = /[A-Za-z]+/;
             const found = lastElSplit.match(regex);
-            // setQuery.add(found[0])
             const left = elSplit[0];
             const leftName = left.split("(");
             queryConvert[leftName[0]] = found[0];
           }
         })
+        // Fill out 'mutationConvert' to be a dictonary that looks up the field 'type' for a mutation 'type' (key/value pair -> createPerson: 'Person')
         const mutationSplitBracket = allMutations.split(/{\n/)
         const regex = /!\n/
         const mutation = mutationSplitBracket[1].split(regex);
@@ -126,9 +125,8 @@ function GraphViz() {
             mutationConvert[sliced] = field;
           }
         })
+        // "setmutationRef" and "setConvert" save their respective object arguments in state so they can be accessed when a query / mutation is issued
         setmutationRef(mutationConvert)
-
-        // Convert looks at the type of query ('people', 'person') and converts it to schema 'Type' (Person)
         setConvert(queryConvert);
         const queryObject = {};
         // Now isolate the Non-Query/Mutation type fields 
@@ -147,7 +145,7 @@ function GraphViz() {
                 break;
               }
             } 
-            // Fill out queryObject with 'queryName' as property and fields as values
+            // Fill out queryObject with 'queryName' (Person) as property and fields (name) as values. Obj looks like: {Person: name, Person: age}
             el.forEach((prop) => {
               if (prop.includes(":")){
                 let propSplit = prop.split(":");
@@ -163,11 +161,14 @@ function GraphViz() {
             })
           }
         })
+        // add 'queryObject' to state so that query / mutation useEffect can access it
+        setgraphObjRef(queryObject)
         const vizNodes = [];
         const vizEdges = [];
-        //Creates central query node that connects all field "types"
+        // Creates central query node that connects all query "types"
         const queryNode = {id: "Query", label: "Query", color: 'rgba(90, 209, 104, 1)', widthConstraint:75, font: {size: 20, align: 'center'}}
         vizNodes.push(queryNode)
+        //formats all "types", groups them with their fields by color, and sets them as nodes in vis.js graph.
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
         let colorPosition = 0;
         for (let key in queryObject){
@@ -182,37 +183,27 @@ function GraphViz() {
           }
           colorPosition += 1;
         }
-        setgraphObjRef(queryObject)
-        // if there are green nodes already in graph, update the green nodes via setData. Setting 'greenNode' to 
-        // false will result in orig graph being rendered instead of green graph
+        // If green graph is currently rendered (via greenNode being truthy), set greenNode to false so that base graph shown (not the green graph)
         if (greenNode) {
           greenNodeOn(false)
-          // net.network.setData({
-          //   edges: vizEdges, 
-          //   nodes: vizNodes,
-          // });
         } 
-        // must use setGraph to render initial data
+        // use setGraph to render initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
-
+        // Deep clone of Nodes and Edges created to be used when creating a graph with green nodes (after query / mutation)
         setNodes(JSON.parse(JSON.stringify(vizNodes)));
         setEdges(JSON.parse(JSON.stringify(vizEdges)));
-     
-        
       }
       }, [updatedSchema])
 
     useEffect(() => {
-      // listening for change to store.query.data, this will change if new query is executed
+      // listening for change to store.query.extensions, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
-      
-      // store.query.extensions.tracing
-
       if (store.query.extensions) {
       const greenObj = {};
       const queryRes = store.query.data;
       const mutationRes = store.mutation;
-      const recHelp = (data) => {
+      // queryHelp used to fill out greenObj for Queries
+      const queryHelp = (data) => {
         // iterate through queries targeted ('people', 'planets')
         for (let key in data) {
           let val;
@@ -233,60 +224,47 @@ function GraphViz() {
               if (Array.isArray(newData[prop])) {
                 const newObj = {};
                 newObj[prop] = newData[prop];
-                recHelp(newObj)
+                queryHelp(newObj)
               }
             }
           } 
         }   
       }
+      // mutationHelp used to fill out greenObj for Mutations
       const mutationHelp = (data) => {
         // regex to match mutation type
-        console.log('DataPreRegex', data)
-        // const typeRegex = /[A-Za-z0-9_ ]+\(.+\)$/g
         const regexTest = /[a-zA-Z ]+\([^\)]+\)/g
         const mutationArr = data.match(regexTest)
-        console.log('mutationArr', mutationArr)
         mutationArr.forEach((el)=>{
           const mutationArrTrim = el.trim();
           const typeMutationArr = mutationArrTrim.split("(");
-          // iterate typeMutationArr, trip the el[0], and split the right side
           const typeMutation = typeMutationArr[0].trim();
           const typeMutationConvert = mutationRef[typeMutation];
           greenObj[typeMutationConvert] = true;
           const fieldMutations = typeMutationArr[1].split(/(:)/)
-          console.log('fieldMutations', fieldMutations)
           fieldMutations.forEach((el, i, arr)=>{
             if (arr[i+1] === ":") {
-              // add el to greenObj
               const fieldSplit = el.split(/[ ]+/)
-              console.log('fieldSplit', fieldSplit)
               const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1];
               greenObj[typeField] = true;
             }
           })
-        })
-        console.log('GREENOBJ', greenObj)
-        
-        
+        })        
       }
 
       if ((queryRes && store.schema.schemaNew) || (store.mutation && store.schema.schemaNew)) {
         // for QUERY: this fills out greenObj with our fields for green nodes
         if (!store.mutation) {
-          recHelp(queryRes)
+          queryHelp(queryRes)
         } else {
-          // ADD FUNC TO BE INVOKED ON MUTATION, SHOULD ALSO FILL OUT 'GREEN OBJ'
+          // for MUTATION: this fills out greenObj with fields for green nodes
           mutationHelp(mutationRes)
           dispatch({
             type: "mutation",
             payload: false
           });
         }
-        
-        
-        
-
-
+        // Need to create deep copy of 'nodes' and 'edges' so that each instance of green node graph does not persist (pass by ref issue)
         const nodeCopy = JSON.parse(JSON.stringify(nodes))
         const newNodeArr = nodeCopy.map((el)=> {
           // check if value is a key in greenObj, it true, turn its node color green
@@ -312,11 +290,10 @@ function GraphViz() {
         }
         for (let key in greenObj) {
           if (graphObjFormat[key]) {
-            // add edge beween value and key
             edgesArr.push({from: key, to: graphObjFormat[key]})
           }
         }
-        // if there are green nodes present, we need to update them 
+        // if there are green nodes present, we need to update them via setData
         if (greenNode) {
           net.network.setData({
             edges: edgesArr, 
@@ -324,17 +301,14 @@ function GraphViz() {
           });
         }
         // if no green nodes currently, need to use setGraphGreen to create graph
-        
-          setGraphGreen({
-            edges: edgesArr, 
-            nodes: newNodeArr,
-          })
-          greenNodeOn(true);
-        
+        setGraphGreen({
+          edges: edgesArr, 
+          nodes: newNodeArr,
+        })
+        greenNodeOn(true);
       }
     }
     }, [store.query.extensions])
-
 
     // Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
@@ -343,7 +317,7 @@ function GraphViz() {
 			.then(res => saveSchema(res))
 			.catch(err => console.log('Error with fetching updated schema from User app: ', err));
 	}
-	// Invokes when savedSchema state is update, sending schema to indexeddb table of schema
+	// Invokes when savedSchema state is updated, sending schema to indexeddb table of schema
 	useEffect(() => {
 		if (savedSchema) {
 			schemaDB.add({ name: savedSchema })
@@ -359,7 +333,6 @@ function GraphViz() {
     }
 	}, [savedSchema])
 
-
     return (
       <div>
       <div className='topLeftButtons' id='vizQuadrant'>
@@ -374,10 +347,6 @@ function GraphViz() {
           graph={graph}
           options={options}
           events={events}
-          // getNetwork={network => {
-          //   //  if you want access to vis.js network api you can set the state in a parent component using this property
-          //   setNet({ network })
-          // }}
         />
       </div>
       }
@@ -395,7 +364,6 @@ function GraphViz() {
         />
       </div>
       }
-
       </div>
     );
 }
