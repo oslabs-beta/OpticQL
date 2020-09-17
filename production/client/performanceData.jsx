@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Context } from "./store.jsx";
-import ExpandPerfData from "./expandPerfData.jsx"
+import ExpandPerfData from "./expandPerfData.jsx";
+import HistoryView from "./historyView.jsx";
+import { useIndexedDB } from 'react-indexed-db';
 
 import {
 	VictoryChart,
@@ -16,12 +18,49 @@ import {
 const PerfData = () => {
 
 	const { store } = useContext(Context);
-	const [showWindowPortal, setWindowPortal] = useState(false);
-	// const [outerPerformanceObj, setPerformanceObj] = useState({});
+	const [showWindowPortalOne, setWindowPortalOne] = useState(false);
+	const [showWindowPortalTwo, setWindowPortalTwo] = useState(false);
+	const [dbResults, setDBResults] = useState();
+	const queryDB = useIndexedDB('queryData');
 
-	function toggleWindowPortal () {
-		setWindowPortal(!showWindowPortal)
+	const dbData = [];
+
+	function toggleWindowPortalOne () {
+		// Set local state
+		setWindowPortalOne(!showWindowPortalOne)
 	}
+
+	function numberWithCommas (x) {
+		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+	}
+
+	function toggleWindowPortalTwo () {
+		// Set local state
+		setWindowPortalTwo(!showWindowPortalTwo)
+
+		// Execute database query for historical information
+		queryDB.getAll()
+			.then(result => {
+				console.log(result);
+				return result;
+			})
+			// Loop through the result and make an array with [query name, total duration]
+			.then(result => {
+				for (let i = 0; i < result.length; i++) {
+					const currQueryObj = result[i]
+					dbData.push({
+						x: currQueryObj.id,
+						y: (currQueryObj.response.extensions.tracing.duration / 1000000),
+						z: currQueryObj.queryString,
+						t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
+					})
+				}
+				// set state here for DBResults
+				return setDBResults(dbData)
+			})
+			.catch(err => console.log("Error with database query for all historical information: ", err));
+	}
+
 
 	// Declaring variables to re-assign if store.query.extensions is not falsy
 	const data = [];
@@ -249,12 +288,6 @@ const PerfData = () => {
 		// setPerformanceObj(performanceObj)
 	}
 
-	// {store.loading && <img src="./assets/loading.gif" />}
-	// {(!store.query.data && !store.loading) && <div id='queryPlaceholder'>No query results to display</div>}
-	// {(store.query.data && !store.loading) && <div>{container}</div>}
-
-
-
 	return (
 		<div>
 			{store.loading && <img src="./assets/loading.gif" />}
@@ -262,10 +295,16 @@ const PerfData = () => {
 			{(store.query.data && !store.loading) &&
 				<div>
 					<div className="performanceMetricsButtonInfo">
-						<button onClick={toggleWindowPortal} className="performanceMetricsButton">
+						<button onClick={toggleWindowPortalOne} className="performanceMetricsButton">
 							Expand Performance Metrics
 						</button>
-						<ExpandPerfData key={1} showWindow={showWindowPortal} performanceAvg={perfAvg} anomaliesObject={anomaliesObj} performance={performanceObj} />
+
+						<button onClick={toggleWindowPortalTwo} className="performanceMetricsButton">
+							Show Historical Metrics
+						</button>
+
+						<ExpandPerfData key={'ExpandPerfData 1'} showWindow={showWindowPortalOne} performanceAvg={perfAvg} anomaliesObject={anomaliesObj} performance={performanceObj} />
+						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} dbResults={dbResults} />
 						<div>{htmlContainer}</div>
 					</div>
 					<div>{chartContainer}</div>
