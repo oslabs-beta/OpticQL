@@ -33,8 +33,8 @@ body {
 	color: #c8c8c8;
 	font-family: sans-serif;
 	font-size: 16px;
-  padding: 15px;
-  height: 400px;
+	padding: 15px;
+	height: 340px;
 }
 /* #controlPanel {
 	padding: 20px 25px 20px 20px;
@@ -64,7 +64,7 @@ body {
   width: 50%;
 	min-width: 200px;
 	/* min-height: 100px; */
-	height: 650px;
+	height: 600px;
 	margin: 10px 20px 10px 20px;
 	padding: 20px;
 	background-color: #05445E
@@ -84,9 +84,53 @@ body {
 	margin-bottom: 20px;
 }
 
+.indexDBstyleButton {
+	/* height: 40px; */
+	/* margin-bottom: 20px; */
+	background-color: #75E6DA;
+	font-size: 16px;
+	font-weight: 500;
+	color:#05445E;
+	border: none;
+	margin: 5px;
+	padding: 4px;
+	height: 60px;
+	/* width: 150px; */
+	border-radius: 5px;
+	border: 1px solid white;
+	/* box-shadow: 2px 2px 1px 2px #888888 */
+}
+
+.navButtons {
+	/* height: 40px; */
+	/* margin-bottom: 20px; */
+	background-color: #75E6DA;
+	font-size: 16px;
+	font-weight: 500;
+	color:#05445E;
+	border: none;
+	margin: 5px;
+	padding: 4px;
+	height: 45px;
+	/* width: 150px; */
+	border-radius: 5px;
+	border: 1px solid white;
+	/* box-shadow: 2px 2px 1px 2px #888888 */
+}
+
+.indexDBbuttons {
+	display: flex;
+	flex-direction: right;
+	justify-content: center;
+	padding: 5px;
+	margin-top: 380px;
+}
+
 #query {
 	min-height: 200px;
-	/* min-width: 100%; */
+	max-height: 340px;
+	max-width: 95%;
+	min-width: 95%;
 }
 
 #queryScroll {
@@ -103,11 +147,11 @@ body {
 
 .quadrantButton, 
 .performanceMetricsButton {
+	border: 1px solid white;
 	background-color: #75E6DA;
 	font-size: 16px;
 	font-weight: 500;
 	color:#05445E;
-	border: none;
 	margin: 0px 20px 0px 0px;
 	padding: 10px;
 	height: 100%;
@@ -116,11 +160,11 @@ body {
 }
 
 button:focus {
-  outline:none;
+  outline: none;
 }
 
 input:focus {
-  outline:none;
+  outline: none;
 }
 
 .quadrantButton:hover {
@@ -139,7 +183,7 @@ input:focus {
 	font-size: 16px;
 	font-weight: 400;
 	color:#05445E;
-	border: none;
+	border: 1px solid white;
 	margin: 0px 20px 0px 0px;
 	padding: 10px;
 	height: 100%;
@@ -156,7 +200,7 @@ input:focus {
 	font-size: 16px;
 	font-weight: 400;
 	color:#05445E;
-	border: none;
+	border: 1px solid white;
 	margin: 0px 20px 0px 0px;
 	padding: 10px;
 	height: 100%;
@@ -204,4 +248,8 @@ input:focus {
 .performanceMetricsButtonInfo {
 	display: flex;
 	flex-direction: right;
+}
+
+.navigation {
+	margin-left: 75px;
 }
