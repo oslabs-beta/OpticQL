@@ -10,6 +10,7 @@ function GraphViz() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
 
+  const [mutationRef, setmutationRef] = useState({})
   const [updatedSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false)
   const [events, setEvents] = useState({});
@@ -114,22 +115,21 @@ function GraphViz() {
             queryConvert[leftName[0]] = found[0];
           }
         })
-          const mutationSplitBracket = allMutations.split(/{\n/)
-          const regex = /!\n/
-          const mutation = mutationSplitBracket[1].split(regex);
-          console.log(mutation)
-          mutation.map((el) => {
-            const regexEnd = /\):/
-            let endNode = el.split(regexEnd);
-            let field = endNode[endNode.length-1].trim()
-            const index = el.indexOf("(");
-            const sliced = el.slice(0, index).trim()
-            if (sliced.length !== 0){
-              mutationConvert[sliced] = field;
-            }
-            console.log(mutationConvert)
-          })
-      
+        const mutationSplitBracket = allMutations.split(/{\n/)
+        const regex = /!\n/
+        const mutation = mutationSplitBracket[1].split(regex);
+        console.log(mutation)
+        mutation.map((el) => {
+          const regexEnd = /\):/
+          let endNode = el.split(regexEnd);
+          let field = endNode[endNode.length-1].trim()
+          const index = el.indexOf("(");
+          const sliced = el.slice(0, index).trim()
+          if (sliced.length !== 0){
+            mutationConvert[sliced] = field;
+          }
+        })
+        setmutationRef(mutationConvert)
 
         // Convert looks at the type of query ('people', 'person') and converts it to schema 'Type' (Person)
         setConvert(queryConvert);
@@ -209,17 +209,12 @@ function GraphViz() {
       // listening for change to store.query.data, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       
-      // if (greenNode) {
-      //   net.network.setData({
-      //     edges: [], 
-      //     nodes: [],
-      //   });
-      // }
-    
-      if (store.query.data) {
+      // store.query.extensions.tracing
 
+      if (store.query.extensions) {
       const greenObj = {};
       const queryRes = store.query.data;
+      const mutationRes = store.mutation;
       const recHelp = (data) => {
         // iterate through queries targeted ('people', 'planets')
         for (let key in data) {
@@ -247,7 +242,14 @@ function GraphViz() {
           } 
         }   
       }
-    
+      const mutationHelp = (data) => {
+        // regex to match mutation type
+        console.log('DataPreRegex', data)
+        // const typeRegex = /[A-Za-z0-9_ ]+\(.+\)$/g
+        const regexTest = /[a-zA-Z ]+\([^]+\)/g
+        const mutationArr = data.match(regexTest)
+        console.log('mutationArr', mutationArr)
+      }
 
       if ((queryRes && store.schema.schemaNew) || (store.mutation && store.schema.schemaNew)) {
         // for QUERY: this fills out greenObj with our fields for green nodes
@@ -255,6 +257,7 @@ function GraphViz() {
           recHelp(queryRes)
         } else {
           // ADD FUNC TO BE INVOKED ON MUTATION, SHOULD ALSO FILL OUT 'GREEN OBJ'
+          mutationHelp(mutationRes)
         }
         
         
@@ -307,7 +310,7 @@ function GraphViz() {
         
       }
     }
-    }, [store.query.data])
+    }, [store.query.extensions])
 
 
     // Make query to User App's server API for updated GraphQL schema
