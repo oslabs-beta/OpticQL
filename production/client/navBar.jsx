@@ -1,24 +1,23 @@
 import React from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
-	// remember to ask patrick and rebecca for the logo code
-	const newLocation = (e) => {
-		e.preventDefault();
-		window.location.href = '/history'
+
+	// REMEMBER TO ASK PATRICK AND REBECCA FOR RE-INSERTION OF THE LOGO
+
+	const linkStyle = {
+		"color": "#05445E",
+		"text-decoration": "none",
 	}
 
 	return (
-		<div>
-			<Link to="/">Home </Link>
-			<button style={{ "backgroundColor": 'white' }}>
-				<Link to="/history">Historical Performance</Link>
+		<div className="navigation">
+			<button className="navButtons">
+				<Link to="/" style={linkStyle}>Home</Link>
 			</button>
-
-			{/* <button component={Link} to="/history">
-				Click Me
-</button> */}
-
+			<button className="navButtons">
+				<Link to="/fullviz" style={linkStyle}>Full Viz</Link>
+			</button>
 		</div>
 	);
 }

@@ -10,6 +10,7 @@ initDB(DBConfig);
 // https://www.npmjs.com/package/react-indexed-db
 
 // should grab the App component and attach to the index.html
+
 render(
 	<BrowserRouter>
 		<App />

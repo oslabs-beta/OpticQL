@@ -101,6 +101,23 @@ body {
 	/* box-shadow: 2px 2px 1px 2px #888888 */
 }
 
+.navButtons {
+	/* height: 40px; */
+	/* margin-bottom: 20px; */
+	background-color: #75E6DA;
+	font-size: 16px;
+	font-weight: 500;
+	color:#05445E;
+	border: none;
+	margin: 5px;
+	padding: 4px;
+	height: 45px;
+	/* width: 150px; */
+	border-radius: 5px;
+	border: 1px solid white;
+	/* box-shadow: 2px 2px 1px 2px #888888 */
+}
+
 .indexDBbuttons {
 	display: flex;
 	flex-direction: right;
@@ -230,4 +247,8 @@ input:focus {
 .performanceMetricsButtonInfo {
 	display: flex;
 	flex-direction: right;
+}
+
+.navigation {
+	margin-left: 75px;
 }

@@ -1,14 +1,14 @@
 import React from "react";
 import NavBar from './navBar.jsx'
 
-const History = () => {
+const FullViz = () => {
 
 	return (
 		<div>
 			<NavBar />
-			<h1>hello</h1>
+			<h1>Hello World</h1>
 		</div>
 	)
 }
 
-export default History;
+export default FullViz;

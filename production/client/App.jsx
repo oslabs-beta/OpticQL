@@ -1,8 +1,8 @@
 import React from 'react';
-import { Switch, Route, Link } from "react-router-dom";
-import HistoryView from './historyView.jsx'
+import { Switch, Route } from "react-router-dom";
+import FullVizView from './fullVizView.jsx'
 import QuadrantView from './quadrantView.jsx'
-import Error from './error.jsx'
+// import Error from './error.jsx'
 
 const App = () => {
 
@@ -10,8 +10,9 @@ const App = () => {
 		<main>
 			<Switch>
 				<Route path="/" component={QuadrantView} exact />
-				<Route path="/history" component={HistoryView} />
-				<Route component={Error} />
+				<Route path="/fullviz" component={FullVizView} />
+				{/* <Route component={Error} /> */}
+				<Route path="*" component={QuadrantView} />
 			</Switch>
 		</main>
 	)
