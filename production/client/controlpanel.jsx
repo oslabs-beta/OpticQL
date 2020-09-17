@@ -112,6 +112,10 @@ const ControlPanel = () => {
 		});
 	}
 
+	const options = {
+		lineNumbers: true,
+	}
+
 	// function ClearAll() {
 	// 	const { clear } = useIndexedDB('schemaData');
 
