@@ -258,9 +258,17 @@ function GraphViz() {
           greenObj[typeMutationConvert] = true;
           const fieldMutations = typeMutationArr[1].split(/(:)/)
           console.log('fieldMutations', fieldMutations)
-          console.log(typeMutationArr)
+          fieldMutations.forEach((el, i, arr)=>{
+            if (arr[i+1] === ":") {
+              // add el to greenObj
+              const fieldSplit = el.split(/[ ]+/)
+              console.log('fieldSplit', fieldSplit)
+              const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1];
+              greenObj[typeField] = true;
+            }
+          })
         })
-
+        console.log(greenObj)
         
         
       }
