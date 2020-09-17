@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import { Context } from './store.jsx';
+import CodeMirror from 'react-codemirror';
+require('codemirror/lib/codemirror.css');
 
 // Further actions: (1) ensure mutations work
 
@@ -122,15 +124,12 @@ const ControlPanel = () => {
 
 	return (
 		<div>
-			<form onSubmit={handleSubmit}>
-				<div id="form-group">
-					<div className="topLeftButtons" id="controlQuadrant">
-						<input type="submit" className="quadrantButton" id="submitQuery" value="Submit Query" />
-					</div>
-					{/* <label htmlFor="query"></label> */}
-					<textarea className="form-control" id="query" value={query} onChange={handleChange} placeholder="Please enter query here"></textarea>
-				</div>
-			</form>
+
+			<div className="topLeftButtons">
+				<button className="quadrantButton" onClick={handleSubmit}>Submit Query</button>
+				<CodeMirror options={options} id="query" value={query} onChange={handleChange} defaultValue="Please enter query here" />
+			</div>
+
 			<div className="indexDBbuttons">
 				<button className="indexDBstyleButton" key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button>
 				<button className="indexDBstyleButton" key={2} onClick={schemaDatabaseGrab}>Check Database for Schema</button>
@@ -139,6 +138,8 @@ const ControlPanel = () => {
 			</div>
 		</div>
 	)
+
+
 
 }
 
