@@ -123,6 +123,7 @@ body {
 	flex-direction: right;
 	justify-content: center;
 	padding: 5px;
+	margin-top: 380px;
 }
 
 #query {
