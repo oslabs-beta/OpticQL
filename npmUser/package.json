@@ -4,7 +4,8 @@
 	"description": "npm backend server",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon server.js"
 	},
 	"author": "",
 	"license": "ISC",
@@ -17,8 +18,11 @@
 		"express-graphql": "^0.11.0",
 		"graphql-tools": "^6.2.0",
 		"node-fetch": "^2.6.0",
-		"optic-ql": "^1.0.3",
+		"optic-ql": "^1.0.5",
 		"pg": "^8.3.3",
 		"postgraphile": "^4.8.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.4"
 	}
 }

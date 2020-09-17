@@ -29,8 +29,6 @@ function GraphViz() {
       edges: []
     },
   );
-
-
   const [options, setOptions] = useState(
     {
       layout: {
@@ -55,7 +53,6 @@ function GraphViz() {
         smooth: {
           enabled: true,
           type: "dynamic",
-          // roundness: 0.5
         },
       },
       height: "580px",
