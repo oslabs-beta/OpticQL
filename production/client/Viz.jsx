@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
 import { useIndexedDB } from 'react-indexed-db';
@@ -16,6 +17,9 @@ function GraphViz(props) {
   const [events, setEvents] = useState({});
   const [convert, setConvert] = useState({})
   const [graphObjRef, setgraphObjRef] = useState({})
+  
+
+  
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
@@ -426,15 +430,28 @@ function GraphViz(props) {
         updateSchema(updatedSchema + 1);
     }
 	}, [savedSchema])
-
+  
+  const linkStyle = {
+		"color": "#05445E",
+		"textDecoration": "none",
+	}
     return (
       <div>
+      {!props.fullGraph && 
       <div className='topLeftButtons' id='vizQuadrant'>
         <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Import Schema</button>
         {store.schema.schemaNew && 
-          <button className="quadrantButton">View Full Screen</button>
+          <button className="quadrantButton">
+            <Link to="/fullviz" style={linkStyle}>View Full Screen</Link>
+          </button>
         }
       </div>
+      }
+      {props.fullGraph &&
+        <button className="navButtons">
+          <Link to="/" style={linkStyle}>Home</Link>
+        </button>
+      }
       {(store.schema.schemaNew && !greenNode) &&
       <div id='graphBox'>
         <Graph
