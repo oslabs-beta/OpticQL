@@ -11,14 +11,13 @@ function GraphViz(props) {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
 
-  const [mutationRef, setmutationRef] = useState({})
+  const [mutationRef, setmutationRef] = useState({});
   const [updatedSchema, updateSchema] = useState(0);
-  const [greenNode, greenNodeOn] = useState(false)
+  const [greenNode, greenNodeOn] = useState(false);
   const [events, setEvents] = useState({});
-  const [convert, setConvert] = useState({})
-  const [graphObjRef, setgraphObjRef] = useState({})
-  
-
+  const [convert, setConvert] = useState({});
+  const [graphObjRef, setgraphObjRef] = useState({});
+  const [initialRender, setInitialRender] = useState(true);
   
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
@@ -69,6 +68,8 @@ function GraphViz(props) {
     useEffect(()=>{
       if (!props.fullGraph) {
       console.log('schema USE EFFECT')
+
+   
 
       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
@@ -314,14 +315,23 @@ function GraphViz(props) {
         }
         //update store to have properties for green nodes and green edges, so that full page Viz view can use them.
         // MAKE SURE THIS DISPATCH DOES NOT OVERWRITE THE EXISTING DATA!!
-        dispatch({
-          type: "greenEdges",
-          payload: JSON.parse(JSON.stringify(edgesArr))
-        })
-        dispatch({
-          type: "greenNodes",
-          payload: JSON.parse(JSON.stringify(newNodeArr))
-        })
+        console.log("NODES BEING OVER-WRITTEN")
+        console.log("NodesinUseEffect", store.greenNodes)
+
+        // on initial render prevent this from running
+        if (edgesArr.length !== 0) {
+          dispatch({
+            type: "greenEdges",
+            payload: JSON.parse(JSON.stringify(edgesArr))
+          })
+          dispatch({
+            type: "greenNodes",
+            payload: JSON.parse(JSON.stringify(newNodeArr))
+          })
+        } 
+
+
+
         // if there are green nodes present, we need to update them via setData
         if (greenNode) {
           net.network.setData({
@@ -379,15 +389,15 @@ function GraphViz(props) {
         }
       }
       // 1. piece of state noting if returning from fullGraph
-      // THIS DEALS WITH QUADRANT GRAPH
 
+      // THIS DEALS WITH QUADRANT GRAPH
       if ((store.fullGraphVisit && store.greenNodes) && !props.fullGraph) {
         console.log('THIS SHOULD TRIGGER')
         console.log('EDGES', store.greenEdges)
         console.log('NODES', store.greenNodes)
         setGraphGreen({
-          edges: store.greenEdges, 
-          nodes: store.greenNodes
+          edges: JSON.parse(JSON.stringify(store.greenEdges)), 
+          nodes: JSON.parse(JSON.stringify(store.greenNodes))
         })
         // net.network.setData({
         //   edges: store.greenEdges, 
@@ -399,6 +409,26 @@ function GraphViz(props) {
           payload: false
         })
       }
+      if ((store.fullGraphVisit && !store.greenNodes) && !props.fullGraph) {
+        setGraphGreen({
+          edges: JSON.parse(JSON.stringify(store.edges)), 
+          nodes: JSON.parse(JSON.stringify(store.nodes))
+        })
+        // net.network.setData({
+        //   edges: store.greenEdges, 
+        //   nodes: store.greenNodes
+        // });
+        dispatch({
+          type: "fullGraphVisit",
+          payload: false
+        })
+      }
+
+
+
+
+
+
     // else if (store.fullGraphVisit && !store.greenNodes) {
     //   setGraph({nodes: store.nodes, edges: store.edges});
     //   dispatch({
@@ -410,6 +440,17 @@ function GraphViz(props) {
     }, [])  
 	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
+    // DO A DISPATCH TO SET THE GREEN NODES TO FALSE
+    dispatch({
+      type: "greenEdges",
+      payload: false
+    })
+    dispatch({
+      type: "greenNodes",
+      payload: false
+    })
+
+
 		fetch('http://localhost:3000/getSchema')
 			.then(res => res.json())
 			.then(res => saveSchema(res))
