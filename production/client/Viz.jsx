@@ -489,7 +489,7 @@ function GraphViz(props) {
       </div>
       }
       {props.fullGraph &&
-        <button className="navButtons">
+        <button className="quadrantButton">
           <Link to="/" style={linkStyle}>Home</Link>
         </button>
       }

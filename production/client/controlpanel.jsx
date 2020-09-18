@@ -182,10 +182,10 @@ const ControlPanel = () => {
 				<CodeMirror options={options} id="query" value={query} onChange={handleChange} defaultValue="Please enter query here" />
 			</div>
 			<div className="indexDBbuttons">
-				<button className="indexDBstyleButton" key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button>
-				<button className="indexDBstyleButton" key={2} onClick={schemaDatabaseGrab}>Check Database for Schema</button>
-				<button className="indexDBstyleButton" key={3} onClick={handleDeleteQueryData}>Delete Query Data</button>
-				<button className="indexDBstyleButton" key={4} onClick={handleDeleteSchemaData}>Delete Schema Data</button>
+				<button className="quadrantButton" key={1} onClick={queryDatabaseGrab}>Check Database for Queries</button>
+				<button className="quadrantButton" key={2} onClick={schemaDatabaseGrab}>Check Database for Schema</button>
+				<button className="quadrantButton" key={3} onClick={handleDeleteQueryData}>Delete Query Data</button>
+				<button className="quadrantButton" key={4} onClick={handleDeleteSchemaData}>Delete Schema Data</button>
 			</div>
 		</div>
 	)
