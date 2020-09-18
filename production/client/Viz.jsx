@@ -56,7 +56,7 @@ function GraphViz(props) {
         },
       },
       height: props.height,
-      width: "100%",
+      width: props.width,
 
       autoResize: true,
     },
@@ -293,6 +293,15 @@ function GraphViz(props) {
             edgesArr.push({from: key, to: graphObjFormat[key]})
           }
         }
+        //update store to have properties for green nodes and green edges, so that full page Viz view can use them.
+        dispatch({
+          type: "greenEdges",
+          payload: edgesArr
+        })
+        dispatch({
+          type: "greenNodes",
+          payload: newNodeArr
+        })
         // if there are green nodes present, we need to update them via setData
         if (greenNode) {
           net.network.setData({
@@ -310,6 +319,22 @@ function GraphViz(props) {
     }
     }, [store.query.extensions])
 
+    //distinguishing between fullGraph and quadrant views so green nodes update when toggling views.
+    useEffect(()=> {
+      if (props.fullGraph) {
+        if (greenNode) {
+          net.network.setData({
+            edges: store.greenEdges, 
+            nodes: store.greenNodes
+          });
+        }
+        setGraphGreen({
+          edges: store.greenEdges, 
+          nodes: store.greenNodes
+        })
+        greenNodeOn(true);
+      }
+    }, [])  
 	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
 		fetch('http://localhost:3000/getSchema')

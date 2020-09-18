@@ -1,5 +1,4 @@
-import React, { useReducer } from 'react';
-import { Context, initialState, reducer } from './store.jsx';
+import React from 'react';
 import ControlPanel from './controlpanel.jsx';
 import QueryDisplay from './queryDisplay.jsx';
 import GraphViz from './Viz.jsx'
@@ -7,11 +6,8 @@ import PerformanceData from './performanceData.jsx';
 import NavBar from './navBar.jsx'
 
 const QuadrantView = () => {
-	const [store, dispatch] = useReducer(reducer, initialState)
-
 	return (
 		<div>
-			<Context.Provider value={{ store, dispatch }}>
 				<NavBar />
 				<div id='mainContainer'>
 					<div className="row" id='topRow'>
@@ -27,11 +23,10 @@ const QuadrantView = () => {
 							<PerformanceData />
 						</div>
 						<div id="graphViz" className="quadrant2">
-							<GraphViz height={"630px"}/>
+							<GraphViz height={"630px"} width={"100%"} fullGraph={false}/>
 						</div>
 					</div>
 				</div>
-			</Context.Provider>
 		</div>
 	)
 }

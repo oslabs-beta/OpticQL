@@ -69,7 +69,15 @@ body {
 	padding: 20px;
 	background-color: #05445E
 }
+#fullVizParent {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 
+#fullVizContainer {
+	width: 80%;
+}
 
 #mainContainer {
   display: flex;
