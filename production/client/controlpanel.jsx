@@ -22,11 +22,22 @@ const ControlPanel = () => {
 	// Make query to User App's server API, in turn, User's database
 
 	function makeQuery () {
-		// UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
-		dispatch({
-			type: "updateLoading",
-			payload: true
-		});
+    // UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
+    dispatch({
+      type: "updateLoading",
+      payload: true
+    });
+
+    // ADD DISPATCH, send query to 'Mutation' variable
+    // if query.includes('mutation')
+    if (query.includes('mutation')) {
+      dispatch({
+        type: "mutation",
+        payload: query
+      });
+    };
+    
+
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
 			headers: {

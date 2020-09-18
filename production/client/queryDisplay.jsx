@@ -41,26 +41,26 @@ const QueryDisplay = () => {
 	// <img src="./assets/logo2.png" />
 	return (
 		<div>
-			{(!store.query.data && !store.loading) &&
-				<div id='queryPlaceholder'>No query results to display</div>
-			}
-			{store.loading &&
-				<img src="./assets/loading.gif" className="loading" />
-			}
-			{(store.query.data && !store.loading) &&
-				<div>
-					<div className="topLeftButtons">
-						<button className={response ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetResponse}>Response</button>
-						<button className={metrics ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetMetrics}>Metrics</button>
-						<button className={errors ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetErrors}>Errors</button>
-					</div>
-					<div id='queryScroll'>
-						{response && <pre><code>{JSON.stringify(store.query.data, null, 2)}</code></pre>}
-						{metrics && <pre><code>{JSON.stringify(store.query.extensions, null, 2)}</code></pre>}
-						{errors && <pre><code>{JSON.stringify(store.query.errors, null, 2)}</code></pre>}
-					</div>
-				</div>
-			}
+      {(!store.query.extensions && !store.loading) &&
+        <div id='queryPlaceholder'>No query results to display</div>
+      }
+      {store.loading && 
+          <img src="./assets/loading.gif" className="loading" />
+      }
+      {(store.query.extensions && !store.loading) &&
+        <div>
+          <div className="topLeftButtons">
+            <button className={response ? 'queryDisplayTrue' : 'queryDisplayFalse'} onClick={handleGetResponse}>Response</button>
+            <button className={metrics ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetMetrics}>Metrics</button>
+            <button className={errors ? 'queryDisplayTrue' : 'queryDisplayFalse'}  onClick={handleGetErrors}>Errors</button>
+          </div>
+          <div id='queryScroll'>
+              {response && <pre><code>{JSON.stringify(store.query.data, null, 2)}</code></pre>}
+              {metrics && <pre><code>{JSON.stringify(store.query.extensions, null, 2)}</code></pre>}
+              {errors && <pre><code>{JSON.stringify(store.query.errors, null, 2)}</code></pre>}
+          </div>
+        </div>
+      }
 		</div>
 	)
 }

@@ -3,7 +3,8 @@ import React from 'react';
 export const initialState = {
 	query: {},
 	schema: {},
-	loading: false,
+  loading: false,
+  mutation: false,
 	history: [],
 }
 
@@ -17,7 +18,9 @@ export const reducer = (state, action) => {
 			return { ...state, schema: action.payload }
 		case "updateLoading": {
 			return { ...state, loading: action.payload }
-		}
+    }
+    case "mutation": 
+      return {...state, mutation: action.payload}
 		case "saveHistory": {
 			return { ...state, history: action.payload }
 		}

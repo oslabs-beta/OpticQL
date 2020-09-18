@@ -142,9 +142,9 @@ const History = (props) => {
 
 	const styleSheet = {
 		"display": "flex",
-		"flex-direction": "column",
-		"justify-content": "center",
-		"align-items": "center",
+		"flexDirection": "column",
+		"justifyContent": "center",
+		"alignItems": "center",
 	}
 
 	return (

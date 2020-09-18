@@ -7,18 +7,23 @@ const NavBar = () => {
 
 	const linkStyle = {
 		"color": "#05445E",
-		"text-decoration": "none",
+		"textDecoration": "none",
 	}
 
 	return (
-		<div className="navigation">
-			<button className="navButtons">
-				<Link to="/" style={linkStyle}>Home</Link>
-			</button>
-			<button className="navButtons">
-				<Link to="/fullviz" style={linkStyle}>Full Viz</Link>
-			</button>
-		</div>
+    <div>
+      <div id='title'>
+      <img src="./assets/logo2.png" />
+      </div>
+      <div className="navigation">
+        <button className="navButtons">
+          <Link to="/" style={linkStyle}>Home</Link>
+        </button>
+        <button className="navButtons">
+          <Link to="/fullviz" style={linkStyle}>Full Viz</Link>
+        </button>
+      </div>
+    </div>
 	);
 }
 
