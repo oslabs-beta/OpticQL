@@ -26,7 +26,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
-    "jest": "^26.4.2",
     "react": "^16.13.1",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.13.1",
@@ -43,6 +42,7 @@
     "css-loader": "^4.2.2",
     "electron": "^10.1.0",
     "electron-builder": "^22.8.0",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4",
     "style-loader": "^1.2.1",
     "supertest": "^4.0.2",
