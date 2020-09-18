@@ -27,7 +27,7 @@ const QuadrantView = () => {
 							<PerformanceData />
 						</div>
 						<div id="graphViz" className="quadrant2">
-							<GraphViz />
+							<GraphViz height={"630px"}/>
 						</div>
 					</div>
 				</div>

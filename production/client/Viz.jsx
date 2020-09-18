@@ -3,7 +3,7 @@ import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
 import { useIndexedDB } from 'react-indexed-db';
 
-function GraphViz() {
+function GraphViz(props) {
   const { store, dispatch } = useContext(Context);
   const [net, setNet] = useState({})
   const [savedSchema, saveSchema] = useState();
@@ -55,7 +55,7 @@ function GraphViz() {
           type: "dynamic",
         },
       },
-      height: "630px",
+      height: props.height,
       width: "100%",
 
       autoResize: true,

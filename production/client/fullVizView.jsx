@@ -1,12 +1,13 @@
 import React from "react";
 import NavBar from './navBar.jsx'
+import GraphViz from './Viz.jsx';
 
 const FullViz = () => {
 
 	return (
 		<div>
 			<NavBar />
-			<h1>Hello World</h1>
+			<GraphViz height={"1000px"}/>
 		</div>
 	)
 }
