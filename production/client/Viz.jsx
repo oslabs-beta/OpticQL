@@ -63,6 +63,9 @@ function GraphViz(props) {
    )
  
     useEffect(()=>{
+      if (!props.fullGraph) {
+      console.log('schema USE EFFECT')
+
       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       let allMutations;
@@ -192,10 +195,22 @@ function GraphViz(props) {
         // Deep clone of Nodes and Edges created to be used when creating a graph with green nodes (after query / mutation)
         setNodes(JSON.parse(JSON.stringify(vizNodes)));
         setEdges(JSON.parse(JSON.stringify(vizEdges)));
-      }
+        //sending nodes and edges to store so that viz graph can persist between page views.
+        dispatch({
+          type: "nodes",
+          payload: vizNodes
+        })
+        dispatch({
+          type: "edges",
+          payload: vizEdges
+        })
+
+      }}
       }, [updatedSchema])
 
     useEffect(() => {
+      if (!props.fullGraph) {
+      console.log('GREEN NODE USE EFFECT')
       // listening for change to store.query.extensions, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       if (store.query.extensions) {
@@ -316,24 +331,63 @@ function GraphViz(props) {
         })
         greenNodeOn(true);
       }
-    }
+    }}
     }, [store.query.extensions])
 
     //distinguishing between fullGraph and quadrant views so green nodes update when toggling views.
     useEffect(()=> {
       if (props.fullGraph) {
-        if (greenNode) {
-          net.network.setData({
+        console.log('FULL GRAPH')
+        console.log(store.greenEdges)
+        console.log(store.greenNodes)
+        dispatch({
+          type: "fullGraphVisit",
+          payload: true
+        })
+        if (store.greenNodes) {
+          if (greenNode) {
+            net.network.setData({
+              edges: store.greenEdges, 
+              nodes: store.greenNodes
+            });
+          }
+          setGraphGreen({
             edges: store.greenEdges, 
             nodes: store.greenNodes
-          });
+          })
+          greenNodeOn(true);
+        } else {
+          // render the store.edges and store.nodes
+          setGraph({nodes: store.nodes, edges: store.edges});
         }
+      }
+      // 1. piece of state noting if returning from fullGraph
+      else if (store.fullGraphVisit && store.greenNodes) {
+        console.log('THIS SHOULD TRIGGER')
+        console.log(store.greenEdges)
+        console.log(store.greenNodes)
         setGraphGreen({
           edges: store.greenEdges, 
           nodes: store.greenNodes
         })
+        // net.network.setData({
+        //   edges: store.greenEdges, 
+        //   nodes: store.greenNodes
+        // });
         greenNodeOn(true);
+        dispatch({
+          type: "fullGraphVisit",
+          payload: false
+        })
       }
+    else if (store.fullGraphVisit && !store.greenNodes) {
+      setGraph({nodes: store.nodes, edges: store.edges});
+      dispatch({
+        type: "fullGraphVisit",
+        payload: false
+      })
+    }
+      // 2. if 
     }, [])  
 	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {

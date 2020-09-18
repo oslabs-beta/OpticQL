@@ -6,8 +6,11 @@ export const initialState = {
   loading: false,
   mutation: false,
 	history: [],
-	greenNodes: [],
-	greenEdges: []
+	nodes: [],
+	edges: [],
+	greenNodes: false,
+	greenEdges: [],
+	fullGraphVisit: false
 }
 
 export const reducer = (state, action) => {
@@ -21,12 +24,20 @@ export const reducer = (state, action) => {
 		case "updateLoading": {
 			return { ...state, loading: action.payload }
 		}
+		case "nodes":
+			return {...state, nodes: action.payload}
+		case "edges":
+			return {...state, edges: action.payload}
 		case "greenNodes":
 			return {...state, greenNodes: action.payload}
 		case "greenEdges":
 			return {...state, greenEdges: action.payload}
     case "mutation": 
-      return {...state, mutation: action.payload}
+			return {...state, mutation: action.payload}
+		case "fullGraphVisit": 
+			return {...state, fullGraphVisit: action.payload}
+
+		
 		case "saveHistory": {
 			return { ...state, history: action.payload }
 		}
