@@ -161,6 +161,8 @@ const PerfData = () => {
 		const containerLine = [
 			<VictoryChart
 				// theme={VictoryTheme.material}
+				height={350}
+				padding={60}
 				domainPadding={{ x: 10 }}
 				containerComponent={
 					<VictoryVoronoiContainer
@@ -191,15 +193,19 @@ const PerfData = () => {
 				// labels={({ datum }) => `Avg.: ${datum.y}`}
 				/>
 				<VictoryAxis
+					label={"Path"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 15, angle: -30, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white", padding: 45 },
 					}}
 				/>
 				<VictoryAxis
+					label={"Duration Time (ms)"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 5, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white", padding: 40 },
 					}}
 					dependentAxis
 				/>
@@ -210,6 +216,8 @@ const PerfData = () => {
 		const containerBar = [
 			<VictoryChart
 				// theme={VictoryTheme.material}
+				height={350}
+				padding={60}
 				domainPadding={{ x: 5 }}
 			// containerComponent={<VictoryZoomContainer />}
 			>
@@ -234,15 +242,19 @@ const PerfData = () => {
 					}
 				/>
 				<VictoryAxis
+					label={"Path"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 5, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white" },
 					}}
 				/>
 				<VictoryAxis
+					label={"Duration Time (ms)"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 5, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white", padding: 40 },
 					}}
 					dependentAxis
 				/>
@@ -307,7 +319,7 @@ const PerfData = () => {
 						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} />
 						<div>{htmlContainer}</div>
 					</div>
-					<div>{chartContainer}</div>
+					<div className="chartContainerDiv">{chartContainer}</div>
 				</div>
 			}
 		</div>

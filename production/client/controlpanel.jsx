@@ -22,21 +22,21 @@ const ControlPanel = () => {
 	// Make query to User App's server API, in turn, User's database
 
 	function makeQuery () {
-    // UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
-    dispatch({
-      type: "updateLoading",
-      payload: true
-    });
+		// UPDATE A TRIGGER IN STORE THAT SAYS LOADING QUERY: TRUE
+		dispatch({
+			type: "updateLoading",
+			payload: true
+		});
 
-    // ADD DISPATCH, send query to 'Mutation' variable
-    // if query.includes('mutation')
-    if (query.includes('mutation')) {
-      dispatch({
-        type: "mutation",
-        payload: query
-      });
-    };
-    
+		// ADD DISPATCH, send query to 'Mutation' variable
+		// if query.includes('mutation')
+		if (query.includes('mutation')) {
+			dispatch({
+				type: "mutation",
+				payload: query
+			});
+		};
+
 
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
@@ -95,7 +95,7 @@ const ControlPanel = () => {
 					for (let i = 0; i < result.length; i++) {
 						const currQueryObj = result[i]
 						dbData.push({
-							x: currQueryObj.id,
+							x: (currQueryObj.id).toString(),
 							y: (currQueryObj.response.extensions.tracing.duration / 1000000),
 							z: currQueryObj.queryString,
 							t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))

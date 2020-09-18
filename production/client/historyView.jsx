@@ -15,12 +15,7 @@ import {
 const History = (props) => {
 
 	const { store } = useContext(Context);
-	// const [chartContainer, setChartContainer] = useState([])
-	// const [updatedData, setUpdatedData] = useState([])
-
-	// let data = [];
 	const chartContainer = [];
-	// console.log(props.dbResults)
 
 	const containerLine = [
 		<VictoryChart
@@ -54,15 +49,19 @@ const History = (props) => {
 			// labels={({ datum }) => `Avg.: ${datum.y}`}
 			/>
 			<VictoryAxis
+				label={"Query Database ID"}
 				style={{
-					tickLabels: { fontSize: 10, padding: 15, angle: -30, fill: "black" },
+					tickLabels: { fontSize: 10, padding: 5, angle: -30, fill: "black" },
 					axis: { stroke: "black" },
+					axisLabel: { fontSize: 10, padding: 30 },
 				}}
 			/>
 			<VictoryAxis
+				label={"Response Duration (ms)"}
 				style={{
 					tickLabels: { fontSize: 10, padding: 5, fill: "black" },
 					axis: { stroke: "black" },
+					axisLabel: { fontSize: 10, padding: 30 },
 				}}
 				dependentAxis
 			/>
@@ -70,6 +69,7 @@ const History = (props) => {
 	];
 
 	// Container for bar chart --> Used when there is ONLY ONE path
+
 	const containerBar = [
 		<VictoryChart
 			// theme={VictoryTheme.material}
@@ -96,46 +96,29 @@ const History = (props) => {
 				}
 			/>
 			<VictoryAxis
+				label={"Query Database ID"}
 				style={{
 					tickLabels: { fontSize: 10, padding: 5, fill: "black" },
 					axis: { stroke: "black" },
+					axisLabel: { fontSize: 10 },
 				}}
 			/>
 			<VictoryAxis
+				label={"Response Duration (ms)"}
 				style={{
 					tickLabels: { fontSize: 10, padding: 5, fill: "black" },
 					axis: { stroke: "black" },
+					axisLabel: { fontSize: 10 },
 				}}
 				dependentAxis
 			/>
 		</VictoryChart>,
 	];
 
-	// useEffect(() => {
-
-	console.log('We are in the useEffect')
-
 	if (store.history.length === 1) {
 		chartContainer.push(containerBar);
 	} else {
 		chartContainer.push(containerLine);
-	}
-
-	// }, [updatedData])
-
-	// useEffect(() => {
-
-	// 	setUpdatedData(props.dbResults);
-
-	// }, [props.dbResults])
-
-
-	// Deletes all query in the database
-
-	const handleDeleteQueryData = () => {
-		queryDB.clear().then(() => {
-			alert('Query database fully deleted!');
-		});
 	}
 
 	const headerStr = 'Historical GraphQL Performance (Overall response duration in ms)'

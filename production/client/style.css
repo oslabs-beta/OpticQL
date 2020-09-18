@@ -240,9 +240,9 @@ input:focus {
 }
 
 .performanceMetricsButton {
-	height: 40px;
+	height: 60px;
 	margin-bottom: 20px;
-	margin-right: 140px;
+	margin-right: 12px;
 }
 
 .performanceMetricsButtonInfo {
@@ -252,4 +252,10 @@ input:focus {
 
 .navigation {
 	margin-left: 75px;
+}
+
+.chartContainerDiv {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }
