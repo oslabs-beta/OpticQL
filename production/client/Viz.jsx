@@ -309,13 +309,14 @@ function GraphViz(props) {
           }
         }
         //update store to have properties for green nodes and green edges, so that full page Viz view can use them.
+        // MAKE SURE THIS DISPATCH DOES NOT OVERWRITE THE EXISTING DATA!!
         dispatch({
           type: "greenEdges",
-          payload: edgesArr
+          payload: JSON.parse(JSON.stringify(edgesArr))
         })
         dispatch({
           type: "greenNodes",
-          payload: newNodeArr
+          payload: JSON.parse(JSON.stringify(newNodeArr))
         })
         // if there are green nodes present, we need to update them via setData
         if (greenNode) {
@@ -338,8 +339,8 @@ function GraphViz(props) {
     useEffect(()=> {
       if (props.fullGraph) {
         console.log('FULL GRAPH')
-        console.log(store.greenEdges)
-        console.log(store.greenNodes)
+        console.log('FG edges', store.greenEdges)
+        console.log('FG nodes', store.greenNodes)
         dispatch({
           type: "fullGraphVisit",
           payload: true
@@ -356,16 +357,30 @@ function GraphViz(props) {
             nodes: store.greenNodes
           })
           greenNodeOn(true);
+
+          // ADD TO STORE VERSION OF GREENEDGES/NODES THAT IS UNDER DIFFERENT TAG.
+          // dispatch({
+          //   type: "fullGreenEdges",
+          //   payload: JSON.parse(JSON.stringify(store.fullGreenEdges))
+          // })
+          // dispatch({
+          //   type: "fullGreenNodes",
+          //   payload: JSON.parse(JSON.stringify(store.fullGreenNodes))
+          // })
+
+
         } else {
           // render the store.edges and store.nodes
           setGraph({nodes: store.nodes, edges: store.edges});
         }
       }
       // 1. piece of state noting if returning from fullGraph
-      else if (store.fullGraphVisit && store.greenNodes) {
+      // THIS DEALS WITH QUADRANT GRAPH
+
+      if ((store.fullGraphVisit && store.greenNodes) && !props.fullGraph) {
         console.log('THIS SHOULD TRIGGER')
-        console.log(store.greenEdges)
-        console.log(store.greenNodes)
+        console.log('EDGES', store.greenEdges)
+        console.log('NODES', store.greenNodes)
         setGraphGreen({
           edges: store.greenEdges, 
           nodes: store.greenNodes
@@ -380,13 +395,13 @@ function GraphViz(props) {
           payload: false
         })
       }
-    else if (store.fullGraphVisit && !store.greenNodes) {
-      setGraph({nodes: store.nodes, edges: store.edges});
-      dispatch({
-        type: "fullGraphVisit",
-        payload: false
-      })
-    }
+    // else if (store.fullGraphVisit && !store.greenNodes) {
+    //   setGraph({nodes: store.nodes, edges: store.edges});
+    //   dispatch({
+    //     type: "fullGraphVisit",
+    //     payload: false
+    //   })
+    // }
       // 2. if 
     }, [])  
 	// Make query to User App's server API for updated GraphQL schema
