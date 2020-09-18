@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import TestWindow from './testWindow.jsx';
+import TestWindowTwo from './testWindowTwo.jsx';
 import { Context } from './store.jsx';
 
 import {
@@ -15,7 +15,7 @@ import {
 const History = (props) => {
 
 	const { store } = useContext(Context);
-	const chartContainer = [];
+	let chartContainer = [];
 
 	const containerLine = [
 		<VictoryChart
@@ -115,7 +115,9 @@ const History = (props) => {
 		</VictoryChart>,
 	];
 
-	if (store.history.length === 1) {
+	if (store.history.length === 0) {
+		chartContainer = 'No historical query information to display';
+	} else if (store.history.length === 1) {
 		chartContainer.push(containerBar);
 	} else {
 		chartContainer.push(containerLine);
@@ -133,12 +135,12 @@ const History = (props) => {
 	return (
 		<div>
 			{props.showWindow && (
-				<TestWindow>
+				<TestWindowTwo>
 					<div style={styleSheet}>
 						<h1 style={{ "color": "#05445E" }}>{headerStr}</h1>
 						{chartContainer}
 					</div>
-				</TestWindow>)}
+				</TestWindowTwo>)}
 		</div>
 	);
 

@@ -16,7 +16,19 @@ function createWindow () {
 		(event, url, frameName, disposition, options, additionalFeatures) => {
 			// This is the name we chose for our window. You can have multiple names for
 			// multiple windows and each have their options
-			if (frameName === 'NewWindowComponent') {
+			if (frameName === 'NewWindowComponentOne') {
+				event.preventDefault();
+				Object.assign(options, {
+					// This will prevent interactions with the mainWindow
+					parent: win,
+					width: 300,
+					height: 300,
+					// You can also set `left` and `top` positions
+				});
+				event.newGuest = new BrowserWindow(options);
+			}
+
+			if (frameName === 'NewWindowComponentTwo') {
 				event.preventDefault();
 				Object.assign(options, {
 					// This will prevent interactions with the mainWindow

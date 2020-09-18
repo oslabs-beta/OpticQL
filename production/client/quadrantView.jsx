@@ -12,8 +12,13 @@ const QuadrantView = () => {
 	return (
 		<div>
 			<Context.Provider value={{ store, dispatch }}>
-				<NavBar />
 				<div id='mainContainer'>
+					<div id='title'>
+						<img src="./assets/logo2.png" />
+					</div>
+					<div className="topQuadrant">
+						<NavBar />
+					</div>
 					<div className="row" id='topRow'>
 						<div className="quadrant" id="controlPanel">
 							<ControlPanel />
