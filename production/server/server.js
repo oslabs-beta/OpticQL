@@ -26,6 +26,12 @@ if (process.env.NODE_ENV === 'production') {
 	app.get('/', (req, res) => {
 		return res.sendFile(path.join(__dirname, '../client/index.html'));
 	});
+
+	// For development purposes in a web app environment
+	app.get('/fullviz', (req, res) => {
+		return res.sendFile(path.join(__dirname, '../client/index.html'));
+	});
+
 }
 
 // For development mode ONLY --- to prevent error codes with application seeking 2nd instance of server file

@@ -28,9 +28,11 @@
     "express-graphql": "^0.11.0",
     "jest": "^26.4.2",
     "react": "^16.13.1",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^16.13.1",
     "react-graph-vis": "^1.0.5",
     "react-indexed-db": "^1.0.12",
+    "react-router-dom": "^5.2.0",
     "victory": "^35.0.9"
   },
   "devDependencies": {
