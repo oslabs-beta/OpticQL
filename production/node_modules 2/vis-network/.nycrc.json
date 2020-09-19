@@ -1,8 +1,0 @@
-{
-  "exclude": ["**/*.test.*", "**/*.d.ts"],
-  "extension": ["ts", "js"],
-  "include": ["lib/**/*"],
-  "instrument": false,
-  "reporter": ["text-summary", "lcov"],
-  "sourceMap": false
-}

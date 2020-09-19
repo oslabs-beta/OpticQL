@@ -1,9 +1,0 @@
-{
-    "extends": "./tsconfig",
-    "compilerOptions": {
-        "declaration": false,
-        "declarationMap": false,
-        "noImplicitAny": false
-    },
-    "exclude": ["test"]
-}
