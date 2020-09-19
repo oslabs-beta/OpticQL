@@ -20,7 +20,6 @@ if (process.env.NODE_ENV === 'production') {
 	app.use('/build', express.static(path.join(__dirname, '../build')));
 	app.use(express.static('client'));
 
-
 	// serve index.html on the route '/'. 
 	// PM: We need to send index.html first, and then index html runs the script that loads the webpack data from build/bundle.js
 	app.get('/', (req, res) => {
