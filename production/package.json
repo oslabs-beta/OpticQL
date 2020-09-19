@@ -10,7 +10,7 @@
     "build": "NODE_ENV=production webpack",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -42,8 +42,10 @@
     "css-loader": "^4.2.2",
     "electron": "^10.1.0",
     "electron-builder": "^22.8.0",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4",
     "style-loader": "^1.2.1",
+    "supertest": "^4.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
