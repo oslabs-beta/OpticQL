@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
 import { useIndexedDB } from 'react-indexed-db';
 
-function GraphViz() {
+function GraphViz(props) {
   const { store, dispatch } = useContext(Context);
   const [net, setNet] = useState({})
   const [savedSchema, saveSchema] = useState();
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
 
-  const [mutationRef, setmutationRef] = useState({})
+  const [mutationRef, setmutationRef] = useState({});
   const [updatedSchema, updateSchema] = useState(0);
-  const [greenNode, greenNodeOn] = useState(false)
+  const [greenNode, greenNodeOn] = useState(false);
   const [events, setEvents] = useState({});
-  const [convert, setConvert] = useState({})
-  const [graphObjRef, setgraphObjRef] = useState({})
+  const [convert, setConvert] = useState({});
+  const [graphObjRef, setgraphObjRef] = useState({});
+  const [initialRender, setInitialRender] = useState(true);
+  
   const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
@@ -55,15 +58,16 @@ function GraphViz() {
           type: "dynamic",
         },
       },
-      height: "630px",
-      width: "100%",
+      height: props.height,
+      width: props.width,
 
       autoResize: true,
     },
    )
  
     useEffect(()=>{
-      // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
+      if (!props.fullGraph) {
+       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       let allMutations;
       if (store.schema.schemaNew){
@@ -114,7 +118,6 @@ function GraphViz() {
         const mutationSplitBracket = allMutations.split(/{\n/)
         const regex = /!\n/
         const mutation = mutationSplitBracket[1].split(regex);
-        console.log(mutation)
         mutation.map((el) => {
           const regexEnd = /\):/
           let endNode = el.split(regexEnd);
@@ -192,10 +195,22 @@ function GraphViz() {
         // Deep clone of Nodes and Edges created to be used when creating a graph with green nodes (after query / mutation)
         setNodes(JSON.parse(JSON.stringify(vizNodes)));
         setEdges(JSON.parse(JSON.stringify(vizEdges)));
-      }
+        //sending nodes and edges to store so that viz graph can persist between page views.
+        dispatch({
+          type: "nodes",
+          payload: vizNodes
+        })
+        dispatch({
+          type: "edges",
+          payload: vizEdges
+        })
+
+      }}
       }, [updatedSchema])
 
     useEffect(() => {
+      if (!props.fullGraph) {
+      
       // listening for change to store.query.extensions, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       if (store.query.extensions) {
@@ -293,6 +308,24 @@ function GraphViz() {
             edgesArr.push({from: key, to: graphObjFormat[key]})
           }
         }
+        //update store to have properties for green nodes and green edges, so that full page Viz view can use them.
+        // MAKE SURE THIS DISPATCH DOES NOT OVERWRITE THE EXISTING DATA!!
+        
+
+        // on initial render prevent this from running
+        if (edgesArr.length !== 0) {
+          dispatch({
+            type: "greenEdges",
+            payload: JSON.parse(JSON.stringify(edgesArr))
+          })
+          dispatch({
+            type: "greenNodes",
+            payload: JSON.parse(JSON.stringify(newNodeArr))
+          })
+        } 
+
+
+
         // if there are green nodes present, we need to update them via setData
         if (greenNode) {
           net.network.setData({
@@ -307,11 +340,107 @@ function GraphViz() {
         })
         greenNodeOn(true);
       }
-    }
+    }}
     }, [store.query.extensions])
 
+    //distinguishing between fullGraph and quadrant views so green nodes update when toggling views.
+    useEffect(()=> {
+      if (props.fullGraph) {
+      
+        dispatch({
+          type: "fullGraphVisit",
+          payload: true
+        })
+        if (store.greenNodes) {
+          if (greenNode) {
+            net.network.setData({
+              edges: store.greenEdges, 
+              nodes: store.greenNodes
+            });
+          }
+          setGraphGreen({
+            edges: store.greenEdges, 
+            nodes: store.greenNodes
+          })
+          greenNodeOn(true);
+
+          // ADD TO STORE VERSION OF GREENEDGES/NODES THAT IS UNDER DIFFERENT TAG.
+          // dispatch({
+          //   type: "fullGreenEdges",
+          //   payload: JSON.parse(JSON.stringify(store.fullGreenEdges))
+          // })
+          // dispatch({
+          //   type: "fullGreenNodes",
+          //   payload: JSON.parse(JSON.stringify(store.fullGreenNodes))
+          // })
+
+
+        } else {
+          // render the store.edges and store.nodes
+          setGraph({nodes: store.nodes, edges: store.edges});
+        }
+      }
+      // 1. piece of state noting if returning from fullGraph
+
+      // THIS DEALS WITH QUADRANT GRAPH
+      if ((store.fullGraphVisit && store.greenNodes) && !props.fullGraph) {
+      
+        setGraphGreen({
+          edges: JSON.parse(JSON.stringify(store.greenEdges)), 
+          nodes: JSON.parse(JSON.stringify(store.greenNodes))
+        })
+        // net.network.setData({
+        //   edges: store.greenEdges, 
+        //   nodes: store.greenNodes
+        // });
+        greenNodeOn(true);
+        dispatch({
+          type: "fullGraphVisit",
+          payload: false
+        })
+      }
+      if ((store.fullGraphVisit && !store.greenNodes) && !props.fullGraph) {
+        setGraphGreen({
+          edges: JSON.parse(JSON.stringify(store.edges)), 
+          nodes: JSON.parse(JSON.stringify(store.nodes))
+        })
+        // net.network.setData({
+        //   edges: store.greenEdges, 
+        //   nodes: store.greenNodes
+        // });
+        dispatch({
+          type: "fullGraphVisit",
+          payload: false
+        })
+      }
+
+
+
+
+
+
+    // else if (store.fullGraphVisit && !store.greenNodes) {
+    //   setGraph({nodes: store.nodes, edges: store.edges});
+    //   dispatch({
+    //     type: "fullGraphVisit",
+    //     payload: false
+    //   })
+    // }
+      // 2. if 
+    }, [])  
 	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
+    // DO A DISPATCH TO SET THE GREEN NODES TO FALSE
+    dispatch({
+      type: "greenEdges",
+      payload: false
+    })
+    dispatch({
+      type: "greenNodes",
+      payload: false
+    })
+
+
 		fetch('http://localhost:3000/getSchema')
 			.then(res => res.json())
 			.then(res => saveSchema(res))
@@ -332,15 +461,28 @@ function GraphViz() {
         updateSchema(updatedSchema + 1);
     }
 	}, [savedSchema])
-
+  
+  const linkStyle = {
+		"color": "#05445E",
+		"textDecoration": "none",
+	}
     return (
       <div>
+      {!props.fullGraph && 
       <div className='topLeftButtons' id='vizQuadrant'>
         <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Import Schema</button>
         {store.schema.schemaNew && 
-          <button className="quadrantButton">View Full Screen</button>
+          <button className="quadrantButton">
+            <Link to="/fullviz" style={linkStyle}>View Full Screen</Link>
+          </button>
         }
       </div>
+      }
+      {props.fullGraph &&
+        <button className="quadrantButton">
+          <Link to="/" style={linkStyle}>Home</Link>
+        </button>
+      }
       {(store.schema.schemaNew && !greenNode) &&
       <div id='graphBox'>
         <Graph
