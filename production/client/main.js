@@ -18,7 +18,7 @@ function createWindow () {
 			// This is the name we chose for our window. You can have multiple names for
 			// multiple windows and each have their options
 			if (frameName === 'NewWindowComponentOne') {
-				event.preventDefault();
+				// event.preventDefault();
 				Object.assign(options, {
 					// This will prevent interactions with the mainWindow
 					parent: win,
@@ -30,7 +30,7 @@ function createWindow () {
 			}
 
 			if (frameName === 'NewWindowComponentTwo') {
-				event.preventDefault();
+				// event.preventDefault();
 				Object.assign(options, {
 					// This will prevent interactions with the mainWindow
 					parent: win,

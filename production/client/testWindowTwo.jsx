@@ -33,4 +33,4 @@ class MyWindowPortalTwo extends React.PureComponent {
 
 
 
-export default MyWindowPortal;
+export default MyWindowPortalTwo;
