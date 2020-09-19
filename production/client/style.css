@@ -4,6 +4,7 @@ body {
 	font-family: 'Roboto', sans-serif;
 	font-weight: 300;
 }
+
 #title {
 	text-align: center;
 }
@@ -13,9 +14,11 @@ body {
 	justify-content: flex-end;
 	width: 95%;
 }
+
 .loading {
 	text-align: center;
 }
+
 .row {
 	display: flex;
   height: 700px;
@@ -24,6 +27,7 @@ body {
 	min-width: 540px;
 	min-height: 500px;
 }
+
 .form-control {
 	outline: none;
 	background-color:  #032330;
@@ -36,6 +40,7 @@ body {
 	padding: 15px;
 	height: 340px;
 }
+
 /* #controlPanel {
 	padding: 20px 25px 20px 20px;
 } */
@@ -75,7 +80,16 @@ body {
 	align-items: center;
 }
 
-#fullVizContainer {
+.topQuadrant {
+	border-radius: 20px;
+	width: 90%;
+	min-width: 540px;
+	margin: 10px 10px 10px 10px;
+	padding: 20px;
+	background-color: #05445E
+}
+
+	#fullVizContainer {
 	width: 80%;
 }
 
@@ -92,6 +106,12 @@ body {
 	margin-bottom: 20px;
 }
 
+.buttonNavBar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+
 .indexDBstyleButton {
 	/* height: 40px; */
 	/* margin-bottom: 20px; */
@@ -102,7 +122,7 @@ body {
 	border: none;
 	margin: 5px;
 	padding: 4px;
-	height: 60px;
+	height: 40px;
 	/* width: 150px; */
 	border-radius: 5px;
 	border: 1px solid white;
@@ -119,7 +139,7 @@ body {
 	border: none;
 	margin: 5px;
 	padding: 4px;
-	height: 45px;
+	height: 40px;
 	/* width: 150px; */
 	border-radius: 5px;
 	border: 1px solid white;
@@ -182,6 +202,7 @@ input:focus {
 #queryPlaceholder {
   color: #c8c8c8;
 }
+
 /* #form-group {
   height: 430px;
 } */
@@ -248,9 +269,9 @@ input:focus {
 }
 
 .performanceMetricsButton {
-	height: 40px;
+	height: 60px;
 	margin-bottom: 20px;
-	margin-right: 140px;
+	margin-right: 12px;
 }
 
 .performanceMetricsButtonInfo {
@@ -258,6 +279,12 @@ input:focus {
 	flex-direction: right;
 }
 
-.navigation {
+/* .navigation {
 	margin-left: 75px;
+} */
+
+.chartContainerDiv {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }

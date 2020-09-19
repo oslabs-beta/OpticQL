@@ -8,25 +8,30 @@ import NavBar from './navBar.jsx'
 const QuadrantView = () => {
 	return (
 		<div>
-				<NavBar />
-				<div id='mainContainer'>
-					<div className="row" id='topRow'>
-						<div className="quadrant" id="controlPanel">
-							<ControlPanel />
-						</div>
-						<div className="quadrant" id="queryDisplay">
-							<QueryDisplay />
-						</div>
+			<div id='mainContainer'>
+				<div id='title'>
+					<img src="./logo2.png" />
+				</div>
+				<div className="topQuadrant">
+					<NavBar />
+				</div>
+				<div className="row" id='topRow'>
+					<div className="quadrant" id="controlPanel">
+						<ControlPanel />
 					</div>
-					<div className="row" id="bottomRow">
-						<div id="performanceDisplay" className="quadrant2">
-							<PerformanceData />
-						</div>
-						<div id="graphViz" className="quadrant2">
-							<GraphViz height={"630px"} width={"100%"} fullGraph={false}/>
-						</div>
+					<div className="quadrant" id="queryDisplay">
+						<QueryDisplay />
 					</div>
 				</div>
+				<div className="row" id="bottomRow">
+					<div id="performanceDisplay" className="quadrant2">
+						<PerformanceData />
+					</div>
+					<div id="graphViz" className="quadrant2">
+						<GraphViz height={"630px"} width={"100%"} fullGraph={false} />
+					</div>
+				</div>
+			</div>
 		</div>
 	)
 }

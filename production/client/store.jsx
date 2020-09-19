@@ -3,8 +3,8 @@ import React from 'react';
 export const initialState = {
 	query: {},
 	schema: {},
-  loading: false,
-  mutation: false,
+	loading: false,
+	mutation: false,
 	history: [],
 	nodes: [],
 	edges: [],
@@ -25,19 +25,19 @@ export const reducer = (state, action) => {
 			return { ...state, loading: action.payload }
 		}
 		case "nodes":
-			return {...state, nodes: action.payload}
+			return { ...state, nodes: action.payload }
 		case "edges":
-			return {...state, edges: action.payload}
+			return { ...state, edges: action.payload }
 		case "greenNodes":
-			return {...state, greenNodes: action.payload}
+			return { ...state, greenNodes: action.payload }
 		case "greenEdges":
-			return {...state, greenEdges: action.payload}
-    case "mutation": 
-			return {...state, mutation: action.payload}
-		case "fullGraphVisit": 
-			return {...state, fullGraphVisit: action.payload}
+			return { ...state, greenEdges: action.payload }
+		case "mutation":
+			return { ...state, mutation: action.payload }
+		case "fullGraphVisit":
+			return { ...state, fullGraphVisit: action.payload }
 
-		
+
 		case "saveHistory": {
 			return { ...state, history: action.payload }
 		}

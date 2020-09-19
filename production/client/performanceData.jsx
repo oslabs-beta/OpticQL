@@ -17,7 +17,7 @@ import {
 
 const PerfData = () => {
 
-	const { store } = useContext(Context);
+	const { dispatch, store } = useContext(Context);
 	const [showWindowPortalOne, setWindowPortalOne] = useState(false);
 	const [showWindowPortalTwo, setWindowPortalTwo] = useState(false);
 	const [dbResults, setDBResults] = useState();
@@ -25,42 +25,21 @@ const PerfData = () => {
 
 	const dbData = [];
 
+
 	function toggleWindowPortalOne () {
-		// Set local state
 		setWindowPortalOne(!showWindowPortalOne)
+		// setWindowPortalTwo(false)
+	}
+
+	function toggleWindowPortalTwo () {
+
+		setWindowPortalTwo(!showWindowPortalTwo)
+		// setWindowPortalOne(false)
 	}
 
 	function numberWithCommas (x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 	}
-
-	function toggleWindowPortalTwo () {
-		// Set local state
-		setWindowPortalTwo(!showWindowPortalTwo)
-
-		// Execute database query for historical information
-		// queryDB.getAll()
-		// 	.then(result => {
-		// 		console.log(result);
-		// 		return result;
-		// 	})
-		// 	// Loop through the result and make an array with [query name, total duration]
-		// 	.then(result => {
-		// 		for (let i = 0; i < result.length; i++) {
-		// 			const currQueryObj = result[i]
-		// 			dbData.push({
-		// 				x: currQueryObj.id,
-		// 				y: (currQueryObj.response.extensions.tracing.duration / 1000000),
-		// 				z: currQueryObj.queryString,
-		// 				t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
-		// 			})
-		// 		}
-		// 		// set state here for DBResults
-		// 		return setDBResults(dbData)
-		// 	})
-		// 	.catch(err => console.log("Error with database query for all historical information: ", err));
-	}
-
 
 	// Declaring variables to re-assign if store.query.extensions is not falsy
 	const data = [];
@@ -161,6 +140,8 @@ const PerfData = () => {
 		const containerLine = [
 			<VictoryChart
 				// theme={VictoryTheme.material}
+				height={350}
+				padding={60}
 				domainPadding={{ x: 10 }}
 				containerComponent={
 					<VictoryVoronoiContainer
@@ -191,15 +172,19 @@ const PerfData = () => {
 				// labels={({ datum }) => `Avg.: ${datum.y}`}
 				/>
 				<VictoryAxis
+					label={"Path"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 15, angle: -30, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white", padding: 45 },
 					}}
 				/>
 				<VictoryAxis
+					label={"Duration Time (ms)"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 5, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white", padding: 40 },
 					}}
 					dependentAxis
 				/>
@@ -210,6 +195,8 @@ const PerfData = () => {
 		const containerBar = [
 			<VictoryChart
 				// theme={VictoryTheme.material}
+				height={350}
+				padding={60}
 				domainPadding={{ x: 5 }}
 			// containerComponent={<VictoryZoomContainer />}
 			>
@@ -234,15 +221,19 @@ const PerfData = () => {
 					}
 				/>
 				<VictoryAxis
+					label={"Path"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 5, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white" },
 					}}
 				/>
 				<VictoryAxis
+					label={"Duration Time (ms)"}
 					style={{
 						tickLabels: { fontSize: 10, padding: 5, fill: "white" },
 						axis: { stroke: "white" },
+						axisLabel: { fontSize: 12, fill: "white", padding: 40 },
 					}}
 					dependentAxis
 				/>
@@ -304,10 +295,10 @@ const PerfData = () => {
 						</button>
 
 						<ExpandPerfData key={'ExpandPerfData 1'} showWindow={showWindowPortalOne} performanceAvg={perfAvg} anomaliesObject={anomaliesObj} performance={performanceObj} />
-						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} />
+						<HistoryView key={'HistoryView 2'} storeHistory={store.history} showWindow={showWindowPortalTwo} />
 						<div>{htmlContainer}</div>
 					</div>
-					<div>{chartContainer}</div>
+					<div className="chartContainerDiv">{chartContainer}</div>
 				</div>
 			}
 		</div>
