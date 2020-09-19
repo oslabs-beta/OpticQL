@@ -11,10 +11,10 @@ const App = () => {
 		<main>
 			<Context.Provider value={{ store, dispatch }}>
 			<Switch>
-				<Route path="/" component={QuadrantView} exact />
 				<Route path="/fullviz" component={FullVizView} />
 				{/* <Route component={Error} /> */}
 				<Route path="*" component={QuadrantView} />
+				<Route path="/" component={QuadrantView} exact />
 			</Switch>
 			</Context.Provider>
 		</main>

@@ -29,7 +29,6 @@ export const reducer = (state, action) => {
 		case "edges":
 			return {...state, edges: action.payload}
 		case "greenNodes":
-			console.log('NODES ARE CHANGING')
 			return {...state, greenNodes: action.payload}
 		case "greenEdges":
 			return {...state, greenEdges: action.payload}

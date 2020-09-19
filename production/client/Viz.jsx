@@ -67,11 +67,7 @@ function GraphViz(props) {
  
     useEffect(()=>{
       if (!props.fullGraph) {
-      console.log('schema USE EFFECT')
-
-   
-
-      // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
+       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
       // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
       let allMutations;
       if (store.schema.schemaNew){
@@ -122,7 +118,6 @@ function GraphViz(props) {
         const mutationSplitBracket = allMutations.split(/{\n/)
         const regex = /!\n/
         const mutation = mutationSplitBracket[1].split(regex);
-        console.log(mutation)
         mutation.map((el) => {
           const regexEnd = /\):/
           let endNode = el.split(regexEnd);
@@ -215,7 +210,7 @@ function GraphViz(props) {
 
     useEffect(() => {
       if (!props.fullGraph) {
-      console.log('GREEN NODE USE EFFECT')
+      
       // listening for change to store.query.extensions, this will change if new query is executed
       // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
       if (store.query.extensions) {
@@ -315,8 +310,7 @@ function GraphViz(props) {
         }
         //update store to have properties for green nodes and green edges, so that full page Viz view can use them.
         // MAKE SURE THIS DISPATCH DOES NOT OVERWRITE THE EXISTING DATA!!
-        console.log("NODES BEING OVER-WRITTEN")
-        console.log("NodesinUseEffect", store.greenNodes)
+        
 
         // on initial render prevent this from running
         if (edgesArr.length !== 0) {
@@ -352,9 +346,7 @@ function GraphViz(props) {
     //distinguishing between fullGraph and quadrant views so green nodes update when toggling views.
     useEffect(()=> {
       if (props.fullGraph) {
-        console.log('FULL GRAPH')
-        console.log('FG edges', store.greenEdges)
-        console.log('FG nodes', store.greenNodes)
+      
         dispatch({
           type: "fullGraphVisit",
           payload: true
@@ -392,9 +384,7 @@ function GraphViz(props) {
 
       // THIS DEALS WITH QUADRANT GRAPH
       if ((store.fullGraphVisit && store.greenNodes) && !props.fullGraph) {
-        console.log('THIS SHOULD TRIGGER')
-        console.log('EDGES', store.greenEdges)
-        console.log('NODES', store.greenNodes)
+      
         setGraphGreen({
           edges: JSON.parse(JSON.stringify(store.greenEdges)), 
           nodes: JSON.parse(JSON.stringify(store.greenNodes))
