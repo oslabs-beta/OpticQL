@@ -74,6 +74,11 @@ body {
 	padding: 20px;
 	background-color: #05445E
 }
+#fullVizParent {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 
 .topQuadrant {
 	border-radius: 20px;
@@ -82,6 +87,10 @@ body {
 	margin: 10px 10px 10px 10px;
 	padding: 20px;
 	background-color: #05445E
+}
+
+	#fullVizContainer {
+	width: 80%;
 }
 
 #mainContainer {
@@ -100,7 +109,7 @@ body {
 .buttonNavBar {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	justify-content: flex-end;
 }
 
 .indexDBstyleButton {

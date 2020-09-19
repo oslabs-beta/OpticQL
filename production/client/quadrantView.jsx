@@ -1,5 +1,4 @@
-import React, { useReducer } from 'react';
-import { Context, initialState, reducer } from './store.jsx';
+import React from 'react';
 import ControlPanel from './controlpanel.jsx';
 import QueryDisplay from './queryDisplay.jsx';
 import GraphViz from './Viz.jsx'
@@ -7,36 +6,32 @@ import PerformanceData from './performanceData.jsx';
 import NavBar from './navBar.jsx'
 
 const QuadrantView = () => {
-	const [store, dispatch] = useReducer(reducer, initialState)
-
 	return (
 		<div>
-			<Context.Provider value={{ store, dispatch }}>
-				<div id='mainContainer'>
-					<div id='title'>
-						<img src="./assets/logo2.png" />
+			<div id='mainContainer'>
+				<div id='title'>
+					<img src="./logo2.png" />
+				</div>
+				<div className="topQuadrant">
+					<NavBar />
+				</div>
+				<div className="row" id='topRow'>
+					<div className="quadrant" id="controlPanel">
+						<ControlPanel />
 					</div>
-					<div className="topQuadrant">
-						<NavBar />
-					</div>
-					<div className="row" id='topRow'>
-						<div className="quadrant" id="controlPanel">
-							<ControlPanel />
-						</div>
-						<div className="quadrant" id="queryDisplay">
-							<QueryDisplay />
-						</div>
-					</div>
-					<div className="row" id="bottomRow">
-						<div id="performanceDisplay" className="quadrant2">
-							<PerformanceData />
-						</div>
-						<div id="graphViz" className="quadrant2">
-							<GraphViz />
-						</div>
+					<div className="quadrant" id="queryDisplay">
+						<QueryDisplay />
 					</div>
 				</div>
-			</Context.Provider>
+				<div className="row" id="bottomRow">
+					<div id="performanceDisplay" className="quadrant2">
+						<PerformanceData />
+					</div>
+					<div id="graphViz" className="quadrant2">
+						<GraphViz height={"630px"} width={"100%"} fullGraph={false} />
+					</div>
+				</div>
+			</div>
 		</div>
 	)
 }

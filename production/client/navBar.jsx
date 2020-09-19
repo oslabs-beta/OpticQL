@@ -48,15 +48,6 @@ const NavBar = () => {
 		<div className="buttonNavBar">
 
 			<div>
-				<button className="navButtons">
-					<Link to="/" style={linkStyle}>Home</Link>
-				</button>
-				<button className="navButtons">
-					<Link to="/fullviz" style={linkStyle}>Full Viz</Link>
-				</button>
-			</div>
-
-			<div>
 				<button className="indexDBstyleButton" key={1} onClick={queryDatabaseGrab}>Check Query Database Records</button>
 				<button className="indexDBstyleButton" key={2} onClick={schemaDatabaseGrab}>Check Schema Database Records</button>
 				<button className="indexDBstyleButton" key={3} onClick={handleDeleteQueryData}>Clear Query Database</button>
