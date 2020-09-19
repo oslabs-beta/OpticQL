@@ -25,26 +25,16 @@ const PerfData = () => {
 
 	const dbData = [];
 
+
 	function toggleWindowPortalOne () {
 		setWindowPortalOne(!showWindowPortalOne)
-		setWindowPortalTwo(false)
-		// dispatch({
-		// 	type: "repeatState"
-		// });
+		// setWindowPortalTwo(false)
 	}
 
 	function toggleWindowPortalTwo () {
-		const storedHistory = store.history;
-		dispatch({
-			type: "repeatState",
-			payload: [],
-		});
-		dispatch({
-			type: "repeatState",
-			payload: storedHistory,
-		});
+
 		setWindowPortalTwo(!showWindowPortalTwo)
-		setWindowPortalOne(false)
+		// setWindowPortalOne(false)
 	}
 
 	function numberWithCommas (x) {
@@ -305,7 +295,7 @@ const PerfData = () => {
 						</button>
 
 						<ExpandPerfData key={'ExpandPerfData 1'} showWindow={showWindowPortalOne} performanceAvg={perfAvg} anomaliesObject={anomaliesObj} performance={performanceObj} />
-						<HistoryView key={'HistoryView 2'} showWindow={showWindowPortalTwo} />
+						<HistoryView key={'HistoryView 2'} storeHistory={store.history} showWindow={showWindowPortalTwo} />
 						<div>{htmlContainer}</div>
 					</div>
 					<div className="chartContainerDiv">{chartContainer}</div>

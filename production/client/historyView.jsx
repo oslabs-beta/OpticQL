@@ -45,7 +45,7 @@ const History = (props) => {
 					data: { stroke: "#189AB4" },
 					// parent: { border: "1px solid #ccc" },
 				}}
-				data={store.history}
+				data={props.storeHistory}
 			// labels={({ datum }) => `Avg.: ${datum.y}`}
 			/>
 			<VictoryAxis
@@ -80,7 +80,7 @@ const History = (props) => {
 				style={{
 					data: { fill: "#189AB4" },
 				}}
-				data={store.history}
+				data={props.storeHistory}
 				labels={({ datum }) =>
 					`Query: ${datum.t} ms,
 				Query String: ${datum.z}`
@@ -131,6 +131,7 @@ const History = (props) => {
 		"justifyContent": "center",
 		"alignItems": "center",
 	}
+
 
 	return (
 		<div>

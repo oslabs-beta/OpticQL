@@ -1,0 +1,185 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.readPackageJson = readPackageJson;
+exports.checkMetadata = checkMetadata;
+
+function _builderUtil() {
+  const data = require("builder-util");
+
+  _builderUtil = function () {
+    return data;
+  };
+
+  return data;
+}
+
+function _fsExtra() {
+  const data = require("fs-extra");
+
+  _fsExtra = function () {
+    return data;
+  };
+
+  return data;
+}
+
+var path = _interopRequireWildcard(require("path"));
+
+function semver() {
+  const data = _interopRequireWildcard(require("semver"));
+
+  semver = function () {
+    return data;
+  };
+
+  return data;
+}
+
+function _normalizePackageData() {
+  const data = _interopRequireDefault(require("normalize-package-data"));
+
+  _normalizePackageData = function () {
+    return data;
+  };
+
+  return data;
+}
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/** @internal */
+async function readPackageJson(file) {
+  const data = await (0, _fsExtra().readJson)(file);
+  await authors(file, data);
+  (0, _normalizePackageData().default)(data); // remove not required fields because can be used for remote build
+
+  delete data.scripts;
+  delete data.readme;
+  return data;
+}
+
+async function authors(file, data) {
+  if (data.contributors != null) {
+    return;
+  }
+
+  let authorData;
+
+  try {
+    authorData = await (0, _fsExtra().readFile)(path.resolve(path.dirname(file), "AUTHORS"), "utf8");
+  } catch (ignored) {
+    return;
+  }
+
+  data.contributors = authorData.split(/\r?\n/g).map(it => it.replace(/^\s*#.*$/, "").trim());
+}
+/** @internal */
+
+
+function checkMetadata(metadata, devMetadata, appPackageFile, devAppPackageFile) {
+  const errors = [];
+
+  const reportError = missedFieldName => {
+    errors.push(`Please specify '${missedFieldName}' in the package.json (${appPackageFile})`);
+  };
+
+  const checkNotEmpty = (name, value) => {
+    if ((0, _builderUtil().isEmptyOrSpaces)(value)) {
+      reportError(name);
+    }
+  };
+
+  if (metadata.directories != null) {
+    errors.push(`"directories" in the root is deprecated, please specify in the "build"`);
+  }
+
+  checkNotEmpty("name", metadata.name);
+
+  if ((0, _builderUtil().isEmptyOrSpaces)(metadata.description)) {
+    _builderUtil().log.warn({
+      appPackageFile
+    }, `description is missed in the package.json`);
+  }
+
+  if (metadata.author == null) {
+    _builderUtil().log.warn({
+      appPackageFile
+    }, `author is missed in the package.json`);
+  }
+
+  checkNotEmpty("version", metadata.version);
+
+  if (metadata != null) {
+    checkDependencies(metadata.dependencies, errors);
+  }
+
+  if (metadata !== devMetadata) {
+    if (metadata.build != null) {
+      errors.push(`'build' in the application package.json (${appPackageFile}) is not supported since 3.0 anymore. Please move 'build' into the development package.json (${devAppPackageFile})`);
+    }
+  }
+
+  const devDependencies = metadata.devDependencies;
+
+  if (devDependencies != null && "electron-rebuild" in devDependencies) {
+    _builderUtil().log.info('electron-rebuild not required if you use electron-builder, please consider to remove excess dependency from devDependencies\n\nTo ensure your native dependencies are always matched electron version, simply add script `"postinstall": "electron-builder install-app-deps" to your `package.json`');
+  }
+
+  if (errors.length > 0) {
+    throw new (_builderUtil().InvalidConfigurationError)(errors.join("\n"));
+  }
+}
+
+function versionSatisfies(version, range, loose) {
+  if (version == null) {
+    return false;
+  }
+
+  const coerced = semver().coerce(version);
+
+  if (coerced == null) {
+    return false;
+  }
+
+  return semver().satisfies(coerced, range, loose);
+}
+
+function checkDependencies(dependencies, errors) {
+  if (dependencies == null) {
+    return;
+  }
+
+  const updaterVersion = dependencies["electron-updater"];
+  const requiredElectronUpdaterVersion = "4.0.0";
+
+  if (updaterVersion != null && !versionSatisfies(updaterVersion, `>=${requiredElectronUpdaterVersion}`)) {
+    errors.push(`At least electron-updater ${requiredElectronUpdaterVersion} is recommended by current electron-builder version. Please set electron-updater version to "^${requiredElectronUpdaterVersion}"`);
+  }
+
+  const swVersion = dependencies["electron-builder-squirrel-windows"];
+
+  if (swVersion != null && !versionSatisfies(swVersion, ">=20.32.0")) {
+    errors.push(`At least electron-builder-squirrel-windows 20.32.0 is required by current electron-builder version. Please set electron-builder-squirrel-windows to "^20.32.0"`);
+  }
+
+  const deps = ["electron", "electron-prebuilt", "electron-rebuild"];
+
+  if (process.env.ALLOW_ELECTRON_BUILDER_AS_PRODUCTION_DEPENDENCY !== "true") {
+    deps.push("electron-builder");
+  }
+
+  for (const name of deps) {
+    if (name in dependencies) {
+      errors.push(`Package "${name}" is only allowed in "devDependencies". ` + `Please remove it from the "dependencies" section in your package.json.`);
+    }
+  }
+} 
+// __ts-babel@6.0.4
+//# sourceMappingURL=packageMetadata.js.map

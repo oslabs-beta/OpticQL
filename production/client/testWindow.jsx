@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 
-class MyWindowPortal extends React.PureComponent {
+class MyWindowPortalOne extends React.PureComponent {
 
 	constructor(props) {
 		super(props);
@@ -31,4 +31,4 @@ class MyWindowPortal extends React.PureComponent {
 
 }
 
-export default MyWindowPortal;
+export default MyWindowPortalOne;

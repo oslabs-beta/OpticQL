@@ -11,6 +11,7 @@ function createWindow () {
 			nativeWindowOpen: true,
 		}
 	})
+	console.log(win.webContents)
 
 	win.webContents.on('new-window',
 		(event, url, frameName, disposition, options, additionalFeatures) => {
@@ -21,8 +22,8 @@ function createWindow () {
 				Object.assign(options, {
 					// This will prevent interactions with the mainWindow
 					parent: win,
-					width: 300,
-					height: 300,
+					width: 800,
+					height: 600,
 					// You can also set `left` and `top` positions
 				});
 				event.newGuest = new BrowserWindow(options);
@@ -33,8 +34,8 @@ function createWindow () {
 				Object.assign(options, {
 					// This will prevent interactions with the mainWindow
 					parent: win,
-					width: 300,
-					height: 300,
+					width: 800,
+					height: 600,
 					// You can also set `left` and `top` positions
 				});
 				event.newGuest = new BrowserWindow(options);

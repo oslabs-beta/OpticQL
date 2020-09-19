@@ -26,8 +26,6 @@ export const reducer = (state, action) => {
 		case "saveHistory": {
 			return { ...state, history: action.payload }
 		}
-		case "repeatState":
-			return { ...state, history: action.payload }
 		default:
 			return state
 	}
