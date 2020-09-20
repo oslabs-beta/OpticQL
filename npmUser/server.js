@@ -63,9 +63,10 @@ type Mutation {
 	skin_color: String,
 	eye_color: String,
 	name: String!,
-	birth_year: String,
+  birth_year: String,
+  _id: Int
   ): Person!
-  deletePerson(id: ID!): Person!
+  deletePerson(_id: Int): Person!
   createFilm(
 	director: String!,
 	opening_crawl: String!,
@@ -358,38 +359,38 @@ const resolvers = {
 
 	Mutation: {
 		createPerson: (parent, args) => {
-			const query = 'INSERT INTO people(gender, height, mass, hair_color, skin_color, eye_color, name, birth_year) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
+			const query = 'INSERT INTO people(gender, height, mass, hair_color, skin_color, eye_color, name, birth_year) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
 			const values = [args.gender, args.height, args.mass, args.hair_color, args.skin_color, args.eye_color, args.name, args.birth_year];
 			try {
-				return db.query(query, values);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		updatePerson: (parent, args) => {
-			try {
-				const query = 'UPDATE people SET gender=$1 height=$2 mass=$3 hair_color=$4 skin_color=$5 eye_color=$6 name=$7 birth_year=$8  WHERE _id = $9';
-				const values = [args.gender, args.height, args.mass, args.hair_color, args.skin_color, args.eye_color, args.name, args.birth_year, args._id];
-				return db.query(query).then((res) => res.rows);
+      const query = 'UPDATE people SET gender=$1, height=$2, mass=$3, hair_color=$4, skin_color=$5, eye_color=$6, name=$7, birth_year=$8  WHERE _id=$9 RETURNING *';
+      const values = [args.gender, args.height, args.mass, args.hair_color, args.skin_color, args.eye_color, args.name, args.birth_year, args._id];
+      try {
+        return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deletePerson: (parent, args) => {
 			try {
-				const query = 'DELETE FROM people WHERE _id = $1';
+				const query = 'DELETE FROM people WHERE _id=$1 RETURNING *';
 				const values = [args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 
 		createFilm: (parent, args) => {
-			const query = 'INSERT INTO films(director, opening_crawl, episode_id, title, release_date, producer, name, birth_year) VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
-			const values = [args.director, args.opening_crawl, args.episode_id, args.title, args.release_date, args.producer, args.name, args.birth_year];
+			const query = 'INSERT INTO films(director, opening_crawl, episode_id, title, release_date, producer, _id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *';
+			const values = [args.director, args.opening_crawl, args.episode_id, args.title, args.release_date, args.producer, args._id];
 			try {
-				return db.query(query, values);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
