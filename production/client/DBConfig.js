@@ -1,15 +1,7 @@
 export const DBConfig = {
 	name: 'OpticQL',
-	version: 2,
+	version: 3,
 	objectStoresMeta: [
-		{
-			store: 'schemaData',
-			storeConfig: { keyPath: 'id', autoIncrement: true },
-			storeSchema: [
-				{ name: 'schemaInfo', keypath: 'schemaID', options: { unique: true } },
-				{ name: 'schemaMetrics', keypath: 'schemaMetrics', options: { unique: false } }
-			]
-		},
 		{
 			store: 'queryData',
 			storeConfig: { keyPath: 'id', autoIncrement: true },

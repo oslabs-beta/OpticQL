@@ -19,7 +19,6 @@ function GraphViz(props) {
   const [graphObjRef, setgraphObjRef] = useState({});
   const [initialRender, setInitialRender] = useState(true);
   
-  const schemaDB = useIndexedDB('schemaData');
   const [graph, setGraph] = useState(
     {
       nodes: [], 
@@ -449,11 +448,6 @@ function GraphViz(props) {
 	// Invokes when savedSchema state is updated, sending schema to indexeddb table of schema
 	useEffect(() => {
 		if (savedSchema) {
-			schemaDB.add({ name: savedSchema })
-				.then(id => {
-					console.log('Schema ID Generated: ', id);
-				})
-				.catch(err => console.log("Error with schema database insertion: ", err))
 				dispatch({
 					type: "updateSchema",
 					payload: savedSchema
@@ -465,7 +459,8 @@ function GraphViz(props) {
   const linkStyle = {
 		"color": "#05445E",
 		"textDecoration": "none",
-	}
+  }
+  
     return (
       <div>
       {!props.fullGraph && 

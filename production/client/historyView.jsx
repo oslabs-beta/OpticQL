@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
-import TestWindowTwo from './testWindowTwo.jsx';
+import React, { useContext } from "react";
 import { Context } from './store.jsx';
-
+import { Link } from 'react-router-dom';
 import {
 	VictoryChart,
 	VictoryLine,
@@ -12,10 +11,12 @@ import {
 } from "victory";
 
 
-const History = (props) => {
-
+const History = () => {
+	
 	const { store } = useContext(Context);
 	let chartContainer = [];
+	
+	console.log('Store.history inside HistoryView: ', store.history)
 
 	const containerLine = [
 		<VictoryChart
@@ -30,10 +31,11 @@ const History = (props) => {
 					}
 					labelComponent={
 						<VictoryTooltip
-							// flyoutHeight={30}
 							cornerRadius={5}
 							flyoutStyle={{ fill: "#D4F1F4" }}
-							style={{ fontSize: 9 }}
+							style={{ fontSize: 6 }}
+							constrainToVisibleArea
+							flyoutPadding={5}
 						/>
 					}
 				/>
@@ -45,23 +47,23 @@ const History = (props) => {
 					data: { stroke: "#189AB4" },
 					// parent: { border: "1px solid #ccc" },
 				}}
-				data={props.storeHistory}
+				data={store.history}
 			// labels={({ datum }) => `Avg.: ${datum.y}`}
 			/>
 			<VictoryAxis
 				label={"Query Database ID"}
 				style={{
-					tickLabels: { fontSize: 10, padding: 5, angle: -30, fill: "black" },
-					axis: { stroke: "black" },
-					axisLabel: { fontSize: 10, padding: 30 },
+					tickLabels: { fontSize: 10, padding: 5, angle: -30, fill: "white" },
+					axis: { stroke: "white" },
+					axisLabel: { fontSize: 10, padding: 30, fill: "white" },
 				}}
 			/>
 			<VictoryAxis
 				label={"Response Duration (ms)"}
 				style={{
-					tickLabels: { fontSize: 10, padding: 5, fill: "black" },
-					axis: { stroke: "black" },
-					axisLabel: { fontSize: 10, padding: 30 },
+					tickLabels: { fontSize: 10, padding: 5, fill: "white" },
+					axis: { stroke: "white" },
+					axisLabel: { fontSize: 10, padding: 30, fill: "white" },
 				}}
 				dependentAxis
 			/>
@@ -80,7 +82,7 @@ const History = (props) => {
 				style={{
 					data: { fill: "#189AB4" },
 				}}
-				data={props.storeHistory}
+				data={store.history}
 				labels={({ datum }) =>
 					`Query: ${datum.t} ms,
 				Query String: ${datum.z}`
@@ -88,27 +90,28 @@ const History = (props) => {
 				barWidth={({ index }) => index * 5 + 20}
 				labelComponent={
 					<VictoryTooltip
-						dy={0}
-						// centerOffset={{ x: 25 }}
-						style={{ fontSize: 8 }}
+						cornerRadius={5}
+						flyoutStyle={{ fill: "#D4F1F4" }}
+						style={{ fontSize: 6 }}
 						constrainToVisibleArea
+						flyoutPadding={5}
 					/>
 				}
 			/>
 			<VictoryAxis
 				label={"Query Database ID"}
 				style={{
-					tickLabels: { fontSize: 10, padding: 5, fill: "black" },
-					axis: { stroke: "black" },
-					axisLabel: { fontSize: 10 },
+					tickLabels: { fontSize: 10, padding: 5, fill: "white" },
+					axis: { stroke: "white" },
+					axisLabel: { fontSize: 10, fill: "white" },
 				}}
 			/>
 			<VictoryAxis
 				label={"Response Duration (ms)"}
 				style={{
-					tickLabels: { fontSize: 10, padding: 5, fill: "black" },
-					axis: { stroke: "black" },
-					axisLabel: { fontSize: 10 },
+					tickLabels: { fontSize: 10, padding: 5, fill: "white" },
+					axis: { stroke: "white" },
+					axisLabel: { fontSize: 10, fill: "white" },
 				}}
 				dependentAxis
 			/>
@@ -116,7 +119,7 @@ const History = (props) => {
 	];
 
 	if (store.history.length === 0) {
-		chartContainer = 'No historical query information to display';
+		chartContainer = '(No historical query information to display)';
 	} else if (store.history.length === 1) {
 		chartContainer.push(containerBar);
 	} else {
@@ -124,24 +127,24 @@ const History = (props) => {
 	}
 
 	const headerStr = 'Historical GraphQL Performance (Overall response duration in ms)'
-
-	const styleSheet = {
-		"display": "flex",
-		"flexDirection": "column",
-		"justifyContent": "center",
-		"alignItems": "center",
+	
+	const linkStyle = {
+		"color": "#05445E",
+		"textDecoration": "none",
 	}
-
-
+	
 	return (
 		<div>
-			{props.showWindow && (
-				<TestWindowTwo>
-					<div style={styleSheet}>
-						<h1 style={{ "color": "#05445E" }}>{headerStr}</h1>
-						{chartContainer}
-					</div>
-				</TestWindowTwo>)}
+			<div className="historyViewContainer">
+				<img src="./logo2.png" />
+				<button className="quadrantButton">
+					<Link to="/" style={linkStyle}>Home</Link>
+				</button>
+				<h3 style={{ "color": "#ffffff" }}>{headerStr}</h3>
+				<div style={{ "width": "80%", "color": "#ffffff", "textAlign": "center", "marginTop": "50px" }}>
+					{chartContainer}
+				</div>
+			</div>
 		</div>
 	);
 

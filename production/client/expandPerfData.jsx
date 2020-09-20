@@ -14,6 +14,8 @@ class ExpandPerfData extends React.PureComponent {
 		}
 
 		const container = [];
+		let insertionContainer;
+		let noResponseStr = '(No additional performance data to show)'
 
 		const styleSheet = {
 			"display": "flex",
@@ -78,6 +80,12 @@ class ExpandPerfData extends React.PureComponent {
 			container.push(<div style={styleInnerDiv}>{pathHeader}{subHeaderOne}{subHeaderTwo}<ul>{innerContainer}</ul></div>);
 		}
 
+		if (container.length > 0) {
+			insertionContainer = container;
+		} else {
+			insertionContainer = (<h2 style={{ "color": "white", "textAlign": "center" }}>{noResponseStr}</h2>)
+		}
+
 		return (
 			<div>
 				{this.props.showWindow && (
@@ -85,7 +93,7 @@ class ExpandPerfData extends React.PureComponent {
 						{/* <pre><code>{JSON.stringify(this.props.performance, null, 2)}</code></pre> */}
 						<div style={styleSheet}>
 							<h1 style={styleHeader}>Expanded Performance Metrics</h1>
-							{container}
+							{insertionContainer}
 						</div>
 					</TestWindow>)}
 			</div>

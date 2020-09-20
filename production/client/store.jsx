@@ -10,7 +10,8 @@ export const initialState = {
 	edges: [],
 	greenNodes: false,
 	greenEdges: false,
-	fullGraphVisit: false
+	fullGraphVisit: false,
+	mutationEvent: false,
 }
 
 export const reducer = (state, action) => {
@@ -34,6 +35,8 @@ export const reducer = (state, action) => {
 			return { ...state, greenEdges: action.payload }
 		case "mutation":
 			return { ...state, mutation: action.payload }
+		case "mutationEvent":
+			return { ...state, mutationEvent: action.payload }
 		case "fullGraphVisit":
 			return { ...state, fullGraphVisit: action.payload }
 
