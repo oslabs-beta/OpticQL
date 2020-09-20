@@ -85,7 +85,7 @@ type Mutation {
 	release_date: String!,
 	producer: String!,
   ): Film!
-  deleteFilm(id: ID!): Film!
+  deleteFilm(_id: Int!): Film!
   createPlanet(
 	orbital_period: Int,
 	climate: String,
@@ -110,7 +110,7 @@ type Mutation {
 	rotation_period: Int,
 	diameter: Int,
   ): Planet!
-  deletePlanet(id: ID!): Planet!
+  deletePlanet(_id: Int!): Planet!
   createSpecies(
 	hair_colors: String,
 	name: String!,
@@ -397,46 +397,46 @@ const resolvers = {
 		},
 		updateFilm: (parent, args) => {
 			try {
-				const query = 'UPDATE films SET director=$1 opening_crawl=$2 episode_id=$3 title=$4 release_date=$5 producer=$6 name=$7 birth_year=$8  WHERE _id = $9';
-				const values = [args.director, args.opening_crawl, args.episode_id, args.title, args.release_date, args.producer, args.name, args.birth_year, args._id];
-				return db.query(query).then((res) => res.rows);
+				const query = 'UPDATE films SET director=$1, opening_crawl=$2, episode_id=$3, title=$4, release_date=$5, producer=$6  WHERE _id = $7 RETURNING *';
+				const values = [args.director, args.opening_crawl, args.episode_id, args.title, args.release_date, args.producer, args._id];
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deleteFilm: (parent, args) => {
 			try {
-				const query = 'DELETE FROM films WHERE _id = $1';
+				const query = 'DELETE FROM films WHERE _id = $1 RETURNING *';
 				const values = [args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 
 		createPlanet: (parent, args) => {
-			const query = 'INSERT INTO planets(orbital_period, climate, gravity, terrain, surface_water, population, name, rotation_period, diameter) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+			const query = 'INSERT INTO planets(orbital_period, climate, gravity, terrain, surface_water, population, name, rotation_period, diameter) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
 			const values = [args.orbital_period, args.climate, args.gravity, args.terrain, args.surface_water, args.population, args.name, args.rotation_period, args.diameter];
 			try {
-				return db.query(query, values);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		updatePlanet: (parent, args) => {
 			try {
-				const query = 'UPDATE planets SET orbital_period=$1 climate=$2 gravity=$3 terrain=$4 surface_water=$5 population=$6 name=$7 rotation_period=$8 diameter=$9  WHERE _id = $10';
+				const query = 'UPDATE planets SET orbital_period=$1, climate=$2, gravity=$3, terrain=$4, surface_water=$5, population=$6, name=$7, rotation_period=$8, diameter=$9  WHERE _id=$10 RETURNING *';
 				const values = [args.orbital_period, args.climate, args.gravity, args.terrain, args.surface_water, args.population, args.name, args.rotation_period, args.diameter, args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deletePlanet: (parent, args) => {
 			try {
-				const query = 'DELETE FROM planets WHERE _id = $1';
+				const query = 'DELETE FROM planets WHERE _id = $1 RETURNING *';
 				const values = [args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
