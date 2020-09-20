@@ -116,9 +116,11 @@ function GraphViz(props) {
         })
         // Fill out 'mutationConvert' to be a dictonary that looks up the field 'type' for a mutation 'type' (key/value pair -> createPerson: 'Person')
         const mutationSplitBracket = allMutations.split(/{\n/)
+        console.log('mutationSplitBracket', mutationSplitBracket)
         const regex = /!\n/
         const mutation = mutationSplitBracket[1].split(regex);
         mutation.map((el) => {
+          console.log('el', el)
           const regexEnd = /\):/
           let endNode = el.split(regexEnd);
           let field = endNode[endNode.length-1].trim()
@@ -248,19 +250,26 @@ function GraphViz(props) {
       // mutationHelp used to fill out greenObj for Mutations
       const mutationHelp = (data) => {
         // regex to match mutation type
+        console.log('mutationData', data)
         const regexTest = /[a-zA-Z ]+\([^\)]+\)/g
         const mutationArr = data.match(regexTest)
+        console.log("mutationArr", mutationArr)
         mutationArr.forEach((el)=>{
+          console.log("mutationArrElement", el)
           const mutationArrTrim = el.trim();
           const typeMutationArr = mutationArrTrim.split("(");
           const typeMutation = typeMutationArr[0].trim();
+          console.log('typeMutation', typeMutation)
+          console.log('mutationRef', mutationRef)
           const typeMutationConvert = mutationRef[typeMutation];
           greenObj[typeMutationConvert] = true;
           const fieldMutations = typeMutationArr[1].split(/(:)/)
+          console.log("fieldMutatinos", fieldMutations)
           fieldMutations.forEach((el, i, arr)=>{
             if (arr[i+1] === ":") {
-              const fieldSplit = el.split(/[ ]+/)
-              const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1];
+              const fieldSplit = el.split(/[ \n]/g)
+              console.log("fieldSplit", fieldSplit)
+              const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1].trim();
               greenObj[typeField] = true;
             }
           })
@@ -274,6 +283,7 @@ function GraphViz(props) {
         } else {
           // for MUTATION: this fills out greenObj with fields for green nodes
           mutationHelp(mutationRes)
+          console.log('greenOBJ', greenObj)
           dispatch({
             type: "mutation",
             payload: false

@@ -129,9 +129,10 @@ type Mutation {
 	average_lifespan: String,
 	skin_colors: String,
 	eye_colors: String,
-	language: String,
+  language: String,
+  _id: Int!,
   ): Species!
-  deleteSpecies(id: ID!): Species!
+  deleteSpecies(_id: Int!): Species!
   createVessel(
 	cost_in_credits: Int,
 	length: String,
@@ -162,16 +163,19 @@ type Mutation {
 	consumables: String,
 	_id: Int!,
   ): Vessel!
-  deleteVessel(id: ID!): Vessel!
+  deleteVessel(_id: Int!): Vessel!
   createStarshipSpec(
-	MGLT: String,
-	hyperdrive_rating: String,
+  mglt: String,
+  hyperdrive_rating: String,
+  vessel_id: Int!,
   ): StarshipSpec!
   updateStarshipSpec(
-	MGLT: String,
-	hyperdrive_rating: String,
+	mglt: String,
+  hyperdrive_rating: String,
+  vessel_id: Int!,
+  _id: Int,
   ): StarshipSpec!
-  deleteStarshipSpec(id: ID!): StarshipSpec!
+  deleteStarshipSpec(_id: Int!): StarshipSpec!
 }
 type Person {
   _id: Int!
@@ -246,8 +250,9 @@ type Vessel {
 }
 type StarshipSpec {
   _id: Int!
-  MGLT: String
+  mglt: String
   hyperdrive_rating: String
+  vessel_id: Int
 }
 `;
 
@@ -443,84 +448,84 @@ const resolvers = {
 		},
 
 		createSpecies: (parent, args) => {
-			const query = 'INSERT INTO species(hair_colors, name, classification, average_height, average_lifespan, skin_colors, eye_colors, language, diameter) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-			const values = [args.hair_colors, args.name, args.classification, args.average_height, args.average_lifespan, args.skin_colors, args.eye_colors, args.language, args.diameter];
+			const query = 'INSERT INTO species(hair_colors, name, classification, average_height, average_lifespan, skin_colors, eye_colors, language) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+			const values = [args.hair_colors, args.name, args.classification, args.average_height, args.average_lifespan, args.skin_colors, args.eye_colors, args.language];
 			try {
-				return db.query(query, values);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		updateSpecies: (parent, args) => {
 			try {
-				const query = 'UPDATE species SET hair_colors=$1 name=$2 classification=$3 average_height=$4 average_lifespan=$5 skin_colors=$6 eye_colors=$7 language=$8 diameter=$9  WHERE _id = $10';
-				const values = [args.hair_colors, args.name, args.classification, args.average_height, args.average_lifespan, args.skin_colors, args.eye_colors, args.language, args.diameter, args._id];
-				return db.query(query).then((res) => res.rows);
+				const query = 'UPDATE species SET hair_colors=$1, name=$2, classification=$3, average_height=$4, average_lifespan=$5, skin_colors=$6, eye_colors=$7, language=$8  WHERE _id=$9 RETURNING *';
+				const values = [args.hair_colors, args.name, args.classification, args.average_height, args.average_lifespan, args.skin_colors, args.eye_colors, args.language, args._id];
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deleteSpecies: (parent, args) => {
 			try {
-				const query = 'DELETE FROM species WHERE _id = $1';
+				const query = 'DELETE FROM species WHERE _id = $1 RETURNING *';
 				const values = [args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 
 		createVessel: (parent, args) => {
-			const query = 'INSERT INTO vessels(cost_in_credits, length, vessel_type, model, manufacturer, name, vessel_class, max_atmosphering_speed, crew, passengers, cargo_capacity, consumables) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)';
+			const query = 'INSERT INTO vessels(cost_in_credits, length, vessel_type, model, manufacturer, name, vessel_class, max_atmosphering_speed, crew, passengers, cargo_capacity, consumables) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *';
 			const values = [args.cost_in_credits, args.length, args.vessel_type, args.model, args.manufacturer, args.name, args.vessel_class, args.max_atmosphering_speed, args.crew, args.passengers, args.cargo_capacity, args.consumables];
 			try {
-				return db.query(query, values);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		updateVessel: (parent, args) => {
 			try {
-				const query = 'UPDATE vessels SET cost_in_credits=$1 length=$2 vessel_type=$3 model=$4 manufacturer=$5 name=$6 vessel_class=$7 max_atmosphering_speed=$8 crew=$9 passengers=$10 cargo_capacity=$11 consumables=$12  WHERE _id = $13';
+				const query = 'UPDATE vessels SET cost_in_credits=$1, length=$2, vessel_type=$3, model=$4, manufacturer=$5, name=$6, vessel_class=$7, max_atmosphering_speed=$8, crew=$9, passengers=$10, cargo_capacity=$11, consumables=$12  WHERE _id=$13 RETURNING *';
 				const values = [args.cost_in_credits, args.length, args.vessel_type, args.model, args.manufacturer, args.name, args.vessel_class, args.max_atmosphering_speed, args.crew, args.passengers, args.cargo_capacity, args.consumables, args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deleteVessel: (parent, args) => {
 			try {
-				const query = 'DELETE FROM vessels WHERE _id = $1';
+				const query = 'DELETE FROM vessels WHERE _id = $1 RETURNING *';
 				const values = [args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 
 		createStarshipSpec: (parent, args) => {
-			const query = 'INSERT INTO starship_specs(MGLT, hyperdrive_rating, vessel_type, model, manufacturer, name, vessel_class, max_atmosphering_speed, crew, passengers, cargo_capacity, consumables) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)';
-			const values = [args.MGLT, args.hyperdrive_rating, args.vessel_type, args.model, args.manufacturer, args.name, args.vessel_class, args.max_atmosphering_speed, args.crew, args.passengers, args.cargo_capacity, args.consumables];
+			const query = 'INSERT INTO starship_specs(hyperdrive_rating, vessel_id, mglt) VALUES($1, $2, $3) RETURNING *';
+			const values = [args.hyperdrive_rating, args.vessel_id, args.mglt];
 			try {
-				return db.query(query, values);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		updateStarshipSpec: (parent, args) => {
 			try {
-				const query = 'UPDATE starship_specs SET MGLT=$1 hyperdrive_rating=$2 vessel_type=$3 model=$4 manufacturer=$5 name=$6 vessel_class=$7 max_atmosphering_speed=$8 crew=$9 passengers=$10 cargo_capacity=$11 consumables=$12  WHERE _id = $13';
-				const values = [args.MGLT, args.hyperdrive_rating, args.vessel_type, args.model, args.manufacturer, args.name, args.vessel_class, args.max_atmosphering_speed, args.crew, args.passengers, args.cargo_capacity, args.consumables, args._id];
-				return db.query(query).then((res) => res.rows);
+				const query = 'UPDATE starship_specs SET mglt=$1, hyperdrive_rating=$2, vessel_id=$3 WHERE _id=$4 RETURNING *';
+				const values = [args.mglt, args.hyperdrive_rating, args.vessel_id, args._id];
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deleteStarshipSpec: (parent, args) => {
 			try {
-				const query = 'DELETE FROM starship_specs WHERE _id = $1';
+				const query = 'DELETE FROM starship_specs WHERE _id=$1 RETURNING *';
 				const values = [args._id];
-				return db.query(query).then((res) => res.rows);
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
