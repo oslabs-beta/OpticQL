@@ -1,36 +1,24 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import { Context } from './store.jsx';
 
 const NavBar = () => {
 	const queryDB = useIndexedDB('queryData');
-	const schemaDB = useIndexedDB('schemaData');
-	const { dispatch } = useContext(Context);
+	const { dispatch, store } = useContext(Context);
+	const [databaseID, setDatabaseID] = useState('');
 
-	const linkStyle = {
-		"color": "#05445E",
-		"textDecoration": "none",
-	}
-
-	function queryDatabaseGrab () {
+	function queryDatabasePull () {
 		queryDB.getAll()
-			.then(result => {
-				console.log(result)
+			.then(res => {
+				console.log('Query database information: ', res);
 			})
-			.catch(err => console.log("Error with getting all records from query database: ", err));
+			.catch(err => console.log("Error with getting all records from database: ", err));
 	};
 
-	function schemaDatabaseGrab () {
-		schemaDB.getAll()
-			.then(res => console.log(res))
-			.catch(err => console.log("Error with getting all records from schema database: ", err));
-	};
-
-	const handleDeleteQueryData = () => {
+	const queryDatabaseClearAll = () => {
 		queryDB.clear()
 			.then(() => {
-				alert('Query database fully deleted!');
+				alert('Query database fully deleted');
 				dispatch({
 					type: "saveHistory",
 					payload: [],
@@ -38,22 +26,59 @@ const NavBar = () => {
 			});
 	}
 
-	const handleDeleteSchemaData = () => {
-		schemaDB.clear().then(() => {
-			alert('Schema database fully deleted!');
-		});
+	function queryDatabaseCheckRecord () {
+		if (Number(databaseID) >= 0) {
+			queryDB.getAll()
+				.then(res => {
+						let doesExist = false;
+						for (let i = 0; i < res.length; i += 1) {
+							const currentRecord = res[i];
+							if (currentRecord.id === Number(databaseID)) {
+								doesExist = true;
+								break;
+							}
+						}
+						if (doesExist) {
+							queryDatabaseDeleteOne();
+						} else {
+							alert('Specific record does not exist');
+						}
+					})
+					.catch(err => console.log("Error with checking if specific record from database exists: ", err));
+		} else {
+			alert('Database ID must be a number greater than zero');
+		}
+	};
+
+	function queryDatabaseDeleteOne () {
+		queryDB.deleteRecord(Number(databaseID))
+			.then(() => console.log('Record successfully deleted'))
+			.catch(err => console.log("Error with getting deleting specific record from database: ", err));
+		
+		// for loop through
+		const filtered = store.history.filter(obj => {
+			return obj.x !== databaseID
+		})
+		
+		dispatch ({
+			type: "saveHistory",
+			payload: filtered
+		})
+
+	};
+
+	const handleChange = (e) => {
+		setDatabaseID(e.target.value);
 	}
 
 	return (
 		<div className="buttonNavBar">
-
 			<div>
-				<button className="indexDBstyleButton" key={1} onClick={queryDatabaseGrab}>Check Query Database Records</button>
-				<button className="indexDBstyleButton" key={2} onClick={schemaDatabaseGrab}>Check Schema Database Records</button>
-				<button className="indexDBstyleButton" key={3} onClick={handleDeleteQueryData}>Clear Query Database</button>
-				<button className="indexDBstyleButton" key={4} onClick={handleDeleteSchemaData}>Clear Schema Database</button>
+				<button className="indexDBstyleButton" key={'navBar button: 1'} onClick={queryDatabasePull}>Pull Database</button>
+				<button className="indexDBstyleButton" key={'navBar button: 2'} onClick={queryDatabaseClearAll}>Clear All Database</button>
+				<button className="indexDBstyleButton" key={'navBar button: 3'} onClick={queryDatabaseCheckRecord}>Clear Specific Record</button>
+				<input className="databaseIDButton" type="text" onChange={handleChange} placeholder="Database ID to Delete" />
 			</div>
-
 		</div >
 	);
 }

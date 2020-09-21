@@ -3,6 +3,7 @@ import { useIndexedDB } from 'react-indexed-db';
 import { Context } from './store.jsx';
 import CodeMirror from 'react-codemirror';
 require('codemirror/lib/codemirror.css');
+const placeholder = require('codemirror/addon/display/placeholder');
 
 const ControlPanel = () => {
 
@@ -33,8 +34,13 @@ const ControlPanel = () => {
 				type: "mutation",
 				payload: query
 			});
-		};
 
+			dispatch({
+				type: "mutationEvent",
+				payload: query
+			});
+
+		};
 
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
@@ -48,6 +54,7 @@ const ControlPanel = () => {
 		})
 			.then(res => res.json())
 			.then((res) => {
+				console.log("Fetch response: ", res)
 				saveQuery(res)
 				dispatch({
 					type: "updateLoading",
@@ -59,7 +66,7 @@ const ControlPanel = () => {
 					type: "updateLoading",
 					payload: false
 				});
-				console.log("This is the error: ", err);
+				console.log("Fetch error: ", err);
 			})
 	}
 
@@ -72,7 +79,7 @@ const ControlPanel = () => {
 				response: savedQuery
 			})
 				.then(id => {
-					console.log('Query DB ID Generated: ', id);
+					console.log('Success! Query DB ID Generated: ', id);
 				})
 				.catch(err => console.log("Error with query database insertion: ", err));
 
@@ -82,10 +89,6 @@ const ControlPanel = () => {
 			});
 
 			queryDB.getAll()
-				.then(result => {
-					console.log(result);
-					return result;
-				})
 				// Loop through the result and make an array with [query name, total duration]
 				.then(result => {
 					const dbData = [];
@@ -116,18 +119,23 @@ const ControlPanel = () => {
 	//grabs the input value (query) from the text box and invokes makeQuery function to send that query to Apollo server
 	function handleSubmit (e) {
 		e.preventDefault();
-		makeQuery();
+		if (query) {
+			makeQuery();
+		} else {
+			alert('Please input a valid query/mutation request');
+		}
 	}
 
 	const options = {
 		lineNumbers: true,
+		placeholder: "Enter query or mutation here:"
 	}
 
 	return (
 		<div>
 			<div className="topLeftButtons">
 				<button className="quadrantButton" onClick={handleSubmit}>Submit Query</button>
-				<CodeMirror options={options} id="query" value={query} onChange={handleChange} defaultValue="Please enter query here" />
+				<CodeMirror options={options} id="query" value={query} onChange={handleChange} />
 			</div>
 		</div>
 	)
