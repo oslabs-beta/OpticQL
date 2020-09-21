@@ -259,8 +259,8 @@ function GraphViz(props) {
           const fieldMutations = typeMutationArr[1].split(/(:)/)
           fieldMutations.forEach((el, i, arr)=>{
             if (arr[i+1] === ":") {
-              const fieldSplit = el.split(/[ ]+/)
-              const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1];
+              const fieldSplit = el.split(/[ \n]/g)
+              const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1].trim();
               greenObj[typeField] = true;
             }
           })

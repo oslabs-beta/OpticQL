@@ -130,7 +130,7 @@ type Mutation {
 	skin_colors: String,
 	eye_colors: String,
   language: String,
-  _id: Int!
+  _id: Int!,
   ): Species!
   deleteSpecies(_id: Int!): Species!
   createVessel(
@@ -165,15 +165,17 @@ type Mutation {
   ): Vessel!
   deleteVessel(_id: Int!): Vessel!
   createStarshipSpec(
-  MGLT: String,
-  vessel_id: Int,
-	hyperdrive_rating: String,
+  mglt: String,
+  hyperdrive_rating: String,
+  vessel_id: Int!,
   ): StarshipSpec!
   updateStarshipSpec(
-	MGLT: String,
-	hyperdrive_rating: String,
+	mglt: String,
+  hyperdrive_rating: String,
+  vessel_id: Int!,
+  _id: Int,
   ): StarshipSpec!
-  deleteStarshipSpec(id: ID!): StarshipSpec!
+  deleteStarshipSpec(_id: Int!): StarshipSpec!
 }
 type Person {
   _id: Int!
@@ -248,8 +250,9 @@ type Vessel {
 }
 type StarshipSpec {
   _id: Int!
-  MGLT: String
+  mglt: String
   hyperdrive_rating: String
+  vessel_id: Int
 }
 `;
 
@@ -501,8 +504,8 @@ const resolvers = {
 		},
 
 		createStarshipSpec: (parent, args) => {
-			const query = 'INSERT INTO starship_specs(hyperdrive_rating, vessel_id) VALUES($1, $2) RETURNING *';
-			const values = [args.hyperdrive_rating, args.vessel_id];
+			const query = 'INSERT INTO starship_specs(hyperdrive_rating, vessel_id, mglt) VALUES($1, $2, $3) RETURNING *';
+			const values = [args.hyperdrive_rating, args.vessel_id, args.mglt];
 			try {
 				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
@@ -511,8 +514,8 @@ const resolvers = {
 		},
 		updateStarshipSpec: (parent, args) => {
 			try {
-				const query = 'UPDATE starship_specs SET MGLT=$1 hyperdrive_rating=$2 vessel_type=$3 model=$4 manufacturer=$5 name=$6 vessel_class=$7 max_atmosphering_speed=$8 crew=$9 passengers=$10 cargo_capacity=$11 consumables=$12  WHERE _id=$13 RETURNING *';
-				const values = [args.MGLT, args.hyperdrive_rating, args.vessel_type, args.model, args.manufacturer, args.name, args.vessel_class, args.max_atmosphering_speed, args.crew, args.passengers, args.cargo_capacity, args.consumables, args._id];
+				const query = 'UPDATE starship_specs SET mglt=$1, hyperdrive_rating=$2, vessel_id=$3 WHERE _id=$4 RETURNING *';
+				const values = [args.mglt, args.hyperdrive_rating, args.vessel_id, args._id];
 				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
