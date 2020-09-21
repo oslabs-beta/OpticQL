@@ -737,5 +737,4 @@ opticQL(typeDefs, resolvers, app)
 // const server = new ApolloServer({ schema, context: {}, tracing: true, });
 // server.applyMiddleware({ app });
 app.listen({ port: PORT }, () =>
-	console.log(`🚀 Server ready at http://localhost:3000/graphql`)
-)
+	console.log(`🚀 Server ready at http://localhost:3000/graphql`));

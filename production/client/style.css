@@ -9,6 +9,10 @@ body {
 	text-align: center;
 }
 
+#logo {
+	text-align: center;
+}
+
 #buttonContainer {
 	display: flex;
 	justify-content: flex-end;
@@ -41,10 +45,6 @@ body {
 	height: 340px;
 }
 
-/* #controlPanel {
-	padding: 20px 25px 20px 20px;
-} */
-
 #topRow {
 	margin: 20px;
 }
@@ -57,7 +57,6 @@ body {
 	border-radius: 20px;
   width: 50%;
 	min-width: 200px;
-	/* min-height: 100px; */
 	height: 500px;
 	margin: 10px 20px 10px 20px;
 	padding: 20px;
@@ -68,7 +67,6 @@ body {
   border-radius: 20px;
   width: 50%;
 	min-width: 200px;
-	/* min-height: 100px; */
 	height: 700px;
 	margin: 10px 20px 10px 20px;
 	padding: 20px;
@@ -89,7 +87,7 @@ body {
 	background-color: #05445E
 }
 
-	#fullVizContainer {
+#fullVizContainer {
 	width: 80%;
 }
 
@@ -113,8 +111,6 @@ body {
 }
 
 .indexDBstyleButton {
-	/* height: 40px; */
-	/* margin-bottom: 20px; */
 	background-color: #75E6DA;
 	font-size: 16px;
 	font-weight: 500;
@@ -123,15 +119,24 @@ body {
 	margin: 5px;
 	padding: 4px;
 	height: 40px;
-	/* width: 150px; */
 	border-radius: 5px;
 	border: 1px solid white;
-	/* box-shadow: 2px 2px 1px 2px #888888 */
+}
+
+.databaseIDButton {
+	background-color: white;
+	font-size: 16px;
+	font-weight: 500;
+	color:#05445E;
+	border: none;
+	margin: 5px;
+	padding: 4px;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid white;
 }
 
 .navButtons {
-	/* height: 40px; */
-	/* margin-bottom: 20px; */
 	background-color: #75E6DA;
 	font-size: 16px;
 	font-weight: 500;
@@ -140,10 +145,8 @@ body {
 	margin: 5px;
 	padding: 4px;
 	height: 40px;
-	/* width: 150px; */
 	border-radius: 5px;
 	border: 1px solid white;
-	/* box-shadow: 2px 2px 1px 2px #888888 */
 }
 
 .indexDBbuttons {
@@ -183,7 +186,6 @@ body {
 	margin: 0px 20px 0px 0px;
 	padding: 10px;
 	height: 100%;
-	/* width: 150px; */
 	border-radius: 5px;
 }
 
@@ -203,9 +205,6 @@ input:focus {
   color: #c8c8c8;
 }
 
-/* #form-group {
-  height: 430px;
-} */
 
 .queryDisplayTrue {
   background-color: #A3EBB1;
@@ -216,13 +215,9 @@ input:focus {
 	margin: 0px 20px 0px 0px;
 	padding: 10px;
 	height: 100%;
-	/* width: 150px; */
 	border-radius: 5px;
 
 }
-
-/* .queryDisplayTrue:hover {
-} */
 
 .queryDisplayFalse {
   background-color: #75E6DA;
@@ -233,7 +228,6 @@ input:focus {
 	margin: 0px 20px 0px 0px;
 	padding: 10px;
 	height: 100%;
-	/* width: 150px; */
 	border-radius: 5px;
 
 }
@@ -279,12 +273,16 @@ input:focus {
 	flex-direction: right;
 }
 
-/* .navigation {
-	margin-left: 75px;
-} */
-
 .chartContainerDiv {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+}
+
+.historyViewContainer {
+	display : flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content : center;
+	margin-left: 50px;
 }
