@@ -1,3 +1,5 @@
+// Note: need to version up (i.e., increase version #) from current version if additional changes are made 
+
 export const DBConfig = {
 	name: 'OpticQL',
 	version: 3,

@@ -3,7 +3,7 @@ import NavBar from './navBar.jsx'
 import GraphViz from './Viz.jsx';
 
 const FullViz = () => {
-	//pass prop GraphViz as true here
+	// Pass prop GraphViz as true here
 	return (
 		<div>
 			<div id='title'>
