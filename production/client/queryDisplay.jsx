@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Context } from './store.jsx';
 
+//conditionally renders buttons based on whether query does not exist/is loading/has been loaded.
 const QueryDisplay = () => {
 
 	const { store } = useContext(Context);
@@ -28,7 +29,6 @@ const QueryDisplay = () => {
 
 	function handleGetResponse (e) {
 		e.preventDefault();
-		// e.target.style.backgroundColor='#D4F1F4'
 		if (!response) {
 			setResponse(true);
 			setMetrics(false);
@@ -38,7 +38,6 @@ const QueryDisplay = () => {
 
 	let responseButton = response ? 'queryDisplayTrue' : 'queryDisplayFalse'
 
-	// <img src="./assets/logo2.png" />
 	return (
 		<div>
       {(!store.query.extensions && !store.loading) &&

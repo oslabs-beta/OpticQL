@@ -2,23 +2,19 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
-import { useIndexedDB } from 'react-indexed-db';
 
 function GraphViz(props) {
   const { store, dispatch } = useContext(Context);
-  const [net, setNet] = useState({})
+  const [net, setNet] = useState({});
   const [savedSchema, saveSchema] = useState();
-  const [nodes, setNodes] = useState([])
-  const [edges, setEdges] = useState([])
-
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
   const [mutationRef, setmutationRef] = useState({});
   const [updatedSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false);
   const [events, setEvents] = useState({});
-  const [convert, setConvert] = useState({});
+  const [convert, setQueryRef] = useState({});
   const [graphObjRef, setgraphObjRef] = useState({});
-  const [initialRender, setInitialRender] = useState(true);
-  
   const [graph, setGraph] = useState(
     {
       nodes: [], 
@@ -59,15 +55,15 @@ function GraphViz(props) {
       },
       height: props.height,
       width: props.width,
-
       autoResize: true,
     },
    )
  
     useEffect(()=>{
+      // useEffect triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
+      // Below code block only executes on Quadrant view:
       if (!props.fullGraph) {
-       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
-      // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
+      // Creates and formats a field for each line in the schema. Differentiates 'Query', 'Mutation', and general types ('Person', 'Planet' etc..)
       let allMutations;
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
@@ -80,11 +76,8 @@ function GraphViz(props) {
             const trimmed = field.trim();
             return trimmed;
           })
-          
-        
         })
-        // Separating query and mutation types from general type fields, 
-        // which will be used to create nodes in graph.
+        // Here seperate query and mutation types from general type fields
         let queryArr;
         let queryIndex;
         let mutationIndex;
@@ -101,7 +94,9 @@ function GraphViz(props) {
         
         const queryConvert = {};
         const mutationConvert = {};
-        // Fill out 'queryConvert' to be a dictonary that looks up the field 'type' for a query 'type' (key/value pair -> people: 'Person')
+        // Fill out 'queryConvert'/'mutationConvert' to be dictionaries that look up the field 'type' for a Query/Mutation 'type'. 
+        // Query example: (people: 'Person')
+        // Mutation example: (createPerson: 'Person')
         queryArr.forEach((el)=>{
           if (el.includes(":")) {
             const elSplit = el.split(':');
@@ -113,7 +108,6 @@ function GraphViz(props) {
             queryConvert[leftName[0]] = found[0];
           }
         })
-        // Fill out 'mutationConvert' to be a dictonary that looks up the field 'type' for a mutation 'type' (key/value pair -> createPerson: 'Person')
         const mutationSplitBracket = allMutations.split(/{\n/)
         const regex = /!\n/
         const mutation = mutationSplitBracket[1].split(regex);
@@ -127,9 +121,9 @@ function GraphViz(props) {
             mutationConvert[sliced] = field;
           }
         })
-        // "setmutationRef" and "setConvert" save their respective object arguments in state so they can be accessed when a query / mutation is issued
+        // "setmutationRef" and "setQueryRef" save their respective object arguments in state so they can be accessed when a Query / Mutation is issued
         setmutationRef(mutationConvert)
-        setConvert(queryConvert);
+        setQueryRef(queryConvert);
         const queryObject = {};
         // Now isolate the Non-Query/Mutation type fields 
         formatted.forEach((el, i)=>{

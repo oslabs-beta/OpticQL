@@ -4,8 +4,8 @@ import { Context, initialState, reducer } from './store.jsx';
 import FullVizView from './fullVizView.jsx';
 import QuadrantView from './quadrantView.jsx';
 import HistoryView from './historyView.jsx';
-// import Error from './error.jsx'
 
+//declare paths for react router and give components access to store.
 const App = () => {
 	const [store, dispatch] = useReducer(reducer, initialState)
 	return (
@@ -16,12 +16,10 @@ const App = () => {
 				<Route path="/fullhistory" component={HistoryView} />
 				<Route path="*" component={QuadrantView} />
 				<Route path="/" component={QuadrantView} exact />
-				{/* <Route component={Error} /> */}
 			</Switch>
 			</Context.Provider>
 		</main>
 	)
-
 }
 
 export default App;

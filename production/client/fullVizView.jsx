@@ -3,7 +3,7 @@ import NavBar from './navBar.jsx'
 import GraphViz from './Viz.jsx';
 
 const FullViz = () => {
-	//pass prop GraphViz as true here
+	//pass prop GraphViz as true here: this will change the size from quadrant view to full screen view.
 	return (
 		<div>
 			<div id='title'>
