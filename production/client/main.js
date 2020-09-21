@@ -1,11 +1,13 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
+const iconPath = path.join(__dirname, "/client/assets/icon.png");
 function createWindow () {
 	// Create the browser window.
 	const win = new BrowserWindow({
 		width: 1280,
 		height: 720,
+		icon: iconPath,
 		webPreferences: {
 			nodeIntegration: true,
 			nativeWindowOpen: true,

@@ -335,6 +335,7 @@ function GraphViz(props) {
     //distinguishing between fullGraph and quadrantView so green nodes update when toggling views.
     useEffect(()=> {
       if (props.fullGraph) {
+        // fullGraphVisit logic deals with rendering of nodes upon returning to quadrantView 
         dispatch({
           type: "fullGraphVisit",
           payload: true
@@ -359,9 +360,8 @@ function GraphViz(props) {
           setGraph({nodes: store.nodes, edges: store.edges});
         }
       }
-      // THIS DEALS WITH QUADRANT GRAPH
+      // Case: Returning from fullGraphView with Green Nodes -> 
       if ((store.fullGraphVisit && store.greenNodes) && !props.fullGraph) {
-      
         setGraphGreen({
           edges: JSON.parse(JSON.stringify(store.greenEdges)), 
           nodes: JSON.parse(JSON.stringify(store.greenNodes))
@@ -372,38 +372,21 @@ function GraphViz(props) {
           payload: false
         })
       }
+      // Case: Returning from fullGraphView with base graph -> 
       if ((store.fullGraphVisit && !store.greenNodes) && !props.fullGraph) {
         setGraphGreen({
           edges: JSON.parse(JSON.stringify(store.edges)), 
           nodes: JSON.parse(JSON.stringify(store.nodes))
         })
-        // net.network.setData({
-        //   edges: store.greenEdges, 
-        //   nodes: store.greenNodes
-        // });
         dispatch({
           type: "fullGraphVisit",
           payload: false
         })
       }
-
-
-
-
-
-
-    // else if (store.fullGraphVisit && !store.greenNodes) {
-    //   setGraph({nodes: store.nodes, edges: store.edges});
-    //   dispatch({
-    //     type: "fullGraphVisit",
-    //     payload: false
-    //   })
-    // }
-      // 2. if 
     }, [])  
 	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
-    // DO A DISPATCH TO SET THE GREEN NODES TO FALSE
+    // Reset greenEdges / greenNodes to false (so data does not persist)
     dispatch({
       type: "greenEdges",
       payload: false
@@ -412,14 +395,12 @@ function GraphViz(props) {
       type: "greenNodes",
       payload: false
     })
-
-
 		fetch('http://localhost:3000/getSchema')
 			.then(res => res.json())
 			.then(res => saveSchema(res))
 			.catch(err => console.log('Error with fetching updated schema from User app: ', err));
 	}
-	// Invokes when savedSchema state is updated, sending schema to indexeddb table of schema
+	// Invokes when savedSchema state is updated, sending schema to store.
 	useEffect(() => {
 		if (savedSchema) {
 				dispatch({
@@ -461,7 +442,6 @@ function GraphViz(props) {
         />
       </div>
       }
-
       {(store.schema.schemaNew && greenNode) &&
       <div id='graphBox'>
         <Graph
