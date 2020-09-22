@@ -86,7 +86,7 @@ const NavBar = () => {
 				<button className="indexDBstyleButton" key={'navBar button: 3'} onClick={queryDatabaseCheckRecord}>Clear Specific Record</button>
 				<input className="databaseIDButton" type="text" onChange={handleChange} placeholder="Database ID to Delete" />
 			</div>
-		</div >
+		</div>
 	);
 }
 

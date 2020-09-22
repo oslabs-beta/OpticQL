@@ -5,6 +5,7 @@ import FullVizView from './fullVizView.jsx';
 import QuadrantView from './quadrantView.jsx';
 import HistoryView from './historyView.jsx';
 
+//declare paths for react router and give components access to store.
 const App = () => {
 	const [store, dispatch] = useReducer(reducer, initialState)
 	return (
@@ -19,7 +20,6 @@ const App = () => {
 			</Context.Provider>
 		</main>
 	)
-
 }
 
 export default App;
