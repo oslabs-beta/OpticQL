@@ -289,3 +289,11 @@ input:focus {
 	justify-content : center;
 	margin-left: 50px;
 }
+
+.loadingBox {
+  display: flex;
+  align-items: center;
+  justify-content : center;
+  padding-top: 200px;
+}
+
