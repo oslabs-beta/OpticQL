@@ -186,6 +186,7 @@ body {
 	padding: 10px;
 	height: 100%;
 	border-radius: 5px;
+
 }
 
 button:focus {
@@ -270,11 +271,8 @@ input:focus {
 .performanceMetricsButtonInfo {
 	display: flex;
 	flex-direction: right;
+	flex-wrap: wrap;
 }
-
-/* .htmlContainer{
-	position: fixed;
-} */
 
 .chartContainerDiv {
 	display: flex;
@@ -294,6 +292,5 @@ input:focus {
   display: flex;
   align-items: center;
   justify-content : center;
-  padding-top: 200px;
 }
 
