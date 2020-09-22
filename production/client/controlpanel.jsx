@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import { Context } from './store.jsx';
 import CodeMirror from 'react-codemirror';
+import throttle from 'lodash/throttle';
+
 require('codemirror/lib/codemirror.css');
 const placeholder = require('codemirror/addon/display/placeholder');
 
@@ -20,7 +22,6 @@ const ControlPanel = () => {
 	// Make query to User App's server API, in turn, User's database
 
 	function makeQuery () {
-
 		// Update a trigger in store that says loading query: true
 		dispatch({
 			type: "updateLoading",
@@ -69,6 +70,9 @@ const ControlPanel = () => {
 				console.log("Fetch error: ", err);
 			})
 	}
+
+  // throttled version of makeQuery: 
+  const makeQueryThrottled = useCallback(throttle(makeQuery, 1000), [query])
 
 	// Invokes when savedQuery state is update, sending query to indexeddb
 
@@ -120,11 +124,13 @@ const ControlPanel = () => {
 	function handleSubmit (e) {
 		e.preventDefault();
 		if (query) {
-			makeQuery();
+			makeQueryThrottled();
 		} else {
 			alert('Please input a valid query/mutation request');
 		}
 	}
+
+  
 
 	const options = {
 		lineNumbers: true,
