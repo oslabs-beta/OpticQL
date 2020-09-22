@@ -1,33 +1,12 @@
 const express = require('express');
 const cors = require('cors')
-// const fetch = require('node-fetch');
 const { opticQL } = require("optic-ql");
-
-// const { graphqlHTTP } = require('express-graphql');
-// // const express_graphql = require('express-graphql');
-// // const { buildSchema } = require('graphql');
-// // const { GraphQLSchema, GraphQLObjectType, GraphQLString } = graphql
 const db = require('./models/starwarsModel.js');
-
-// const { makeExecutableSchema } = require('apollo-server');
-
-// const axios = require('axios');
-
-
-
-// app.get('/api', ((req, res) => {
-// 	const test = `SELECT * FROM "people"`
-// 	db.query(test).then((data) => {
-// 		res.send(data)
-// 	})
-// }))
-
-// const { ApolloServer, gql } = require('apollo-server-express');
 const app = express();
+
 app.use(cors())
 
 const PORT = 3000;
-
 
 const typeDefs = `
 type Query {
@@ -373,10 +352,10 @@ const resolvers = {
 			}
 		},
 		updatePerson: (parent, args) => {
-      const query = 'UPDATE people SET gender=$1, height=$2, mass=$3, hair_color=$4, skin_color=$5, eye_color=$6, name=$7, birth_year=$8  WHERE _id=$9 RETURNING *';
-      const values = [args.gender, args.height, args.mass, args.hair_color, args.skin_color, args.eye_color, args.name, args.birth_year, args._id];
-      try {
-        return db.query(query, values).then((res) => res.rows[0]);;
+			const query = 'UPDATE people SET gender=$1, height=$2, mass=$3, hair_color=$4, skin_color=$5, eye_color=$6, name=$7, birth_year=$8  WHERE _id=$9 RETURNING *';
+			const values = [args.gender, args.height, args.mass, args.hair_color, args.skin_color, args.eye_color, args.name, args.birth_year, args._id];
+			try {
+				return db.query(query, values).then((res) => res.rows[0]);;
 			} catch (err) {
 				throw new Error(err);
 			}
@@ -666,75 +645,7 @@ const resolvers = {
 	},
 }
 
-
-
-// const schema = makeExecutableSchema({
-// 	typeDefs,
-// 	resolvers,
-// })
-
-// app.use('/graphql', graphqlHTTP({
-// 	schema: schema,
-// 	graphiql: true,
-// }));
-
-
-// function npmFetch(schema) {
-//   fetch('http://localhost:3001/api/schema', {
-//     method: 'POST', 
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       hello: schema
-//     }),
-//   })
-//   .then((res) => {
-//     console.log(res)
-//     return res.json()
-//   })
-//   .then((data)=>{
-//     console.log('fetch')
-//     console.log(data)
-//   })
-// }
-
-
-app.use('/api/hello', (req, res) => {
-	res.status(200).json({ hello: 'holaTest2' })
-})
-
-// app.use('/getSchema', (req, res) => {
-//   res.status(200).json({schemaNew: typeDefs})
-// })
-
-// functionality to send schema to Electron
-// function npmFetch (schema) {
-// 	fetch('http://localhost:3001/api/schema', {
-// 		method: 'POST',
-// 		headers: {
-// 			'Content-Type': 'application/json',
-// 		},
-// 		body: JSON.stringify({
-// 			hello: schema
-// 		}),
-// 	})
-// 		.then((res) => {
-// 			console.log(res)
-// 			return res.json()
-// 		})
-// 		.then((data) => {
-// 			console.log('fetch')
-// 			console.log(data)
-// 		})
-// }
-// opticQL(typeDefs)
-
 opticQL(typeDefs, resolvers, app)
 
-
-// app.listen(5000, () => console.log('Now browse to localhost:5000/graphql'));
-// const server = new ApolloServer({ schema, context: {}, tracing: true, });
-// server.applyMiddleware({ app });
 app.listen({ port: PORT }, () =>
 	console.log(`🚀 Server ready at http://localhost:3000/graphql`));

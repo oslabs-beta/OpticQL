@@ -2,8 +2,6 @@ import React, { useState, useContext } from "react";
 import { Link } from 'react-router-dom';
 import { Context } from "./store.jsx";
 import ExpandPerfData from "./expandPerfData.jsx";
-import { useIndexedDB } from 'react-indexed-db';
-
 import {
 	VictoryChart,
 	VictoryLine,
@@ -17,24 +15,24 @@ const PerfData = () => {
 
 	const { store } = useContext(Context);
 
+	// Local state to show or hide the pop-up window
 	const [showWindowPortal, setWindowPortal] = useState(false);
-	const [dbResults, setDBResults] = useState();
-	const queryDB = useIndexedDB('queryData');
 
-	const dbData = [];
-
-
+	// Change state of showWindowPortal whenever Expand Performance Metrics button is clicked
 	function toggleWindowPortal () {
 		setWindowPortal(!showWindowPortal)
 	}
 
+	// To format the response metrics with commas if 4 digits or more
 	function numberWithCommas (x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 	}
 
 	// Declaring variables to re-assign if store.query.extensions is not falsy
 	const data = [];
+	// Variable for rendering of the Summary Performance Metrics text in the upper right hand corner of lower left quadrant
 	const htmlContainer = [];
+	// Variable for rending of the main charting (bar or line Victory charts)
 	const chartContainer = [];
 	let overallResTime;
 	let startTime;
@@ -43,37 +41,33 @@ const PerfData = () => {
 	const perfAvg = {};
 	const anomaliesObj = {};
 
-	function numberWithCommas (x) {
-		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-	}
-
+	// If the request is valid (with an associated response), and it is not a mutation request
 	if (store.query.extensions && !store.mutationEvent) {
-		// Declaring variables
-		// const performanceObj = {};
 		const topLevelQueryArr = [];
 
-		// Saving top-level query information --> formatting overall response time (in ms) to include commas before the decimal
+		// Saving top-level request information --> formatting overall response time (in ms) to include commas before the decimal
 		overallResTime = numberWithCommas(
 			(store.query.extensions.tracing.duration / 1000000).toFixed(4)
 		);
 
-		// Saving the rest of the top-level query information
+		// Saving the rest of the top-level (overall) request information
 		startTime = store.query.extensions.tracing.startTime;
 		endTime = store.query.extensions.tracing.endTime;
 
 		// Saving resolver-level information to a variable
-		const performanceDataArray =
-			store.query.extensions.tracing.execution.resolvers;
+		const performanceDataArray = store.query.extensions.tracing.execution.resolvers;
 
 		// Resolver-level query information
 		for (let i = 0; i < performanceDataArray.length; i++) {
 			const currResolver = performanceDataArray[i];
 
+			// This captures 'parent' resolvers and associated duration
 			if (currResolver.path.length === 1) {
 				const pathStr = currResolver.path[0];
 				const pathDuration = currResolver.duration;
 				topLevelQueryArr.push([pathStr, pathDuration]);
 			} else {
+				// 'Children' resolvers and duration get stored in performanceObj
 				const pathStrJoined = currResolver.path.join(".");
 				const pathKey = currResolver.path.filter(function (curEl) {
 					return typeof curEl === "string";
@@ -87,6 +81,7 @@ const PerfData = () => {
 			}
 		}
 
+		// Finding the average of all the 'children' resolvers duration time for each identified path
 		for (let perfQuery in performanceObj) {
 			let perfArr = performanceObj[perfQuery];
 			let average = 0;
@@ -97,6 +92,7 @@ const PerfData = () => {
 			perfAvg[perfQuery] = Number(finalAvg.toFixed(4));
 		}
 
+		// Isolating the 'children' resolvers where the duration time exceeds the average duration time for that identified path
 		for (const [pathName, avg] of Object.entries(perfAvg)) {
 			const anomaliesArr = [];
 			const arrayOfTimes = performanceObj[pathName];
@@ -109,6 +105,7 @@ const PerfData = () => {
 			anomaliesObj[pathName] = anomaliesArr;
 		}
 
+		// Declaring the performance data to be rendered in Victory chart 
 		for (let queryKey in perfAvg) {
 			let queryKeyObj = {};
 			queryKeyObj.x = queryKey;
@@ -120,7 +117,6 @@ const PerfData = () => {
 		}
 
 		// Console logs for error-checking
-
 		// console.log("performanceObj ", performanceObj);
 		// console.log("topLevelQueryArr ", topLevelQueryArr);
 		// console.log("perfAvg:", perfAvg);
@@ -130,7 +126,6 @@ const PerfData = () => {
 		// Container for line chart --> Used when there is MORE THAN ONE path
 		const containerLine = [
 			<VictoryChart
-				// theme={VictoryTheme.material}
 				height={350}
 				padding={60}
 				domainPadding={{ x: 10 }}
@@ -144,7 +139,6 @@ const PerfData = () => {
 						}
 						labelComponent={
 							<VictoryTooltip
-								// flyoutHeight={30}
 								cornerRadius={5}
 								flyoutStyle={{ fill: "#D4F1F4" }}
 								style={{ fontSize: 9 }}
@@ -155,12 +149,10 @@ const PerfData = () => {
 			>
 				<VictoryLine
 					style={{
-						// labels: { fontSize: 6 },
 						data: { stroke: "#189AB4" },
-						// parent: { border: "1px solid #ccc" },
 					}}
+					// Performance data is inputted here
 					data={data}
-				// labels={({ datum }) => `Avg.: ${datum.y}`}
 				/>
 				<VictoryAxis
 					label={"Path"}
@@ -185,16 +177,15 @@ const PerfData = () => {
 		// Container for bar chart --> Used when there is ONLY ONE path
 		const containerBar = [
 			<VictoryChart
-				// theme={VictoryTheme.material}
 				height={350}
 				padding={60}
 				domainPadding={{ x: 5 }}
-			// containerComponent={<VictoryZoomContainer />}
 			>
 				<VictoryBar
 					style={{
 						data: { fill: "#189AB4" },
 					}}
+					// Performance data is inputted here
 					data={data}
 					labels={({ datum }) =>
 						`Avg. response time: ${datum.t} ms,
@@ -205,7 +196,6 @@ const PerfData = () => {
 					labelComponent={
 						<VictoryTooltip
 							dy={0}
-							// centerOffset={{ x: 25 }}
 							style={{ fontSize: 8 }}
 							constrainToVisibleArea
 						/>
@@ -231,16 +221,11 @@ const PerfData = () => {
 			</VictoryChart>,
 		];
 
-		// Adding <p> tags with top-level query information to container array (for rendering)
+		// Adding <p> tags with top-level query information to HTMLcontainer array
 		htmlContainer.push(
 			<p key={"overallPerfMetric: 0"} className="perfMetricPTag" className="perfMetricPTagTitle">Summary Performance Metrics:</p>
 		);
-		// container.push(
-		// 	<p key={"overallPerfMetric: 1"} className="perfMetricPTag"> ▫ Overall query start time: {startTime}</p>
-		// );
-		// container.push(
-		// 	<p key={"overallPerfMetric: 2"} className="perfMetricPTag"> ▫ Overall query end time: {endTime}</p>
-		// );
+
 		htmlContainer.push(
 			<p key={"overallPerfMetric: 3"} className="perfMetricPTag">
 				▫ Overall response time: {overallResTime} ms
@@ -260,7 +245,8 @@ const PerfData = () => {
 			);
 		}
 
-		// Conditional statement to assign container to either the line or bar chart
+		// Conditional statement to assign chartContainer to either the line or bar chart
+
 		if (data.length === 1) {
 			chartContainer.push(containerBar);
 		} else {
@@ -268,13 +254,18 @@ const PerfData = () => {
 		}
 	}
 
+	// If the request is valid (with an associated response), and it is a MUTATION request
 	if (store.query.extensions && store.mutationEvent) {
 
-		const overallDurationTime = numberWithCommas(((store.query.extensions.tracing.duration)/1000000).toFixed(4));
+		// Saving the overall duration time for the MUTATION request
+		const overallDurationTime = numberWithCommas(((store.query.extensions.tracing.duration) / 1000000).toFixed(4));
 
+		// Saving the resolvers array to a variable
 		const resolverArr = store.query.extensions.tracing.execution.resolvers;
 
+		// For loop to create a data object to be rendered inside Victory charts
 		for (let i = 0; i < resolverArr.length; i++) {
+			// If conditional to isolate where the resolver path is only one field (which indicates a mutation request vs. the callback fields requested)
 			if (resolverArr[i].path.length === 1) {
 				const resolverDuration = (resolverArr[i].duration) / 1000000;
 				const resolverName = resolverArr[i].path[0];
@@ -286,19 +277,20 @@ const PerfData = () => {
 			}
 		}
 
+		// Adding <p> tags with top-level query information to HTMLcontainer array
 		htmlContainer.push(
 			<p key={"overallPerfMetric: 0"} className="perfMetricPTag" className="perfMetricPTagTitle">Summary Performance Metrics:</p>
 		);
-		
+
 		htmlContainer.push(
 			<p key={"overallPerfMetric: 3"} className="perfMetricPTag">
 				▫ Overall response time: {overallDurationTime} ms
       </p>
 		);
-		
+
+		// Container for line chart --> Used when there is MORE THAN ONE path
 		const containerLine = [
 			<VictoryChart
-				// theme={VictoryTheme.material}
 				height={350}
 				padding={60}
 				domainPadding={{ x: 10 }}
@@ -310,7 +302,6 @@ const PerfData = () => {
 						}
 						labelComponent={
 							<VictoryTooltip
-								// flyoutHeight={30}
 								cornerRadius={5}
 								flyoutStyle={{ fill: "#D4F1F4" }}
 								style={{ fontSize: 9 }}
@@ -321,12 +312,10 @@ const PerfData = () => {
 			>
 				<VictoryLine
 					style={{
-						// labels: { fontSize: 6 },
 						data: { stroke: "#189AB4" },
-						// parent: { border: "1px solid #ccc" },
 					}}
+					// Performance data is inserted here
 					data={data}
-				// labels={({ datum }) => `Avg.: ${datum.y}`}
 				/>
 				<VictoryAxis
 					label={"Path"}
@@ -351,16 +340,15 @@ const PerfData = () => {
 		// Container for bar chart --> Used when there is ONLY ONE path
 		const containerBar = [
 			<VictoryChart
-				// theme={VictoryTheme.material}
 				height={350}
 				padding={60}
 				domainPadding={{ x: 5 }}
-			// containerComponent={<VictoryZoomContainer />}
 			>
 				<VictoryBar
 					style={{
 						data: { fill: "#189AB4" },
 					}}
+					// Performance data is inserted here
 					data={data}
 					labels={({ datum }) =>
 						`Response time: ${datum.z} ms`
@@ -369,7 +357,6 @@ const PerfData = () => {
 					labelComponent={
 						<VictoryTooltip
 							dy={0}
-							// centerOffset={{ x: 25 }}
 							style={{ fontSize: 8 }}
 							constrainToVisibleArea
 						/>
@@ -395,18 +382,18 @@ const PerfData = () => {
 			</VictoryChart>,
 		];
 
+		// Conditional statement to assign chartContainer to either the line or bar chart
 		if (data.length === 1) {
 			chartContainer.push(containerBar);
 		} else {
 			chartContainer.push(containerLine);
 		}
-
 	}
 
 	const linkStyle = {
 		"color": "#05445E",
 		"textDecoration": "none",
-  }
+	}
 
 	return (
 		<div>

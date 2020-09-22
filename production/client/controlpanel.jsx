@@ -9,17 +9,17 @@ const placeholder = require('codemirror/addon/display/placeholder');
 
 const ControlPanel = () => {
 
-	const { dispatch, store } = useContext(Context);
-
+	const { dispatch } = useContext(Context);
 	const queryDB = useIndexedDB('queryData');
 	const [query, setQuery] = useState();
 	const [savedQuery, saveQuery] = useState();
 
+	// Function to cleanly format response time string with commas
 	function numberWithCommas (x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 	}
 
-	// Make query to User App's server API, in turn, User's database
+	// Make query to User's App's server API, in turn, User's database
 
 	function makeQuery () {
 		// Update a trigger in store that says loading query: true
@@ -28,14 +28,15 @@ const ControlPanel = () => {
 			payload: true
 		});
 
-		// Add Dispath --- send query to 'Mutation' variable
-		// if query.includes('mutation')
 		if (query.includes('mutation')) {
+
+			// Add Dispatch --- send query to 'Mutation' variable in Store (for Viz.jsx purposes)
 			dispatch({
 				type: "mutation",
 				payload: query
 			});
 
+			// Add Dispatch --- send query to 'Mutation' (for Performance Data purposes)
 			dispatch({
 				type: "mutationEvent",
 				payload: query
@@ -43,6 +44,7 @@ const ControlPanel = () => {
 
 		};
 
+		// Execute fetch with query or mutation request to User app's server API 
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
 			headers: {
@@ -55,14 +57,17 @@ const ControlPanel = () => {
 		})
 			.then(res => res.json())
 			.then((res) => {
-				console.log("Fetch response: ", res)
-				saveQuery(res)
+				console.log("Fetch response: ", res);
+				// Updating state of savedQuery to incoming response
+				saveQuery(res);
+				// Loading.gif feature
 				dispatch({
 					type: "updateLoading",
 					payload: false
 				});
 			})
 			.catch(err => {
+				// Loading.gif feature
 				dispatch({
 					type: "updateLoading",
 					payload: false
@@ -71,13 +76,16 @@ const ControlPanel = () => {
 			})
 	}
 
-  // throttled version of makeQuery: 
-  const makeQueryThrottled = useCallback(throttle(makeQuery, 1000), [query])
 
-	// Invokes when savedQuery state is update, sending query to indexeddb
+	// throttled version of makeQuery: 
+	const makeQueryThrottled = useCallback(throttle(makeQuery, 1000), [query])
+
+	// Invokes when savedQuery state variable is updated, sending query to IndexedDB
 
 	useEffect(() => {
+		// Prevents the request from being saved in the database IF the query or mutation request is not valid
 		if (savedQuery && savedQuery.extensions) {
+			// Adding request string (query or mutation) & database response information to the database 
 			queryDB.add({
 				queryString: query,
 				response: savedQuery
@@ -87,13 +95,14 @@ const ControlPanel = () => {
 				})
 				.catch(err => console.log("Error with query database insertion: ", err));
 
+			// savedQuery being updated in global store
 			dispatch({
 				type: "updateQuery",
 				payload: savedQuery
 			});
 
+			// Querying database for all records to create an object to use for historyView.jsx Victory chart
 			queryDB.getAll()
-				// Loop through the result and make an array with [query name, total duration]
 				.then(result => {
 					const dbData = [];
 					for (let i = 0; i < result.length; i++) {
@@ -105,6 +114,7 @@ const ControlPanel = () => {
 							t: numberWithCommas((currQueryObj.response.extensions.tracing.duration / 1000000).toFixed(4))
 						})
 					}
+					// Updating the store with the dbData object created
 					dispatch({
 						type: "saveHistory",
 						payload: dbData
@@ -113,14 +123,15 @@ const ControlPanel = () => {
 				.catch(err => console.log("Error with database query for all historical information: ", err));
 
 		}
+		// Listening to changes for savedQuery
 	}, [savedQuery])
 
-	// Used to capture updated information from form input field for queries
+	// Used to capture updated information from form input field for requests (queries or mutations)
 	function handleChange (query_str) {
 		setQuery(query_str);
 	}
 
-	//grabs the input value (query) from the text box and invokes makeQuery function to send that query to Apollo server
+	// Grabs the input value (query or mutation) from Codemirror, invoking makeQuery function to send that request to the User App's server API
 	function handleSubmit (e) {
 		e.preventDefault();
 		if (query) {
@@ -130,7 +141,7 @@ const ControlPanel = () => {
 		}
 	}
 
-  
+
 
 	const options = {
 		lineNumbers: true,
