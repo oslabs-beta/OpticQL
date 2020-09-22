@@ -11,12 +11,12 @@ const App = () => {
 	return (
 		<main>
 			<Context.Provider value={{ store, dispatch }}>
-			<Switch>
-				<Route path="/fullviz" component={FullVizView} />
-				<Route path="/fullhistory" component={HistoryView} />
-				<Route path="*" component={QuadrantView} />
-				<Route path="/" component={QuadrantView} exact />
-			</Switch>
+				<Switch>
+					<Route path="/fullviz" component={FullVizView} />
+					<Route path="/fullhistory" component={HistoryView} />
+					<Route path="*" component={QuadrantView} />
+					<Route path="/" component={QuadrantView} exact />
+				</Switch>
 			</Context.Provider>
 		</main>
 	)

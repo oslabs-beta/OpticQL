@@ -10,17 +10,16 @@ import {
 	VictoryVoronoiContainer,
 } from "victory";
 
-
 const History = () => {
-	
-	const { store } = useContext(Context);
-	let chartContainer = [];
-	
-	console.log('Store.history inside HistoryView: ', store.history)
 
+	const { store } = useContext(Context);
+
+	// Declaring an empty array to store either the line chart, bar chart, or string (for no historical data)
+	let chartContainer = [];
+
+	// Container for line chart --> Used when there is more than ONE path
 	const containerLine = [
 		<VictoryChart
-			// theme={VictoryTheme.material}
 			domainPadding={{ x: 10 }}
 			containerComponent={
 				<VictoryVoronoiContainer
@@ -43,12 +42,10 @@ const History = () => {
 		>
 			<VictoryLine
 				style={{
-					// labels: { fontSize: 6 },
 					data: { stroke: "#189AB4" },
-					// parent: { border: "1px solid #ccc" },
 				}}
+				// Performance data inserted here
 				data={store.history}
-			// labels={({ datum }) => `Avg.: ${datum.y}`}
 			/>
 			<VictoryAxis
 				label={"Query Database ID"}
@@ -71,17 +68,15 @@ const History = () => {
 	];
 
 	// Container for bar chart --> Used when there is ONLY ONE path
-
 	const containerBar = [
 		<VictoryChart
-			// theme={VictoryTheme.material}
 			domainPadding={{ x: 5 }}
-		// containerComponent={<VictoryZoomContainer />}
 		>
 			<VictoryBar
 				style={{
 					data: { fill: "#189AB4" },
 				}}
+				// Performance data object inserted here
 				data={store.history}
 				labels={({ datum }) =>
 					`Query: ${datum.t} ms,
@@ -118,6 +113,7 @@ const History = () => {
 		</VictoryChart>,
 	];
 
+	// Conditional statement to assign chartContainer to charting (line or bar) if there is data, or else, a string indicating no data to render
 	if (store.history.length === 0) {
 		chartContainer = '(No historical query information to display)';
 	} else if (store.history.length === 1) {
@@ -127,12 +123,12 @@ const History = () => {
 	}
 
 	const headerStr = 'Historical GraphQL Performance (Overall response duration in ms)'
-	
+
 	const linkStyle = {
 		"color": "#05445E",
 		"textDecoration": "none",
 	}
-	
+
 	return (
 		<div>
 			<div className="historyViewContainer">

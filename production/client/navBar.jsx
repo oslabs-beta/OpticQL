@@ -7,6 +7,7 @@ const NavBar = () => {
 	const { dispatch, store } = useContext(Context);
 	const [databaseID, setDatabaseID] = useState('');
 
+	// Query IndexedDB for all request performance/response information 
 	function queryDatabasePull () {
 		queryDB.getAll()
 			.then(res => {
@@ -15,6 +16,7 @@ const NavBar = () => {
 			.catch(err => console.log("Error with getting all records from database: ", err));
 	};
 
+	// Clear all queries in IndexedDB
 	const queryDatabaseClearAll = () => {
 		queryDB.clear()
 			.then(() => {
@@ -26,47 +28,52 @@ const NavBar = () => {
 			});
 	}
 
+	// Step 1:Should a User select the option to delete a specific IndexedDB record
 	function queryDatabaseCheckRecord () {
 		if (Number(databaseID) >= 0) {
 			queryDB.getAll()
 				.then(res => {
-						let doesExist = false;
-						for (let i = 0; i < res.length; i += 1) {
-							const currentRecord = res[i];
-							if (currentRecord.id === Number(databaseID)) {
-								doesExist = true;
-								break;
-							}
+					let doesExist = false;
+					for (let i = 0; i < res.length; i += 1) {
+						const currentRecord = res[i];
+						if (currentRecord.id === Number(databaseID)) {
+							doesExist = true;
+							break;
 						}
-						if (doesExist) {
-							queryDatabaseDeleteOne();
-						} else {
-							alert('Specific record does not exist');
-						}
-					})
-					.catch(err => console.log("Error with checking if specific record from database exists: ", err));
+					}
+					// Invoke queryDatabaseDeleteOne in the event the ID inputted into the form field matches an existing record in IndexedDB
+					if (doesExist) {
+						queryDatabaseDeleteOne();
+					} else {
+						alert('Specific record does not exist');
+					}
+				})
+				.catch(err => console.log("Error with checking if specific record from database exists: ", err));
 		} else {
 			alert('Database ID must be a number greater than zero');
 		}
 	};
 
+	// Step 2: In the event the specific record exists, deletes the specific record from IndexedDB
 	function queryDatabaseDeleteOne () {
 		queryDB.deleteRecord(Number(databaseID))
 			.then(() => console.log('Record successfully deleted'))
 			.catch(err => console.log("Error with getting deleting specific record from database: ", err));
-		
-		// for loop through
+
+		// Filter the current store.history variable to reflect the deletion of the specific record, so
+		// the full page historical performance view is updated (HistoryView)
 		const filtered = store.history.filter(obj => {
 			return obj.x !== databaseID
 		})
-		
-		dispatch ({
+
+		// Updating store.history for the filtered array (which excludes the deleted record)
+		dispatch({
 			type: "saveHistory",
 			payload: filtered
 		})
 
 	};
-
+	// Grabbing the input database ID and updating local state
 	const handleChange = (e) => {
 		setDatabaseID(e.target.value);
 	}

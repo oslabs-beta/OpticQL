@@ -12,8 +12,9 @@ function createWindow () {
 			nodeIntegration: true,
 			nativeWindowOpen: true,
 		}
-	})
+	});
 
+	// This is a popup window for performance metrics
 	win.webContents.on('new-window',
 		(event, url, frameName, disposition, options, additionalFeatures) => {
 			// This is the name we chose for our window. You can have multiple names for
@@ -38,28 +39,26 @@ function createWindow () {
 	// win.loadURL('http://localhost:3000/');
 
 	// This is used when distributing the Electron app
-	win.loadURL(`file://${path.join(__dirname, '../client/index.html')}`)
+	win.loadURL(`file://${path.join(__dirname, '../client/index.html')}`);
 
 	// Open the DevTools.
-	win.webContents.openDevTools()
+	win.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 
-
-
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
 		app.quit()
 	}
-})
+});
 
 app.on('activate', () => {
 	// On macOS it's common to re-create a window in the app when the
@@ -67,7 +66,4 @@ app.on('activate', () => {
 	if (BrowserWindow.getAllWindows().length === 0) {
 		createWindow()
 	}
-})
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+});

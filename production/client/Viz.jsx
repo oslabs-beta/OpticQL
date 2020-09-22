@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Context } from './store.jsx';
 import Graph from "react-graph-vis";
+import { useIndexedDB } from 'react-indexed-db';
+import throttle from 'lodash/throttle';
 
 function GraphViz(props) {
   const { store, dispatch } = useContext(Context);
@@ -399,8 +401,12 @@ function GraphViz(props) {
 			.then(res => res.json())
 			.then(res => saveSchema(res))
 			.catch(err => console.log('Error with fetching updated schema from User app: ', err));
-	}
-	// Invokes when savedSchema state is updated, sending schema to store.
+  }
+  
+  // throttled version of requestSchema: 
+  const requestSchemaThrottled =  useCallback(throttle(requestSchema, 500), [])
+
+	// Invokes when savedSchema state is updated, sending schema to indexeddb table of schema
 	useEffect(() => {
 		if (savedSchema) {
 				dispatch({
@@ -420,7 +426,7 @@ function GraphViz(props) {
       <div>
       {!props.fullGraph && 
       <div className='topLeftButtons' id='vizQuadrant'>
-        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchema}>Import Schema</button>
+        <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchemaThrottled}>Import Schema</button>
         {store.schema.schemaNew && 
           <button className="quadrantButton">
             <Link to="/fullviz" style={linkStyle}>View Full Screen</Link>

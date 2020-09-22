@@ -22,7 +22,7 @@ export const reducer = (state, action) => {
 			return { ...state, query: action.payload }
 		case "updateSchema":
 			return { ...state, schema: action.payload }
-		case "updateLoading": 
+		case "updateLoading":
 			return { ...state, loading: action.payload }
 		case "nodes":
 			return { ...state, nodes: action.payload }
@@ -38,7 +38,7 @@ export const reducer = (state, action) => {
 			return { ...state, mutationEvent: action.payload }
 		case "fullGraphVisit":
 			return { ...state, fullGraphVisit: action.payload }
-		case "saveHistory": 
+		case "saveHistory":
 			return { ...state, history: action.payload }
 		default:
 			return state
