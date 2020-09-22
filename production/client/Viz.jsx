@@ -7,19 +7,16 @@ import throttle from 'lodash/throttle';
 
 function GraphViz(props) {
   const { store, dispatch } = useContext(Context);
-  const [net, setNet] = useState({})
+  const [net, setNet] = useState({});
   const [savedSchema, saveSchema] = useState();
-  const [nodes, setNodes] = useState([])
-  const [edges, setEdges] = useState([])
-
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
   const [mutationRef, setmutationRef] = useState({});
   const [updatedSchema, updateSchema] = useState(0);
   const [greenNode, greenNodeOn] = useState(false);
   const [events, setEvents] = useState({});
-  const [convert, setConvert] = useState({});
+  const [convert, setQueryRef] = useState({});
   const [graphObjRef, setgraphObjRef] = useState({});
-  const [initialRender, setInitialRender] = useState(true);
-  
   const [graph, setGraph] = useState(
     {
       nodes: [], 
@@ -60,15 +57,15 @@ function GraphViz(props) {
       },
       height: props.height,
       width: props.width,
-
       autoResize: true,
     },
    )
  
     useEffect(()=>{
+      // useEffect triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
+      // Below code block only executes on Quadrant view:
       if (!props.fullGraph) {
-       // Triggered when there is a new schema in the database (the useEffect listens for 'updatedSchema')
-      // Creates and formats a field for each new line in the schema. Differentiates 'Query' and 'Mutation'
+      // Creates and formats a field for each line in the schema. Differentiates 'Query', 'Mutation', and general types ('Person', 'Planet' etc..)
       let allMutations;
       if (store.schema.schemaNew){
         const arrTypes = store.schema.schemaNew.split(/}/);
@@ -81,11 +78,8 @@ function GraphViz(props) {
             const trimmed = field.trim();
             return trimmed;
           })
-          
-        
         })
-        // Separating query and mutation types from general type fields, 
-        // which will be used to create nodes in graph.
+        // Here seperate query and mutation types from general type fields
         let queryArr;
         let queryIndex;
         let mutationIndex;
@@ -102,7 +96,9 @@ function GraphViz(props) {
         
         const queryConvert = {};
         const mutationConvert = {};
-        // Fill out 'queryConvert' to be a dictonary that looks up the field 'type' for a query 'type' (key/value pair -> people: 'Person')
+        // Fill out 'queryConvert'/'mutationConvert' to be dictionaries that look up the field 'type' for a Query/Mutation 'type'. 
+        // Query example: (people: 'Person')
+        // Mutation example: (createPerson: 'Person')
         queryArr.forEach((el)=>{
           if (el.includes(":")) {
             const elSplit = el.split(':');
@@ -114,7 +110,6 @@ function GraphViz(props) {
             queryConvert[leftName[0]] = found[0];
           }
         })
-        // Fill out 'mutationConvert' to be a dictonary that looks up the field 'type' for a mutation 'type' (key/value pair -> createPerson: 'Person')
         const mutationSplitBracket = allMutations.split(/{\n/)
         const regex = /!\n/
         const mutation = mutationSplitBracket[1].split(regex);
@@ -128,9 +123,9 @@ function GraphViz(props) {
             mutationConvert[sliced] = field;
           }
         })
-        // "setmutationRef" and "setConvert" save their respective object arguments in state so they can be accessed when a query / mutation is issued
+        // "setmutationRef" and "setQueryRef" save their respective object arguments in state so they can be accessed when a Query / Mutation is issued
         setmutationRef(mutationConvert)
-        setConvert(queryConvert);
+        setQueryRef(queryConvert);
         const queryObject = {};
         // Now isolate the Non-Query/Mutation type fields 
         formatted.forEach((el, i)=>{
@@ -164,7 +159,7 @@ function GraphViz(props) {
             })
           }
         })
-        // add 'queryObject' to state so that query / mutation useEffect can access it
+        // add 'queryObject' to state so that Query / Mutation useEffect can access it
         setgraphObjRef(queryObject)
         const vizNodes = [];
         const vizEdges = [];
@@ -175,6 +170,9 @@ function GraphViz(props) {
         const colorArr = ['rgba(255, 153, 255, 1)','rgba(75, 159, 204, 1)','rgba(255, 102, 102, 1)','rgba(255, 255, 153, 1)','rgba(194, 122, 204, 1)', 'rgba(255, 204, 153, 1)', 'rgba(51, 204, 204, 1)']
         let colorPosition = 0;
         for (let key in queryObject){
+          if (!colorArr[colorPosition]) {
+            colorPosition = 0;
+          }
           const node = {id: key, label: key, title: key, group: key, widthConstraint: 75, color2: colorArr[colorPosition], color: colorArr[colorPosition], font: {size: 16, align: 'center'}};
           vizNodes.push(node);
           vizEdges.push({from: "Query", to: key, length: 275})
@@ -192,10 +190,10 @@ function GraphViz(props) {
         } 
         // use setGraph to render initial data
         setGraph({nodes: vizNodes, edges: vizEdges})
-        // Deep clone of Nodes and Edges created to be used when creating a graph with green nodes (after query / mutation)
+        // Deep clone of Nodes and Edges created to be used when creating a graph with green nodes (after Query / Mutation)
         setNodes(JSON.parse(JSON.stringify(vizNodes)));
         setEdges(JSON.parse(JSON.stringify(vizEdges)));
-        //sending nodes and edges to store so that viz graph can persist between page views.
+        //sending nodes and edges to store so that viz graph can persist between fullGraphViz and quadrantView.
         dispatch({
           type: "nodes",
           payload: vizNodes
@@ -209,228 +207,188 @@ function GraphViz(props) {
       }, [updatedSchema])
 
     useEffect(() => {
+      // Listening for change to store.query.extensions, this will change if new query is executed
+      // This useEffect only occurs in quadrantView
+      // Goal is to fill out greenObj based on Query / Mutation with the nodes that be green. ('Person', 'Person.gender')
       if (!props.fullGraph) {
-      
-      // listening for change to store.query.extensions, this will change if new query is executed
-      // greenObj will contain all the nodes that should turn green. ('Person', 'Person.gender')
-      if (store.query.extensions) {
-      const greenObj = {};
-      const queryRes = store.query.data;
-      const mutationRes = store.mutation;
-      // queryHelp used to fill out greenObj for Queries
-      const queryHelp = (data) => {
-        // iterate through queries targeted ('people', 'planets')
-        for (let key in data) {
-          let val;
-          if (key in convert) {
-            // turn val into 'Person' if key is 'people'
-            val = convert[key];
-            greenObj[val] = true
-            // If data[key][0] has a value of null:
-            let newData; 
-            let count = 0;
-            while (!data[key][count]) {
-              count += 1;
+        if (store.query.extensions) {
+          const greenObj = {};
+          const queryRes = store.query.data;
+          const mutationRes = store.mutation;
+          // queryHelp used to fill out greenObj for Queries
+          const queryHelp = (data) => {
+            // iterate through queries targeted ('people', 'planets')
+            for (let key in data) {
+              let val;
+              if (key in convert) {
+                // turn val into 'Person' if key is 'people'
+                val = convert[key];
+                greenObj[val] = true
+                // Edge case: if data[key][0] has a value of null, look at next element until not null
+                let newData; 
+                let count = 0;
+                while (!data[key][count]) {
+                  count += 1;
+                }
+                newData = data[key][count];
+                for (let prop in newData) {
+                  const propValue = val + '.' + prop
+                  greenObj[propValue] = true;
+                  if (Array.isArray(newData[prop])) {
+                    const newObj = {};
+                    newObj[prop] = newData[prop];
+                    queryHelp(newObj)
+                  }
+                }
+              } 
+            }   
+          }
+          // mutationHelp used to fill out greenObj for Mutations
+          const mutationHelp = (data) => {
+            // regex to match mutation type
+            const regexTest = /[a-zA-Z ]+\([^\)]+\)/g
+            const mutationArr = data.match(regexTest)
+            mutationArr.forEach((el)=>{
+              const mutationArrTrim = el.trim();
+              const typeMutationArr = mutationArrTrim.split("(");
+              const typeMutation = typeMutationArr[0].trim();
+              const typeMutationConvert = mutationRef[typeMutation];
+              greenObj[typeMutationConvert] = true;
+              const fieldMutations = typeMutationArr[1].split(/(:)/)
+              fieldMutations.forEach((el, i, arr)=>{
+                if (arr[i+1] === ":") {
+                  const fieldSplit = el.split(/[ \n]/g)
+                  const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1].trim();
+                  greenObj[typeField] = true;
+                }
+              })
+            })        
+          }
+
+          if ((queryRes && store.schema.schemaNew) || (store.mutation && store.schema.schemaNew)) {
+            // for QUERY: this fills out greenObj with our fields for green nodes
+            if (!store.mutation) {
+              queryHelp(queryRes)
+            } else {
+              // for MUTATION: this fills out greenObj with fields for green nodes
+              mutationHelp(mutationRes)
+              dispatch({
+                type: "mutation",
+                payload: false
+              });
             }
-            newData = data[key][count];
-            for (let prop in newData) {
-              const propValue = val + '.' + prop
-              greenObj[propValue] = true;
-              if (Array.isArray(newData[prop])) {
-                const newObj = {};
-                newObj[prop] = newData[prop];
-                queryHelp(newObj)
+            // Need to create deep copy of 'nodes' and 'edges' so that each instance of green node graph does not persist (solves pass by ref issue)
+            const nodeCopy = JSON.parse(JSON.stringify(nodes))
+            const newNodeArr = nodeCopy.map((el)=> {
+              // check if value is a key in greenObj, it true, turn its node color green
+              if (greenObj[el.id]) {
+                el.color = 'rgba(90, 209, 104, 1)'
+                return el;
+              } else {
+                return el;
+              }
+            })
+            const edgesArr = JSON.parse(JSON.stringify(edges))
+            // We can now add connections between connector nodes via graphObjRef
+            // iterate greenObj, find the value of greenObj key in graphObjRef, and if value is not 'true' add a edge between the value and the key and push ege to edgesArr
+            const graphObjFormat = {};
+            for (let key in graphObjRef) {
+              for (let prop in graphObjRef[key]) {
+                let value = key + '.' + prop;
+                graphObjFormat[value] = graphObjRef[key][prop];
               }
             }
-          } 
-        }   
-      }
-      // mutationHelp used to fill out greenObj for Mutations
-      const mutationHelp = (data) => {
-        // regex to match mutation type
-        const regexTest = /[a-zA-Z ]+\([^\)]+\)/g
-        const mutationArr = data.match(regexTest)
-        mutationArr.forEach((el)=>{
-          const mutationArrTrim = el.trim();
-          const typeMutationArr = mutationArrTrim.split("(");
-          const typeMutation = typeMutationArr[0].trim();
-          const typeMutationConvert = mutationRef[typeMutation];
-          greenObj[typeMutationConvert] = true;
-          const fieldMutations = typeMutationArr[1].split(/(:)/)
-          fieldMutations.forEach((el, i, arr)=>{
-            if (arr[i+1] === ":") {
-              const fieldSplit = el.split(/[ \n]/g)
-              const typeField = typeMutationConvert + '.' + fieldSplit[fieldSplit.length-1].trim();
-              greenObj[typeField] = true;
+            for (let key in greenObj) {
+              if (graphObjFormat[key]) {
+                edgesArr.push({from: key, to: graphObjFormat[key]})
+              }
             }
-          })
-        })        
+            // update store to have properties for green nodes and green edges, so that full page Viz view can use them.
+            // Only dispatch when edgesArr is not empty to prevent a dispatch on page load that overwrites data (solves edge case of returning from fullGraphViz)
+            if (edgesArr.length !== 0) {
+              dispatch({
+                type: "greenEdges",
+                payload: JSON.parse(JSON.stringify(edgesArr))
+              })
+              dispatch({
+                type: "greenNodes",
+                payload: JSON.parse(JSON.stringify(newNodeArr))
+              })
+            } 
+            // if there are green nodes present, we need to update them via setData
+            if (greenNode) {
+              net.network.setData({
+                edges: edgesArr, 
+                nodes: newNodeArr,
+              });
+            }
+            // if no green nodes currently, need to use setGraphGreen to create graph
+            setGraphGreen({
+              edges: edgesArr, 
+              nodes: newNodeArr,
+            })
+            // this causes the green node graph to render instead of base graph
+            greenNodeOn(true);
+          }
+        }
       }
-
-      if ((queryRes && store.schema.schemaNew) || (store.mutation && store.schema.schemaNew)) {
-        // for QUERY: this fills out greenObj with our fields for green nodes
-        if (!store.mutation) {
-          queryHelp(queryRes)
-        } else {
-          // for MUTATION: this fills out greenObj with fields for green nodes
-          mutationHelp(mutationRes)
-          dispatch({
-            type: "mutation",
-            payload: false
-          });
-        }
-        // Need to create deep copy of 'nodes' and 'edges' so that each instance of green node graph does not persist (pass by ref issue)
-        const nodeCopy = JSON.parse(JSON.stringify(nodes))
-        const newNodeArr = nodeCopy.map((el)=> {
-          // check if value is a key in greenObj, it true, turn its node color green
-          if (greenObj[el.id]) {
-            el.color = 'rgba(90, 209, 104, 1)'
-            return el;
-          } else {
-            return el;
-          }
-        })
-        const edgesArr = JSON.parse(JSON.stringify(edges))
-        // We can now add connections between connector nodes via graphObjRef
-        // iterate greenObj, find the value of greenObj key in graphObjRef, and if value is not 'true' add a edge between the value
-        // and the key and push ege to edgesArr
-
-        //formats the graphObjRef to have values of "true" or [type]
-        const graphObjFormat = {};
-        for (let key in graphObjRef) {
-          for (let prop in graphObjRef[key]) {
-            let value = key + '.' + prop;
-            graphObjFormat[value] = graphObjRef[key][prop];
-          }
-        }
-        for (let key in greenObj) {
-          if (graphObjFormat[key]) {
-            edgesArr.push({from: key, to: graphObjFormat[key]})
-          }
-        }
-        //update store to have properties for green nodes and green edges, so that full page Viz view can use them.
-        // MAKE SURE THIS DISPATCH DOES NOT OVERWRITE THE EXISTING DATA!!
-        
-
-        // on initial render prevent this from running
-        if (edgesArr.length !== 0) {
-          dispatch({
-            type: "greenEdges",
-            payload: JSON.parse(JSON.stringify(edgesArr))
-          })
-          dispatch({
-            type: "greenNodes",
-            payload: JSON.parse(JSON.stringify(newNodeArr))
-          })
-        } 
-
-
-
-        // if there are green nodes present, we need to update them via setData
-        if (greenNode) {
-          net.network.setData({
-            edges: edgesArr, 
-            nodes: newNodeArr,
-          });
-        }
-        // if no green nodes currently, need to use setGraphGreen to create graph
-        setGraphGreen({
-          edges: edgesArr, 
-          nodes: newNodeArr,
-        })
-        greenNodeOn(true);
-      }
-    }}
     }, [store.query.extensions])
 
-    //distinguishing between fullGraph and quadrant views so green nodes update when toggling views.
+    //distinguishing between fullGraph and quadrantView so green nodes update when toggling views.
     useEffect(()=> {
       if (props.fullGraph) {
-      
+        // fullGraphVisit logic deals with rendering of nodes upon returning to quadrantView 
         dispatch({
           type: "fullGraphVisit",
           payload: true
         })
         if (store.greenNodes) {
+          // if there are green nodes present, we need to update them via setData
           if (greenNode) {
             net.network.setData({
               edges: store.greenEdges, 
               nodes: store.greenNodes
             });
           }
+          // if no green nodes currently, need to use setGraphGreen to create graph
           setGraphGreen({
             edges: store.greenEdges, 
             nodes: store.greenNodes
           })
+          // this causes the green node graph to render instead of base graph
           greenNodeOn(true);
-
-          // ADD TO STORE VERSION OF GREENEDGES/NODES THAT IS UNDER DIFFERENT TAG.
-          // dispatch({
-          //   type: "fullGreenEdges",
-          //   payload: JSON.parse(JSON.stringify(store.fullGreenEdges))
-          // })
-          // dispatch({
-          //   type: "fullGreenNodes",
-          //   payload: JSON.parse(JSON.stringify(store.fullGreenNodes))
-          // })
-
-
         } else {
-          // render the store.edges and store.nodes
+          // render the base graph (non-green) using store.edges and store.nodes
           setGraph({nodes: store.nodes, edges: store.edges});
         }
       }
-      // 1. piece of state noting if returning from fullGraph
-
-      // THIS DEALS WITH QUADRANT GRAPH
+      // Case: Returning from fullGraphView with Green Nodes -> 
       if ((store.fullGraphVisit && store.greenNodes) && !props.fullGraph) {
-      
         setGraphGreen({
           edges: JSON.parse(JSON.stringify(store.greenEdges)), 
           nodes: JSON.parse(JSON.stringify(store.greenNodes))
         })
-        // net.network.setData({
-        //   edges: store.greenEdges, 
-        //   nodes: store.greenNodes
-        // });
         greenNodeOn(true);
         dispatch({
           type: "fullGraphVisit",
           payload: false
         })
       }
+      // Case: Returning from fullGraphView with base graph -> 
       if ((store.fullGraphVisit && !store.greenNodes) && !props.fullGraph) {
         setGraphGreen({
           edges: JSON.parse(JSON.stringify(store.edges)), 
           nodes: JSON.parse(JSON.stringify(store.nodes))
         })
-        // net.network.setData({
-        //   edges: store.greenEdges, 
-        //   nodes: store.greenNodes
-        // });
         dispatch({
           type: "fullGraphVisit",
           payload: false
         })
       }
-
-
-
-
-
-
-    // else if (store.fullGraphVisit && !store.greenNodes) {
-    //   setGraph({nodes: store.nodes, edges: store.edges});
-    //   dispatch({
-    //     type: "fullGraphVisit",
-    //     payload: false
-    //   })
-    // }
-      // 2. if 
     }, [])  
 	// Make query to User App's server API for updated GraphQL schema
 	function requestSchema () {
-    // DO A DISPATCH TO SET THE GREEN NODES TO FALSE
+    // Reset greenEdges / greenNodes to false (so data does not persist)
     dispatch({
       type: "greenEdges",
       payload: false
@@ -439,8 +397,6 @@ function GraphViz(props) {
       type: "greenNodes",
       payload: false
     })
-
-
 		fetch('http://localhost:3000/getSchema')
 			.then(res => res.json())
 			.then(res => saveSchema(res))
@@ -492,7 +448,6 @@ function GraphViz(props) {
         />
       </div>
       }
-
       {(store.schema.schemaNew && greenNode) &&
       <div id='graphBox'>
         <Graph

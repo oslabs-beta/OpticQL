@@ -55,7 +55,8 @@
   "build": {
     "appId": "yourappid",
     "mac": {
-      "category": "your.app.category.type"
+      "category": "your.app.category.type",
+      "icon": "build/icon.png"
     },
     "files": [
       "build/**/*",
