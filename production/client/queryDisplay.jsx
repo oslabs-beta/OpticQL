@@ -45,7 +45,7 @@ const QueryDisplay = () => {
         <div id='queryPlaceholder'>No query results to display</div>
       }
       {store.loading && 
-          <img src="./assets/loading.gif" className="loading" />
+        <div className="loadingBox"><img className='loadingImg' src="./assets/loading.gif" className="loading" /></div>      
       }
       {(store.query.extensions && !store.loading) &&
         <div>
