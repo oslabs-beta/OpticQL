@@ -10,7 +10,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/oslabs-beta/OpticQL/">
-    <img src="./client/logo2.png" alt="OpticQL Logo">
+    <img src="./production/client/logo2.png" alt="OpticQL Logo">
   </a>
 
 ## OpticQL
