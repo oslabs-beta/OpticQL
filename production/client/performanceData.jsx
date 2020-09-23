@@ -47,7 +47,7 @@ const PerfData = () => {
 
 		// Saving top-level request information --> formatting overall response time (in ms) to include commas before the decimal
 		overallResTime = numberWithCommas(
-			(store.query.extensions.tracing.duration / 1000000).toFixed(4)
+			(store.query.extensions.tracing.duration / 1000000).toFixed(2)
 		);
 
 		// Saving the rest of the top-level (overall) request information
@@ -223,7 +223,7 @@ const PerfData = () => {
 
 		// Adding <p> tags with top-level query information to HTMLcontainer array
 		htmlContainer.push(
-			<p key={"overallPerfMetric: 0"} className="perfMetricPTag" className="perfMetricPTagTitle">Summary Performance Metrics:</p>
+			<p key={"overallPerfMetric: 0"} className="perfMetricPTag" className="perfMetricPTagTitle">Summary Metrics:</p>
 		);
 
 		htmlContainer.push(
@@ -234,7 +234,7 @@ const PerfData = () => {
 
 		for (let i = 0; i < topLevelQueryArr.length; i++) {
 			let overallParentResTime = numberWithCommas(
-				(topLevelQueryArr[i][1] / 1000000).toFixed(4)
+				(topLevelQueryArr[i][1] / 1000000).toFixed(2)
 			);
 
 			htmlContainer.push(

@@ -106,7 +106,7 @@ body {
 .buttonNavBar {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: flex-end;
+	justify-content: center;
 }
 
 .indexDBstyleButton {
@@ -200,6 +200,14 @@ input:focus {
   background-color:#5dbab0;
 }
 
+.indexDBstyleButton:hover {
+  background-color:#5dbab0;
+}
+
+.performanceMetricsButton:hover {
+  background-color:#5dbab0;
+}
+
 #queryPlaceholder {
   color: #c8c8c8;
 }
@@ -247,7 +255,7 @@ input:focus {
 .perfMetricPTag {
 	color: white;
 	font-size: 14px;
-	font-family: Arial;
+	/* font-family: Arial; */
 	margin: 0;
 	padding: 0;
 }
@@ -255,7 +263,7 @@ input:focus {
 .perfMetricPTagTitle {
 	color: white;
 	font-size: 20px;
-	font-family: Arial;
+	/* font-family: Arial; */
 	margin: 0;
 	padding: 0;
 }
