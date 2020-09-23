@@ -12,9 +12,6 @@ const QuadrantView = () => {
 				<div id='title'>
 					<img src="./logo2.png" />
 				</div>
-				<div className="topQuadrant">
-					<NavBar />
-				</div>
 				<div className="row" id='topRow'>
 					<div className="quadrant" id="controlPanel">
 						<ControlPanel />
@@ -30,6 +27,9 @@ const QuadrantView = () => {
 					<div id="graphViz" className="quadrant2">
 						<GraphViz height={"630px"} width={"100%"} fullGraph={false} />
 					</div>
+				</div>
+        <div className="topQuadrant">
+					<NavBar />
 				</div>
 			</div>
 		</div>
