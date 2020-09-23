@@ -106,7 +106,7 @@ body {
 .buttonNavBar {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: flex-end;
+	justify-content: center;
 }
 
 .indexDBstyleButton {
@@ -197,6 +197,14 @@ input:focus {
 }
 
 .quadrantButton:hover {
+  background-color:#5dbab0;
+}
+
+.indexDBstyleButton:hover {
+  background-color:#5dbab0;
+}
+
+.performanceMetricsButton:hover {
   background-color:#5dbab0;
 }
 
