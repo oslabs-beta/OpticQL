@@ -130,10 +130,10 @@ Github Link: [https://github.com/oslabs-beta/OpticQL](https://github.com/oslabs-
 <!--- Authors --->
 ## The Production Team
 
-* [@Patrick Mullen](https://github.com/patrick934)
-* [@Rebecca Miller](https://github.com/millerreb)
-* [@Nicole Du](https://github.com/Nikkkidew)
-* [@Bon-Jay Tseng](https://github.com/bj-tseng)
+* Patrick Mullen [@GitHub](https://github.com/patrick934) [@LinkedIn](https://www.linkedin.com/in/patrick-mullen-834a4255/)
+* Rebecca Miller [@GitHub](https://github.com/millerreb) [@LinkedIn](https://www.linkedin.com/in/rebecca-miller-18466552/)
+* Nicole Du [@GitHub](https://github.com/Nikkkidew) [@LinkedIn](https://www.linkedin.com/in/nicole-du-05299472/)
+* Bon-Jay Tseng [@GitHub](https://github.com/bj-tseng) [@LinkedIn](https://www.linkedin.com/in/bon-jay-tseng/)
 
 <!-- LICENSE -->
 ## License
