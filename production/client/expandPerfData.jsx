@@ -81,7 +81,7 @@ class ExpandPerfData extends React.PureComponent {
 					styleToApply = liStyleBlack;
 				}
 
-				innerContainer.push(<li style={styleToApply}>{str}</li>)
+				innerContainer.push(<li key={i} style={styleToApply}>{str}</li>)
 			}
 
 			const pathHeader = (<h2 key={path}>{path}</h2>);
@@ -89,7 +89,7 @@ class ExpandPerfData extends React.PureComponent {
 			const subHeaderOne = (<h4 key={`${path}: subheadingOne`} style={subHeadStyle}>Total # of Resolvers: {this.props.performance[path].length}</h4>);
 			// Overall statistics to show total outliers in popup window
 			const subHeaderTwo = (<h4 key={`${path}: subheadingTwo`} style={subHeadStyle}>Total # of resolvers above avg. response time (red): {this.props.anomaliesObject[path].length}</h4>);
-			container.push(<div style={styleInnerDiv}>{pathHeader}{subHeaderOne}{subHeaderTwo}<ul>{innerContainer}</ul></div>);
+			container.push(<div key={`${path}: Container`} style={styleInnerDiv}>{pathHeader}{subHeaderOne}{subHeaderTwo}<ul key={`${path}: List`}>{innerContainer}</ul></div>);
 		}
 
 		// Conditional statement whether to render resolver path data, or if none exists (it's a mutation), then render the noResponseStr
