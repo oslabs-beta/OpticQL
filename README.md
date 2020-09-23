@@ -23,7 +23,6 @@ __________
 ## Table of Contents
 
 * [About the Project](#about-the-project)
-  * [Built With](#built-with)
 * [Usage](#usage)
   * [Additional Usage Notes](#additional-usage-notes)
 * [Getting Started is Easy](#getting-started-is-easy)
@@ -42,16 +41,6 @@ __________
 OpticQL is a developer tool designed to facilitate robust performance testing of GraphQL Schema at the field-level. Inteligence provided by OpticQL allows developers to optimize the design of GraphQL Schema and adjust both client-side and server-side code accordingly.
 
 Import your applications' existing GraphQL Schema to the OpticQL desktop application and immediately see a dynamic visualization of the data graph's shape and interdepency. Next, submit either a query or mutation request from OpticQL to your application, with OpticQL automatically capturing performance trace metrics and the data returned by the request. Fields used in that current request (query or mutation) are highlighted inside the data graph visualization for immediate insight. Summary- and field-level performance information for both the current request, and saved requests, are displayed within robust charting.
-
-### Built With
-* [Electron](https://www.electronjs.org/)
-* [GraphQL](https://graphql.org/)
-* [React](https://reactjs.org/)
-* [Express](https://expressjs.com/)
-* [Vis](https://visjs.org/)
-* [Victory](https://formidable.com/open-source/victory/)
-* [PostgreSQL](https://www.postgresql.org/)
-* [Webpack](https://webpack.js.org/)
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -99,7 +88,7 @@ We designed our application in Electron to give developers a fast forward way to
 
 1. Go to the OpticQL website (link found below) and download the desktop application (both macOS and Windows versions are available)
 
-Website: [https://TBD](<!-- https://osirisdev.io/ -->)
+Website: [http://www.opticql.com](http://www.opticql.com/)
 
 2. OpticQL is designed for use alongside our companion (light-weight) NPM package, which will need to be installed on your application's server-side code (e.g., server.js). Please ensure that you follow and read all of the key instructions found directly on the npm website (link found below). 
 ```sh
@@ -134,7 +123,7 @@ We greatly welcome any contributions to this application from the open source co
 <!-- CONTACT -->
 ## Contact Us
 
-Website: [https://TBD](<!-- https://osirisdev.io/ -->)
+Website: [http://www.opticql.com](http://www.opticql.com/)
 
 Github Link: [https://github.com/oslabs-beta/OpticQL](https://github.com/oslabs-beta/OpticQL/)
 
