@@ -16,7 +16,7 @@
 ## OpticQL
 An Electron-based desktop application to assist in performance monitoring and interdepency visualization of a GraphQL Schema.
 
-  __________
+__________
 
 
 <!-- TABLE OF CONTENTS -->
@@ -25,12 +25,13 @@ An Electron-based desktop application to assist in performance monitoring and in
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Usage](#usage)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Contributing](#contributing)
-* [Contact](#contact)
-* [Authors](#authors)
+  * [Additional Usage Notes](#additonal-usage-notes)
+* [Getting Started is Easy](#getting-started-is-easy)
+  * [Important Setup Notes](#important-setup-notes)
+  * [A Note About our Report](#a-note-about-our-repo)
+  * [Contributing to OpticQL](#contributing-to-opticql)
+* [Contact Us](#contact-us)
+* [The Production Team](#the-production-team)
 * [License](#license)
 
 
@@ -72,13 +73,13 @@ _______
 ________
 
 
-**Feature Three**:  Description Three...
+**Feature Three**: Description Three...
 
 <img src="" alt="">
 
 _______
 
-**Feature Four**:  Description Four...[this one is reserved for the pop-up window feature]
+**Feature Four**: Description Four...[this one is reserved for the pop-up window feature]
 
 <img src="" alt="">
 
@@ -87,9 +88,9 @@ _______
 
 ### Additional Usage Notes
 
-* OpticQL includes functionality to **view and store historical GraphQL response data within IndexedDB**, which can be viewed inside of the Electron app's **dev tools (console)**.  In order to open dev tools inside Electron, please press [Command + Option + J --- need to verify]
-* At this time, **GraphQL queries and mutations are supported**; however, fragments are not currenty supported
-* After a current GraphQL request has been made, you can click on the **Expand Performance Metrics** button to view field-level resolver performance data; however, please note that you should click the **Expand Performance Metrics** button again to close the pop-up window (i.e., do not click the red 'x' button in the pop-up frame, or else the Electron app will need to be restarted [or refreshed??] to work) 
+* OpticQL includes functionality to **view and store historical GraphQL response data within IndexedDB**, which can be **viewed inside of the Electron app's dev tools (console)**. In order to open dev tools inside Electron, please press Command + Option + I (Mac users) or Control + Shift + I (Windows users)
+* At this time, **only GraphQL queries and mutations are supported**. Fragments are not currenty supported
+* After a current GraphQL request has been made, you can click on the **Expand Performance Metrics** button to view **field-level resolver performance data**; however, please note that **you need to click the Expand Performance Metrics button again to close the pop-up window** (i.e., do not click the red 'x' button in the pop-up frame, or else the Electron app will need to be restarted (or refreshed) to work) 
 
 <!-- GETTING STARTED -->
 ## Getting Started is Easy
@@ -116,12 +117,12 @@ Website: [https://www.npmjs.com/package/optic-ql](https://www.npmjs.com/package/
 
 ### A Note About our Repo
 
-* Example Server-side Code - Within the npmUser sub-folder, **and for illustrative purposes**, we have included a sample server.js file to show how our NPM package is integrated into an existing codebase. The sample server.js file has a GraphQL schema (typeDefs and resolvers) based on The Star Wars API (SWAPI).  If you have a PostgreSQL database URI populated with information from SWAPI, feel free to insert the URI into the models sub-folder (within npmUser) and try out OpticQL!
+* Example Server-side Code - **Within the npmUser sub-folder, and for illustrative purposes, we have included a sample server.js file to show how our NPM package is integrated into an existing codebase**. The sample server.js file has a GraphQL schema (typeDefs and resolvers) based on The Star Wars API (SWAPI). If you have a PostgreSQL database URI populated with information from SWAPI, feel free to insert the URI into the models sub-folder (within npmUser) and try out OpticQL!
 
 <!-- CONTRIBUTING -->
 ### Contributing to OpticQL
 
-We greatly welcome any contributions to this application from the open source community!  **See directions below**.
+We greatly welcome any contributions to this application from the open source community! **See directions below**.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/NewFeature`)
@@ -137,8 +138,6 @@ Website: [https://TBD](<!-- https://osirisdev.io/ -->)
 
 Github Link: [https://github.com/oslabs-beta/OpticQL](https://github.com/oslabs-beta/OpticQL/)
 
-Twitter: [<!-- @osiris_io -->](<!-- https://twitter.com/osiris_io -->)
- 
 <!--- Authors --->
 ## The Production Team
 
