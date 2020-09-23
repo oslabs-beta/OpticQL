@@ -88,7 +88,7 @@ class ExpandPerfData extends React.PureComponent {
 			// Overall statistics to show total resolvers in popup window
 			const subHeaderOne = (<h4 key={`${path}: subheadingOne`} style={subHeadStyle}>Total # of Resolvers: {this.props.performance[path].length}</h4>);
 			// Overall statistics to show total outliers in popup window
-			const subHeaderTwo = (<h4 key={`${path}: subheadingTwo`} style={subHeadStyle}>Total # of outlier resolvers (highlighted in red): {this.props.anomaliesObject[path].length}</h4>);
+			const subHeaderTwo = (<h4 key={`${path}: subheadingTwo`} style={subHeadStyle}>Total # of resolvers above avg. response time (red): {this.props.anomaliesObject[path].length}</h4>);
 			container.push(<div style={styleInnerDiv}>{pathHeader}{subHeaderOne}{subHeaderTwo}<ul>{innerContainer}</ul></div>);
 		}
 
