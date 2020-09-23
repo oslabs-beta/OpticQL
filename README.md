@@ -53,7 +53,9 @@ _______
 * Import in your schema to render a graphical representation of all fields, edges, and nodes. All type names are connected to their fields in a color-coded and dynamic view
 * Input a query or mutation, all endpoints of the schema that have been "hit" by the request will turn green
 
-<img src="./readme_gifs/feature_one.gif" alt="OpticQL Feature One GIF">
+<p align="center">
+  <img src="./readme_gifs/feature_one.gif" alt="OpticQL Feature One GIF">
+</p>
 
 _______
 
@@ -63,7 +65,9 @@ _______
 * Submit a query or mutation for response data and performance metrics of all requested fields
 * Metrics include overall tracing data and individual resolver's path durations
 
-<img src="./readme_gifs/feature_two.gif" alt="OpticQL Feature Two GIF">
+<p align="center">
+  <img src="./readme_gifs/feature_two.gif" alt="OpticQL Feature Two GIF">
+</p>
 
 ________
 
@@ -73,7 +77,9 @@ ________
 * All query inputs will generate a graphical overview of the resolver paths' average response time via a line or bar chart
 * Additional individual field-level performance metrics are available via a pop-up window
 
-<img src="./readme_gifs/feature_three.gif" alt="OpticQL Feature Three GIF">
+<p align="center">
+  <img src="./readme_gifs/feature_three.gif" alt="OpticQL Feature Three GIF">
+</p>
 
 _______
 
@@ -81,7 +87,9 @@ _______
 
 * Summary- and field-level performance information for both the current request, and past requests, are displayed within robust charting
 
-<img src="./readme_gifs/feature_four.gif" alt="OpticQL Feature Four GIF">
+<p align="center">
+  <img src="./readme_gifs/feature_four.gif" alt="OpticQL Feature Four GIF">
+</p>
 
 _______
 
