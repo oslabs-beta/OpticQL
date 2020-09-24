@@ -71,11 +71,12 @@ class ExpandPerfData extends React.PureComponent {
 			for (let i = 0; i < pathArr.length; i++) {
 				let finalNum = numberWithCommas((pathArr[i][1] / 1000000).toFixed(4));
 				const str = `${pathArr[i][0]} : ${finalNum} ms`;
+				let numToCheck = (pathArr[i][1] / 1000000)
 
 				let styleToApply;
 
 				// Conditional formatting to turn string 'red' if the resolver duration is above the average for that resolver path
-				if (finalNum > this.props.performanceAvg[path]) {
+				if (numToCheck > this.props.performanceAvg[path]) {
 					styleToApply = liStyleRed;
 				} else {
 					styleToApply = liStyleBlack;
