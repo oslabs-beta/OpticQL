@@ -42,8 +42,12 @@ const ControlPanel = () => {
 				payload: query
 			});
 
+		} else {
+			dispatch({
+				type: "mutationEvent",
+				payload: false
+			})
 		};
-
 		// Execute fetch with query or mutation request to User app's server API 
 		fetch('http://localhost:3000/graphql', {
 			method: 'POST',
