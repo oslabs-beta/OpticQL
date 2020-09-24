@@ -48,29 +48,48 @@ Import your applications' existing GraphQL Schema to the OpticQL desktop applica
 _______
 
 
-**Feature One**: Description One... 
+**Feature One: Color-coded Schema Visualization** 
 
-<img src="./readme_gifs/feature_one.gif" alt="Feature One GIF">
+* Import in your schema to render a graphical representation of all fields, edges, and nodes. All type names are connected to their fields in a color-coded and dynamic view
+* Input a query or mutation, all endpoints of the schema that have been "hit" by the request will turn green
+
+<p align="center">
+  <img src="./readme_gifs/feature_one.gif" alt="OpticQL Feature One GIF">
+</p>
 
 _______
 
 
-**Feature Two**: Description Two...
+**Feature Two: GraphQL Playground**
 
-<img src="" alt="">
+* Submit a query or mutation for response data and performance metrics of all requested fields
+* Metrics include overall tracing data and individual resolver's path durations
+
+<p align="center">
+  <img src="./readme_gifs/feature_two.gif" alt="OpticQL Feature Two GIF">
+</p>
 
 ________
 
 
-**Feature Three**: Description Three...
+**Feature Three: Performance Metrics Tool**
 
-<img src="" alt="">
+* All query inputs will generate a graphical overview of the resolver paths' average response time via a line or bar chart
+* Additional individual field-level performance metrics are available via a pop-up window
+
+<p align="center">
+  <img src="./readme_gifs/feature_three.gif" alt="OpticQL Feature Three GIF">
+</p>
 
 _______
 
-**Feature Four**: Description Four...[this one is reserved for the pop-up window feature]
+**Feature Four: Historical Comparison**
 
-<img src="" alt="">
+* Summary- and field-level performance information for both the current request, and past requests, are displayed within robust charting
+
+<p align="center">
+  <img src="./readme_gifs/feature_four.gif" alt="OpticQL Feature Four GIF">
+</p>
 
 _______
 
