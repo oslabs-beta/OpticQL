@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 
-const PG_URI = 'postgres://muodauxm:9hsOBSDllk1LFlvfz-Ql2HgPfZiyC-uX@ruby.db.elephantsql.com:5432/muodauxm';
+const PG_URI = 'insert uri here';
 
 // create a new pool here using the connection string above
 const pool = new Pool({
@@ -9,7 +9,7 @@ const pool = new Pool({
 
 module.exports = {
 	query: async (text, params, callback) => {
-    const res = await pool.query(text, params, callback);
-    return res
+		const res = await pool.query(text, params, callback);
+		return res
 	}
 };
