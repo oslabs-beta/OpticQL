@@ -22,6 +22,7 @@ __________
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
+* [Download Instructions](#download-instructions)
 * [About the Project](#about-the-project)
 * [Usage](#usage)
   * [Additional Usage Notes](#additional-usage-notes)
@@ -33,7 +34,18 @@ __________
 * [The Production Team](#the-production-team)
 * [License](#license)
 
+<!-- Download Instructions -->
+## Download Instructions
 
+# OpticQL Electron App Install: 
+1. Clone repo onto your local machine
+2. Navigate to 'production' directory and run 'npm i' to download dependencies
+3. 'npm run build' to create a production build
+4. 'npm run dist' to build Electron app
+5. Go to 'production' -> 'dist' -> 'mac'
+6. Open the 'OpticQL' Electron app and you're ready to go!
+
+# For an example of server set-up, please view the 'npmUser' directory
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
