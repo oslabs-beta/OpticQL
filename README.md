@@ -123,7 +123,6 @@ npm install optic-ql
 ```
 
 Website: [https://www.npmjs.com/package/optic-ql](https://www.npmjs.com/package/optic-ql/)
-For an example of server set-up, please view the 'npmUser' directory (remember - server must be running on Port 3000)
 
 3. Finally, spin up the server on your application and start the OpticQL Electron app to begin analyzing performance data associated with your GraphQL requests!
 
