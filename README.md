@@ -43,9 +43,7 @@ __________
 3. 'npm run build' to create a production build
 4. 'npm run dist' to build Electron app
 5. Go to 'production' -> 'dist' -> 'mac'
-6. Open the 'OpticQL' Electron app and you're ready to go!
-
-# For an example of server set-up, please view the 'npmUser' directory
+6. Follow rest of instructions at [Getting Started is Easy](#getting-started-is-easy)
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -117,9 +115,7 @@ _______
 
 We designed our application in Electron to give developers a fast forward way to download and use OpticQL. To get a local copy up and running, please follow these steps.
 
-1. Go to the OpticQL website (link found below) and download the desktop application (both macOS and Windows versions are available)
-
-Website: [http://www.opticql.com](http://www.opticql.com/)
+1. If you haven't downloaded the OpticQL Electron app, go back to [Download Instructions](#download-instructions)
 
 2. OpticQL is designed for use alongside our companion (light-weight) NPM package, which will need to be installed on your application's server-side code (e.g., server.js). Please ensure that you follow and read all of the key instructions found directly on the npm website (link found below). 
 ```sh
@@ -127,6 +123,7 @@ npm install optic-ql
 ```
 
 Website: [https://www.npmjs.com/package/optic-ql](https://www.npmjs.com/package/optic-ql/)
+For an example of server set-up, please view the 'npmUser' directory (remember - server must be running on Port 3000)
 
 3. Finally, spin up the server on your application and start the OpticQL Electron app to begin analyzing performance data associated with your GraphQL requests!
 
