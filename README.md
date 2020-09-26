@@ -42,7 +42,7 @@ __________
 2. Navigate to 'production' directory and run 'npm i' to download dependencies
 3. 'npm run build' to create a production build
 4. 'npm run dist' to build Electron app
-5. Go to 'production' -> 'dist' -> 'mac'
+5. Go to 'production' -> 'dist' -> 'mac'. The OpticQL app will be in this directory 
 6. Follow rest of instructions at [Getting Started is Easy](#getting-started-is-easy)
 
 <!-- ABOUT THE PROJECT -->
