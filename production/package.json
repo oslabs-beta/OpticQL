@@ -10,7 +10,7 @@
     "build": "NODE_ENV=production webpack",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "test": "jest"
+    "test": "jest --verbose --runInBand --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -45,6 +45,7 @@
     "electron-builder": "^22.8.0",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
+    "puppeteer": "^5.3.1",
     "style-loader": "^1.2.1",
     "supertest": "^4.0.2",
     "webpack": "^4.44.1",
