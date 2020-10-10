@@ -26,6 +26,16 @@ describe('Front-end Integration/Features', () => {
       const title = await page.$eval('#queryPlaceholder', (el) => el.innerHTML);
       expect(title).toBe('No query results to display');
     });
+    it('child elements load', async () => {
+      // We navigate to the page at the beginning of each case so we have a fresh start
+      await page.goto(APP);
+      await page.waitForSelector('#mainContainer');
+      const childNodes = await page.$eval('#mainContainer', (el) => el.childNodes.length);
+      expect(childNodes).toBe(4);
+    });
+
+
+
   })
 
 })
