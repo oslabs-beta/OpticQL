@@ -18,7 +18,7 @@ describe('Front-end Integration/Features', () => {
     APP.destroy();
   });
 
-  xdescribe('initial load',() => {
+  describe('initial load',() => {
     
     it('loads successfully', async () => {
       // We navigate to the page at the beginning of each case so we have a fresh start
@@ -52,25 +52,37 @@ describe('Front-end Integration/Features', () => {
 
   })
 
-  xdescribe('Executes successful queries or mutations',() => {
+//   xdescribe('Executes successful queries or mutations',() => {
   
+//     it('displays a usable input field for queries or mutations', async () => {
+//       await page.goto(APP); // takes a URL
+//       await page.waitForSelector('#controlPanel'); // takes a selector - waits for it to appear in page
+//       await page.waitForSelector('.ReactCodeMirror'); // fetches element (selector)
+//       const childNodes = await page.$$eval('.ReactCodeMirror', (el) => el.childNodes);
+//       console.log("childnodes:", childNodes)
+//       // await page.keyboard.type('{ people { gender }}');
+//       // const inputValue = await page.$eval('.ReactCodeMirror', el => el.value);
+//       // expect(inputValue).toBe('{ people { gender }}');
+//     });
+
+// // #queryDisplay
+// // .topLeftButtons.length(3)
+//   })
+
+
+  describe('TEST',()=>{
     it('displays a usable input field for queries or mutations', async () => {
-      await page.goto(APP); // takes a URL
+      await page.goto(APP);
       await page.waitForSelector('#controlPanel'); // takes a selector - waits for it to appear in page
       await page.waitForSelector('.ReactCodeMirror'); // fetches element (selector)
       const childNodes = await page.$$eval('.ReactCodeMirror', (el) => el.childNodes);
       console.log("childnodes:", childNodes)
-      // await page.keyboard.type('{ people { gender }}');
-      // const inputValue = await page.$eval('.ReactCodeMirror', el => el.value);
-      // expect(inputValue).toBe('{ people { gender }}');
-    });
-
-// #queryDisplay
-// .topLeftButtons.length(3)
-
-
+    })
 
   })
+
+
+
 
   xdescribe('Schema Viz Loads',()=>{
     it('import schema works', async () => {
