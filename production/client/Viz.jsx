@@ -428,7 +428,7 @@ function GraphViz(props) {
       <div className='topLeftButtons' id='vizQuadrant'>
         <button className="quadrantButton" id="updateSchema" key={2} onClick={requestSchemaThrottled}>Import Schema</button>
         {store.schema.schemaNew && 
-          <button className="quadrantButton">
+          <button id="fullVizClick" className="quadrantButton">
             <Link to="/fullviz" style={linkStyle}>View Full Screen</Link>
           </button>
         }
