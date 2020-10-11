@@ -34,7 +34,12 @@ describe('Front-end Integration/Features', () => {
       expect(childNodes).toBe(4);
     });
 
-
+    it('top row child elements load', async () => {
+      await page.goto(APP);
+      await page.waitForSelector('#topRow');
+      const childNodes = await page.$eval('#topRow', (el) => el.childNodes.length);
+      expect(childNodes).toBe(2)
+    })
 
   })
 
