@@ -11,8 +11,8 @@ const NavBar = () => {
 	function queryDatabasePull () {
 		queryDB.getAll()
 			.then(res => {
-        console.log('Query database information: ', res);
-        alert('Query database has been logged in developer console. To view on Mac: Command + Option + I');
+				console.log('Query database information: ', res);
+				alert('Query database has been logged in developer console. To view on Mac: Command + Option + I');
 			})
 			.catch(err => console.log("Error with getting all records from database: ", err));
 	};
@@ -83,7 +83,7 @@ const NavBar = () => {
 		<div className="buttonNavBar">
 			<div>
 				<button className="indexDBstyleButton" key={'navBar button: 1'} onClick={queryDatabasePull}>Pull Database</button>
-				<button className="indexDBstyleButton" key={'navBar button: 2'} onClick={queryDatabaseClearAll}>Clear All Database</button>
+				<button id="dbClearButton" className="indexDBstyleButton" key={'navBar button: 2'} onClick={queryDatabaseClearAll}>Clear All Database</button>
 				<button className="indexDBstyleButton" key={'navBar button: 3'} onClick={queryDatabaseCheckRecord}>Clear Specific Record</button>
 				<input className="databaseIDButton" type="text" onChange={handleChange} placeholder="Database ID to Delete" />
 			</div>
