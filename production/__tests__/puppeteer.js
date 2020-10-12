@@ -3,8 +3,8 @@ const puppeteer = require("puppeteer");
 const APP = `http://localhost:8080/`
 
 describe("Front-end Integration/Features", () => {
-	let browser;
 	let page;
+	let browser;
 
 	beforeEach(async () => {
 		browser = await puppeteer.launch({
@@ -14,8 +14,8 @@ describe("Front-end Integration/Features", () => {
 		page = await browser.newPage();
 	});
 
-	afterAll(() => {
-		APP.destroy();
+	afterAll(async () => {
+		await browser.close();
 	});
 
 	describe("initial load", () => {
@@ -66,10 +66,6 @@ describe("Front-end Integration/Features", () => {
 			await page.goto(APP);
 			await page.waitForSelector("#graphViz");
 			await page.click("#updateSchema", async (el) => {
-				// expect there to be a div now with visualization...
-				// graphBox should be a div on the page
-				// const graphLoad = await page.$eval('#graphBox', (el) => el.childNodes.length);
-				// expect(graphLoad).toBe(2)
 				const graphLoad = (await page.$("#graphBox")) !== null;
 				expect(graphLoad).toBe(true);
 				const fullVizBut = (await page.$("#fullVizClick")) !== null;
@@ -77,6 +73,66 @@ describe("Front-end Integration/Features", () => {
 			});
 		});
 	});
+
+	describe("Codemirror input", () => {
+		it('displays text in codemirror box', async () => {
+			await page.goto(APP);
+			await page.waitForSelector('#controlPanel');
+			await page.click('.ReactCodeMirror')
+			await page.focus('.ReactCodeMirror');
+			await page.keyboard.type('{people{gender}}');
+			const inputValue = await page.$eval('textarea', (el) => el.value);
+			expect(inputValue).toBe('{people{gender}}');
+		});
+
+		it('submits a query and the response metric box, 3 buttons (response, metrics, errors) shows', async () => {
+			await page.goto(APP);
+			await page.waitForSelector('#controlPanel');
+			await page.click('.ReactCodeMirror')
+			await page.focus('.ReactCodeMirror');
+			await page.keyboard.type('{people{gender}}');
+			await page.click("#submitQuery")
+			await page.waitForSelector('#responseButtons')
+			const childNodes = await page.$eval(
+				"#responseButtons",
+				(el) => el.childNodes.length
+			);
+			expect(childNodes).toBe(3)
+			//the result window should be true 
+			const resultWindow = (await page.$('#queryScroll')) !== null;
+			expect(resultWindow).toBe(true)
+
+		});
+		it('loads the performance metrics button', async () => {
+			await page.goto(APP);
+			await page.waitForSelector('#controlPanel');
+			await page.click('.ReactCodeMirror')
+			await page.focus('.ReactCodeMirror');
+			await page.keyboard.type('{people{gender}}');
+			await page.click("#submitQuery")
+			await page.waitForSelector('.performanceMetricsButtonInfo')
+			const childNodes = await page.$eval(
+				".performanceMetricsButtonInfo",
+				(el) => el.childNodes.length
+			);
+			expect(childNodes).toBe(4)
+		});
+
+		it('loads the performance metrics graph', async () => {
+			await page.goto(APP);
+			await page.waitForSelector('#controlPanel');
+			await page.click('.ReactCodeMirror')
+			await page.focus('.ReactCodeMirror');
+			await page.keyboard.type('{people{gender}}');
+			await page.click("#submitQuery")
+			await page.waitForSelector('.chartContainerDiv')
+			const chartGraph = (await page.$('.chartContainerDiv')) !== null;
+			expect(chartGraph).toBe(true)
+		});
+
+
+	});
+
 
 	describe("Full Screen View loads", () => {
 		it("loads new page for graph", async () => {
@@ -92,6 +148,7 @@ describe("Front-end Integration/Features", () => {
 						".fullpageViz",
 						(el) => el.childNodes.length
 					);
+					console.log("childNodes", childNodes)
 					expect(childNodes).toBe(4);
 				})
 			});
@@ -172,5 +229,5 @@ describe("Front-end Integration/Features", () => {
 	// 	}, 15000);
 	// });
 
-
+	// browser.close();
 });
