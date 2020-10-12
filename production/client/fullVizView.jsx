@@ -5,7 +5,7 @@ import GraphViz from './Viz.jsx';
 const FullViz = () => {
 	// Pass prop GraphViz as true here
 	return (
-		<div>
+		<div className="fullpageViz">
 			<div id='title'>
 				<img src="./logo2.png" />
 			</div>
