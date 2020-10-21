@@ -130,7 +130,7 @@ const History = () => {
 	}
 
 	return (
-		<div>
+		// <div>
 			<div className="historyViewContainer">
 				<img src="./logo2.png" />
 				<button className="quadrantButton">
@@ -141,7 +141,7 @@ const History = () => {
 					{chartContainer}
 				</div>
 			</div>
-		</div>
+		// </div>
 	);
 
 }
