@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 
 const APP = `http://localhost:8080/`
 
-describe("Front-end Integration/Features", () => {
+xdescribe("Front-end Integration/Features", () => {
 	let page;
 	let browser;
 
@@ -61,7 +61,7 @@ describe("Front-end Integration/Features", () => {
 
 
 
-	describe("Schema Viz Loads", () => {
+	xdescribe("Schema Viz Loads", () => {
 		it("import schema works", async () => {
 			await page.goto(APP);
 			await page.waitForSelector("#graphViz");
@@ -74,7 +74,7 @@ describe("Front-end Integration/Features", () => {
 		});
 	});
 
-	describe("Codemirror input", () => {
+	xdescribe("Codemirror input", () => {
 		it('displays text in codemirror box', async () => {
 			await page.goto(APP);
 			await page.waitForSelector('#controlPanel');
@@ -134,7 +134,7 @@ describe("Front-end Integration/Features", () => {
 	});
 
 
-	describe("Full Screen View loads", () => {
+	xdescribe("Full Screen View loads", () => {
 		it("loads new page for graph", async () => {
 			await page.goto(APP);
 			await page.waitForSelector("#graphViz");
