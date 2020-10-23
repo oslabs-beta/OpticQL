@@ -1,7 +1,7 @@
 const { Pool } = require("pg");
 
 const PG_URI =
-	"insert URI here";
+	"insert uri here";
 
 // create a new pool here using the connection string above
 const pool = new Pool({
