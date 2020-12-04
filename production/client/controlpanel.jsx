@@ -28,7 +28,7 @@ const ControlPanel = () => {
 		});
 
 		if (query.includes("mutation")) {
-			// Add Dispatch --- send query to 'Mutation' variable in Store (for Viz.jsx purposes)
+			// Add Dispatch --- send query to 'Mutation' variable in Store (for graphViz.jsx purposes)
 			dispatch({
 				type: "mutation",
 				payload: query,
