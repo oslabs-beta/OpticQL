@@ -5,7 +5,7 @@ import toJson from 'enzyme-to-json';
 import sinon from 'sinon';
 
 import FullViz from '../client/fullVizView.jsx'
-import GraphViz from '../client/Viz.jsx';
+import GraphViz from '../client/graphViz.jsx';
 import ExpandPerfData from '../client/expandPerfData.jsx';
 import TestWindow from '../client/testWindow.jsx';
 
@@ -53,7 +53,7 @@ describe('React unit tests', () => {
   });
 
 
-  // describe('Viz.js', () => {
+  // describe('graphViz.js', () => {
   //   let wrapper;
     
   //   const props = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import ControlPanel from './controlpanel.jsx';
 import QueryDisplay from './queryDisplay.jsx';
-import GraphViz from './Viz.jsx'
+import GraphViz from './graphViz.jsx'
 import PerformanceData from './performanceData.jsx';
 import NavBar from './navBar.jsx'
 

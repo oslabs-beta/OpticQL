@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from './navBar.jsx'
-import GraphViz from './Viz.jsx';
+import GraphViz from './graphViz.jsx';
 
 const FullViz = () => {
 	// Pass prop GraphViz as true here
